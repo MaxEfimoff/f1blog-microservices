@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { app } from './app';
-import { DatabaseConnectionError } from './errors/database-connecttion-error';
+import { DatabaseConnectionError } from '@f1blog/common';
 
 // DB config
 const db = require('./config/keys').mongoURI;

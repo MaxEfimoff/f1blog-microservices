@@ -6,9 +6,7 @@ import { activate } from '../../controllers/users/activate';
 import { login } from '../../controllers/users/login';
 import { current } from '../../controllers/users/current';
 import { all } from '../../controllers/users/all';
-import { validateRequest } from '../../../middlewares/validate-request';
-import { currentUser } from '../../../middlewares/current-user';
-import { requireAuth } from '../../../middlewares/require-auth';
+import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
 
 const router = express.Router();
 

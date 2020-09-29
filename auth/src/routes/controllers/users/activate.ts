@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import 'express-async-errors';
 import { User } from '../../../db/models/User';
 import { ConfirmationHash } from '../../../db/models/ConfirmationHash';
-import { BadRequestError } from '../../../errors/bad-request-error';
+import { BadRequestError } from '@f1blog/common';
 
 const activate = async (req: Request, res: Response) => {
   const hash = req.params.hash;

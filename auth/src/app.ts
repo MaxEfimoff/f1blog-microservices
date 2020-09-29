@@ -1,8 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors/not-fount-error';
+import { errorHandler, NotFoundError } from '@f1blog/common';
 import passport from 'passport';
 
 // Routes

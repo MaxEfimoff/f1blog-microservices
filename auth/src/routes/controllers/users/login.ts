@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import 'express-async-errors';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
-import { BadRequestError } from '../../../errors/bad-request-error';
+import { BadRequestError } from '@f1blog/common';
 import { User } from '../../../db/models/User';
 
 const login = async (req: Request, res: Response) => {

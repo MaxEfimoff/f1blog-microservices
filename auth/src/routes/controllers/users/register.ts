@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
 import bcrypt from 'bcrypt';
-import { BadRequestError } from '../../../errors/bad-request-error';
+import { BadRequestError } from '@f1blog/common';
 import { sendConfirmationEmail } from '../../helpers/sendConfirmationEmail';
 import { User } from '../../../db/models/User';
 import { ConfirmationHash } from '../../../db/models/ConfirmationHash';
