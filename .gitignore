@@ -1,3 +1,5 @@
 auth/node_modules
-auth/config
+auth/src/config
 auth/package-lock
+profile/src/config
+profile/node_modules
