@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { UserDoc } from './User';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // An interface that describes the properties
 // that are required to create a new Profile
@@ -37,6 +38,7 @@ interface ProfileDoc extends mongoose.Document {
   status?: string;
   karma?: number;
   date: number;
+  version: number;
 }
 
 const ProfileSchema = new mongoose.Schema(
@@ -112,6 +114,20 @@ const ProfileSchema = new mongoose.Schema(
     },
   }
 );
+
+ProfileSchema.set('versionKey', 'version');
+ProfileSchema.plugin(updateIfCurrentPlugin);
+
+// Add findByEvent method to a ProfileSchema
+ProfileSchema.statics.findByEvent = (event: {
+  id: string;
+  version: number;
+}) => {
+  return Profile.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
+};
 
 // Add build method to a ProfileSchema
 ProfileSchema.statics.build = (attrs: ProfileAttrs) => {

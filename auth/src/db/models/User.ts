@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // An interface that describes the properties
 // that are required to create a new User
@@ -26,6 +27,7 @@ interface UserDoc extends mongoose.Document {
   active: boolean;
   role: string;
   date: Date;
+  version: number;
 }
 
 const UserSchema = new mongoose.Schema(
@@ -75,6 +77,9 @@ const UserSchema = new mongoose.Schema(
     },
   }
 );
+
+UserSchema.set('versionKey', 'version');
+UserSchema.plugin(updateIfCurrentPlugin);
 
 // Add build method to a UserSchema
 UserSchema.statics.build = (attrs: UserAttrs) => {

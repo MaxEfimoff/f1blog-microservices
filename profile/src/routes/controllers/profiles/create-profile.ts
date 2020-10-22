@@ -35,14 +35,24 @@ const createProfile = async (req: UserRequest, res: Response) => {
     });
 
     // Save New Profile to DB
-    await newProfile.save();
+    await newProfile.save((err) => {
+      if (err) throw new BadRequestError('Could not save profile to DB');
+    });
 
     // Publish a ProfileCreated event
     new ProfileCreatedPublisher(natsWrapper.client).publish({
       id: newProfile.id,
       handle: newProfile.handle,
+      version: newProfile.version,
       user: {
         id: user.id,
+      },
+    });
+
+    return res.status(201).json({
+      status: 'success',
+      data: {
+        newProfile,
       },
     });
   }

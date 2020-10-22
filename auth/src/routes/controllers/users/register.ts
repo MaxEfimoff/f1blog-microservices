@@ -7,6 +7,7 @@ import { User } from '../../../db/models/User';
 import { ConfirmationHash } from '../../../db/models/ConfirmationHash';
 import { UserCreatedPublisher } from '../../../events/publishers/user-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
+import { version } from 'mongoose';
 
 const register = async (req: Request, res: Response) => {
   let { name, email, password } = req.body;
@@ -40,6 +41,7 @@ const register = async (req: Request, res: Response) => {
           id: newUser.id,
           name: newUser.name,
           email: newUser.email,
+          version: newUser.version,
         });
 
         // Create confirmetion hash
