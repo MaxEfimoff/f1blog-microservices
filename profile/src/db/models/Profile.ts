@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
+import { UserDoc } from './User';
 
 // An interface that describes the properties
 // that are required to create a new Profile
 interface ProfileAttrs {
-  user: {};
-  // user: mongoose.Schema.Types.ObjectId;
+  user: UserDoc;
   subscribers?: [];
   subscribedProfiles?: [];
   subscribedBlogs?: [];
@@ -26,8 +26,7 @@ interface ProfileModel extends mongoose.Model<ProfileDoc> {
 // An interface that describes the properties
 // that a single Profile Document has
 interface ProfileDoc extends mongoose.Document {
-  // user: mongoose.Schema.Types.ObjectId;
-  user: {};
+  user: UserDoc;
   subscribers?: [];
   subscribedProfiles?: [];
   subscribedBlogs?: [];
@@ -43,35 +42,34 @@ interface ProfileDoc extends mongoose.Document {
 const ProfileSchema = new mongoose.Schema(
   {
     user: {
-      // type: mongoose.Schema.Types.ObjectId,
-      type: {},
-      ref: 'users',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     },
     // The ones who are subscribed for me
     subscibers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'profile',
+        ref: 'Profile',
       },
     ],
     // The ones I am subscribed to
     subscribedProfiles: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'profile',
+        ref: 'Profile',
       },
     ],
     // The ones I am subscribed to
     subscribedBlogs: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'blog',
+        ref: 'Blog',
       },
     ],
     joinedGroups: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'group',
+        ref: 'Group',
       },
     ],
     handle: {

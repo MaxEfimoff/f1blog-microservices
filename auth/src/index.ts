@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { DatabaseConnectionError } from '@f1blog/common';
+import { natsWrapper } from './nats-wrapper';
 
 // DB config
 const db = require('./config/keys').mongoURI;
@@ -12,6 +13,15 @@ const start = async () => {
   }
 
   try {
+    await natsWrapper.connect('ticketing', 'bjhvhv', 'http:nats-srv:4222');
+
+    natsWrapper.client.on('close', () => {
+      console.log('NATS connection closed!');
+      process.exit();
+    });
+    process.on('SIGINT', () => natsWrapper.client.close());
+    process.on('SIGTERM', () => natsWrapper.client.close());
+
     await mongoose.connect(db, {
       useFindAndModify: false,
       useNewUrlParser: true,

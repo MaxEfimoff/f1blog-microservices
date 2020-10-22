@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
-import bcrypt from 'bcrypt';
-import { BadRequestError } from '@f1blog/common';
+import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
+import { User } from '../../../db/models/User';
+import { ProfileCreatedPublisher } from '../../../events/publishers/profile-created-publisher';
+import { natsWrapper } from '../../../nats-wrapper';
 
 interface UserRequest extends Request {
   user: {
@@ -12,15 +14,19 @@ interface UserRequest extends Request {
 
 const createProfile = async (req: UserRequest, res: Response) => {
   let { handle, avatar, background, status } = req.body;
-  const user = req.user.id;
 
-  const profile = await Profile.findOne({ user: user });
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    throw new NotFoundError();
+  }
+
+  const profile = await Profile.findOne({ user });
 
   if (profile) {
     throw new BadRequestError('Profile already exists');
   } else {
     const newProfile = Profile.build({
-      user: req.user,
+      user: user,
       handle,
       avatar,
       background,
@@ -28,8 +34,17 @@ const createProfile = async (req: UserRequest, res: Response) => {
       date: Date.now(),
     });
 
-    // Save New user to DB
-    const savedUser = await newProfile.save();
+    // Save New Profile to DB
+    await newProfile.save();
+
+    // Publish a ProfileCreated event
+    new ProfileCreatedPublisher(natsWrapper.client).publish({
+      id: newProfile.id,
+      handle: newProfile.handle,
+      user: {
+        id: user.id,
+      },
+    });
   }
 };
 

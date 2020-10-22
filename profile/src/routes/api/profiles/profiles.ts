@@ -3,6 +3,7 @@ import { profileValidation } from '../../../validation/create-profile';
 import { createProfile } from '../../controllers/profiles/create-profile';
 import { all } from '../../controllers/profiles/all';
 import { test } from '../../controllers/profiles/test';
+import { current } from '../../controllers/profiles/current';
 import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
 
 const router = express.Router();
@@ -18,8 +19,8 @@ router.post(
   validateRequest,
   createProfile
 );
+router.get('/current', currentUser, requireAuth, current);
 // router.post('/login', loginValidation, validateRequest, login);
 // router.patch('/:hash/activate', activate);
-// router.get('/current', currentUser, requireAuth, current);
 
 export { router as profiles };
