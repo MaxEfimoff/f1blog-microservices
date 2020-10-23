@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newsitem-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: newsitem
+  template:
+    metadata:
+      labels:
+        app: newsitem
+    spec:
+      containers:
+        - name: newsitem
+          image: maxefi/newsitem
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: REDIS_HOST
+              value: newsitem-redis-srv
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: newsitem-srv
+spec:
+  selector:
+    app: newsitem
+  ports:
+    - name: newsitem
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

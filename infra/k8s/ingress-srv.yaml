@@ -18,6 +18,10 @@ spec:
             backend:
               serviceName: profile-srv
               servicePort: 3000
+          - path: /api/v1/newsitem/?(.*)
+            backend:
+              serviceName: newsitem-srv
+              servicePort: 3000
           - path: /?(.*)
             backend:
               serviceName: client-srv
