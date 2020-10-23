@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import { UserDoc } from './User';
 
 // An interface that describes the properties
 // that are required to create a new User
 interface ResetPasswordHashAttrs {
   expireAt?: Date;
-  user: object;
+  user: UserDoc;
 }
 
 // An interface that describes the properties
@@ -17,7 +18,7 @@ interface ResetPasswordHashModel extends mongoose.Model<ResetPasswordHashDoc> {
 // that a single User Document has
 interface ResetPasswordHashDoc extends mongoose.Document {
   expireAt: Date;
-  user: object;
+  user: UserDoc;
 }
 
 const ResetPasswordHashSchema = new mongoose.Schema({
@@ -28,7 +29,7 @@ const ResetPasswordHashSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'User',
   },
 });
 
