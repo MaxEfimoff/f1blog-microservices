@@ -15,18 +15,18 @@ interface NewsItemAttrs {
     {
       profile: ProfileDoc;
       text: string;
-      likes: ProfileDoc[];
-      dislikes: ProfileDoc[];
-      rating: number;
+      likes?: ProfileDoc[];
+      dislikes?: ProfileDoc[];
+      rating?: number;
       comments?: [
         {
           profile: ProfileDoc;
           text: string;
-          likes: ProfileDoc[];
-          dislikes: ProfileDoc[];
-          rating: number;
+          likes?: ProfileDoc[];
+          dislikes?: ProfileDoc[];
+          rating?: number;
           createdAt: number;
-          updatedAt: number;
+          updatedAt?: number;
         }
       ];
     }
@@ -44,7 +44,7 @@ interface NewsItemModel extends mongoose.Model<NewsItemDoc> {
 
 // An interface that describes the properties
 // that a single NewsItem Document has
-interface NewsItemDoc extends mongoose.Document {
+export interface NewsItemDoc extends mongoose.Document {
   profile: ProfileDoc;
   title: string;
   text: string;
@@ -55,25 +55,25 @@ interface NewsItemDoc extends mongoose.Document {
     {
       profile: ProfileDoc;
       text: string;
-      likes: ProfileDoc[];
-      dislikes: ProfileDoc[];
-      rating: number;
+      likes?: ProfileDoc[];
+      dislikes?: ProfileDoc[];
+      rating?: number;
       comments?: [
         {
           profile: ProfileDoc;
           text: string;
-          likes: ProfileDoc[];
-          dislikes: ProfileDoc[];
-          rating: number;
+          likes?: ProfileDoc[];
+          dislikes?: ProfileDoc[];
+          rating?: number;
           createdAt: number;
-          updatedAt: number;
+          updatedAt?: number;
         }
       ];
       createdAt: number;
       updatedAt?: number;
     }
   ];
-  tags?: ProfileDoc[];
+  tags?: string[];
   createdAt: number;
   updatedAt?: number;
   version: number;
@@ -175,8 +175,7 @@ const NewsItemSchema = new mongoose.Schema(
     ],
     tags: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profile',
+        type: String,
       },
     ],
     createdAt: {

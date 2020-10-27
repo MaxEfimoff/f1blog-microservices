@@ -25,9 +25,6 @@ const createNewsItem = async (req: UserRequest, res: Response) => {
   }
 
   const profile = await Profile.findOne({ user_id: req.user.id });
-  if (!profile) {
-    throw new NotFoundError();
-  }
 
   if (!profile) {
     throw new BadRequestError('You should create profile first');
@@ -54,7 +51,7 @@ const createNewsItem = async (req: UserRequest, res: Response) => {
       text: newNewsItem.text,
       image: newNewsItem.image,
       version: newNewsItem.version,
-      profile_id: newNewsItem.id,
+      profile_id: profile.id,
     });
 
     return res.status(201).json({
