@@ -9,6 +9,9 @@ import { natsWrapper } from '../../../nats-wrapper';
 interface UserRequest extends Request {
   user: {
     id: string;
+    name: string;
+    iat: number;
+    exp: number;
   };
 }
 
@@ -44,9 +47,7 @@ const createProfile = async (req: UserRequest, res: Response) => {
       id: newProfile.id,
       handle: newProfile.handle,
       version: newProfile.version,
-      user: {
-        id: user.id,
-      },
+      user_id: req.user.id,
     });
 
     return res.status(201).json({

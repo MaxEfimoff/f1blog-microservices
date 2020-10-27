@@ -4,6 +4,7 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 // An interface that describes the properties
 // that are required to create a new Profile
 interface ProfileAttrs {
+  user_id: string;
   handle: string;
   id: string;
   version: number;
@@ -23,10 +24,14 @@ interface ProfileModel extends mongoose.Model<ProfileDoc> {
 // that a single Profile Document has
 export interface ProfileDoc extends mongoose.Document {
   handle: string;
+  user_id: string;
 }
 
 const ProfileSchema = new mongoose.Schema(
   {
+    user_id: {
+      type: String,
+    },
     handle: {
       type: String,
       required: true,
@@ -65,6 +70,7 @@ ProfileSchema.statics.build = (attrs: ProfileAttrs) => {
   return new Profile({
     _id: attrs.id,
     handle: attrs.handle,
+    user_id: attrs.user_id,
   });
 };
 

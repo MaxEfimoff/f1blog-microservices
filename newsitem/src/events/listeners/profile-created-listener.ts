@@ -10,8 +10,10 @@ export class ProfileCreatedListener extends Listener<ProfileCreatedEvent> {
   async onMessage(data: ProfileCreatedEvent['data'], msg: Message) {
     console.log('Profile created event data!', data);
 
-    const { id, handle, version } = data;
+    const { id, handle, version, user_id } = data;
+
     const profile = Profile.build({
+      user_id,
       handle,
       id,
       version,
