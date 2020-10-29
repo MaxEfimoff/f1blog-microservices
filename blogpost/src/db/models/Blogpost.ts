@@ -1,53 +1,63 @@
 import mongoose from 'mongoose';
 import { ProfileDoc } from './Profile';
+import { GroupDoc } from './Group';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // An interface that describes the properties
 // that are required to create a new NewsItem
-interface NewsItemAttrs {
+interface BlogPostAttrs {
   profile: ProfileDoc;
   title: string;
   text: string;
   image?: string;
-  likes?: ProfileDoc[];
-  dislikes?: ProfileDoc[];
-  threads?: [
-    {
-      profile: ProfileDoc;
-      text: string;
-      likes?: ProfileDoc[];
-      dislikes?: ProfileDoc[];
-      rating?: number;
-      comments?: [
-        {
-          profile: ProfileDoc;
-          text: string;
-          likes?: ProfileDoc[];
-          dislikes?: ProfileDoc[];
-          rating?: number;
-          createdAt: number;
-          updatedAt?: number;
-        }
-      ];
-    }
-  ];
-  tags?: ProfileDoc[];
+  // likes?: ProfileDoc[];
+  // dislikes?: ProfileDoc[];
+  // threads?: [
+  //   {
+  //     profile: ProfileDoc;
+  //     text: string;
+  //     likes?: ProfileDoc[];
+  //     dislikes?: ProfileDoc[];
+  //     rating?: number;
+  //     comments?: [
+  //       {
+  //         profile: ProfileDoc;
+  //         text: string;
+  //         likes?: ProfileDoc[];
+  //         dislikes?: ProfileDoc[];
+  //         rating?: number;
+  //         createdAt: number;
+  //         updatedAt?: number;
+  //       }
+  //     ];
+  //   }
+  // ];
+  // tags?: ProfileDoc[];
+  // updatedAt?: number;
   createdAt: number;
-  updatedAt?: number;
 }
 
 // An interface that describes the properties
-// that a NewsItem Model has
-interface NewsItemModel extends mongoose.Model<NewsItemDoc> {
-  build(attrs: NewsItemAttrs): NewsItemDoc;
+// that a BlogPost Model has
+interface BlogPostModel extends mongoose.Model<BlogPostDoc> {
+  build(attrs: BlogPostAttrs): BlogPostDoc;
 }
 
 // An interface that describes the properties
-// that a single NewsItem Document has
-export interface NewsItemDoc extends mongoose.Document {
+// that a single BlogPost Document has
+export interface BlogPostDoc extends mongoose.Document {
   profile: ProfileDoc;
   title: string;
   text: string;
+  mainPost?: {
+    type: boolean;
+    default: false;
+  };
+  featuredPost?: {
+    type: boolean;
+    default: false;
+  };
+  group?: GroupDoc;
   image?: string;
   likes?: ProfileDoc[];
   dislikes?: ProfileDoc[];
@@ -80,7 +90,7 @@ export interface NewsItemDoc extends mongoose.Document {
   version: number;
 }
 
-const NewsItemSchema = new mongoose.Schema(
+const BlogPostSchema = new mongoose.Schema(
   {
     profile: {
       type: mongoose.Schema.Types.ObjectId,
@@ -94,9 +104,21 @@ const NewsItemSchema = new mongoose.Schema(
       type: String,
       max: 1200,
     },
+    mainPost: {
+      type: Boolean,
+      default: false,
+    },
+    featuredPost: {
+      type: Boolean,
+      default: false,
+    },
     image: {
       type: String,
       max: 1000,
+    },
+    group: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Group',
     },
     likes: [
       {
@@ -200,28 +222,28 @@ const NewsItemSchema = new mongoose.Schema(
   }
 );
 
-NewsItemSchema.set('versionKey', 'version');
-NewsItemSchema.plugin(updateIfCurrentPlugin);
+BlogPostSchema.set('versionKey', 'version');
+BlogPostSchema.plugin(updateIfCurrentPlugin);
 
-// Add findByEvent method to a NewsItemSchema
-NewsItemSchema.statics.findByEvent = (event: {
+// Add findByEvent method to a BlogPostSchema
+BlogPostSchema.statics.findByEvent = (event: {
   id: string;
   version: number;
 }) => {
-  return NewsItem.findOne({
+  return BlogPost.findOne({
     _id: event.id,
     version: event.version - 1,
   });
 };
 
-// Add build method to a NewsItemSchema
-NewsItemSchema.statics.build = (attrs: NewsItemAttrs) => {
-  return new NewsItem(attrs);
+// Add build method to a BlogPostSchema
+BlogPostSchema.statics.build = (attrs: BlogPostAttrs) => {
+  return new BlogPost(attrs);
 };
 
-const NewsItem = mongoose.model<NewsItemDoc, NewsItemModel>(
-  'NewsItem',
-  NewsItemSchema
+const BlogPost = mongoose.model<BlogPostDoc, BlogPostModel>(
+  'BlogPost',
+  BlogPostSchema
 );
 
-export { NewsItem };
+export { BlogPost };

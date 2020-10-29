@@ -11,6 +11,7 @@ import { fetchNewsItemById } from '../../controllers/newsitems/fetch-newsitem-by
 import { fetchMyNewsItems } from '../../controllers/newsitems/fetch-my-newsitems';
 import { fetchMyProfileIdNewsItems } from '../../controllers/newsitems/fetch-profileid-newsitems';
 import { deleteNewsItem } from '../../controllers/newsitems/delete-newsitem';
+import { deleteNewsItemThread } from '../../controllers/newsitems/delete-newsitem-thread';
 import { likeNewsItem } from '../../controllers/newsitems/like-newsitem';
 import { dislikeNewsItem } from '../../controllers/newsitems/dislike-newsitem';
 
@@ -22,6 +23,7 @@ router.get('/my', currentUser, requireAuth, fetchMyNewsItems);
 router.get('/', fetchAllNewsItems);
 router.get('/:id', fetchNewsItemById);
 router.get('/profile/:id', fetchMyProfileIdNewsItems);
+
 router.post(
   '/',
   currentUser,
@@ -40,6 +42,7 @@ router.post(
 );
 router.post('/like/:id', currentUser, requireAuth, likeNewsItem);
 router.post('/dislike/:id', currentUser, requireAuth, dislikeNewsItem);
+
 router.patch(
   '/:id',
   currentUser,
@@ -48,7 +51,14 @@ router.patch(
   validateRequest,
   updateNewsItem
 );
+
 router.delete('/:id', currentUser, requireAuth, deleteNewsItem);
+router.delete(
+  '/thread/:newsitem_id/:thread_id',
+  currentUser,
+  requireAuth,
+  deleteNewsItemThread
+);
 // router.get('/current', currentUser, requireAuth, current);
 // router.post('/login', loginValidation, validateRequest, login);
 // router.patch('/:hash/activate', activate);

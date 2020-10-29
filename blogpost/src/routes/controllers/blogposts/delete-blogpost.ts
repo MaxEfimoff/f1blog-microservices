@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
-import { NewsItem } from '../../../db/models/NewsItem';
-import { NewsItemDeletedPublisher } from '../../../events/publishers/newsitem-deleted-publisher';
+import { BlogPost } from '../../../db/models/Blogpost';
+// import { NewsItemDeletedPublisher } from '../../../events/publishers/newsitem-deleted-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { NotAuthorizedError } from '@f1blog/common';
 
@@ -16,7 +16,7 @@ interface UserRequest extends Request {
   };
 }
 
-const deleteNewsItem = async (req: UserRequest, res: Response) => {
+const deleteBlogPost = async (req: UserRequest, res: Response) => {
   const user = req.user;
 
   if (!user) {
@@ -28,31 +28,31 @@ const deleteNewsItem = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    const newsItem = await NewsItem.findById(req.params.id);
+    const blogPost = await BlogPost.findById(req.params.id);
 
-    if (newsItem.profile.toString() !== profile.id) {
+    if (blogPost.profile.toString() !== profile.id) {
       return new NotAuthorizedError();
     }
 
-    await newsItem.remove();
+    await blogPost.remove();
 
-    // Publish a NewsItemDeleted event
-    new NewsItemDeletedPublisher(natsWrapper.client).publish({
-      id: newsItem.id,
-      title: null,
-      text: null,
-      image: null,
-      version: newsItem.version,
-      profile_id: profile.id,
-    });
+    // // Publish a BlogPostDeleted event
+    // new BlogPostDeletedPublisher(natsWrapper.client).publish({
+    //   id: blogPost.id,
+    //   title: null,
+    //   text: null,
+    //   image: null,
+    //   version: blogPost.version,
+    //   profile_id: profile.id,
+    // });
 
     return res.status(201).json({
       status: 'success',
       data: {
-        newsItem,
+        blogPost,
       },
     });
   }
 };
 
-export { deleteNewsItem };
+export { deleteBlogPost };

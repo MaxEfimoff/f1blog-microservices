@@ -22,6 +22,10 @@ spec:
             backend:
               serviceName: newsitem-srv
               servicePort: 3000
+          - path: /api/v1/blogpost/?(.*)
+            backend:
+              serviceName: blogpost-srv
+              servicePort: 3000
           - path: /?(.*)
             backend:
               serviceName: client-srv
