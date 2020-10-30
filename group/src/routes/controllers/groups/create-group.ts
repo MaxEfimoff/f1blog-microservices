@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
-import { BlogPost } from '../../../db/models/Blogpost';
-import { BlogPostCreatedPublisher } from '../../../events/publishers/blogpost-created-publisher';
+import { Group } from '../../../db/models/Group';
+// import { NewsItemCreatedPublisher } from '../../../events/publishers/newsitem-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 
 interface UserRequest extends Request {
@@ -15,8 +15,8 @@ interface UserRequest extends Request {
   };
 }
 
-const createBlogPost = async (req: UserRequest, res: Response) => {
-  let { title, text, image, group } = req.body;
+const createGroup = async (req: UserRequest, res: Response) => {
+  let { title } = req.body;
 
   const user = req.user;
 
@@ -29,38 +29,36 @@ const createBlogPost = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    const newBlogPost = BlogPost.build({
+    const newGroup = Group.build({
       title,
-      text,
-      image,
       profile: profile,
       createdAt: Date.now(),
     });
 
-    console.log(newBlogPost);
+    console.log(newGroup);
 
-    // Save New BlogPost to DB
-    await newBlogPost.save((err) => {
+    // Save New Group to DB
+    await newGroup.save((err) => {
       if (err) throw new BadRequestError('Could not save news item to DB');
     });
 
-    // Publish a BlogPostCreated event
-    new BlogPostCreatedPublisher(natsWrapper.client).publish({
-      id: newBlogPost.id,
-      title: newBlogPost.title,
-      text: newBlogPost.text,
-      image: newBlogPost.image,
-      version: newBlogPost.version,
-      profile_id: profile.id,
-    });
+    // // Publish a GroupCreated event
+    // new GroupCreatedPublisher(natsWrapper.client).publish({
+    //   id: newGroup.id,
+    //   title: newGroup.title,
+    //   text: newGroup.text,
+    //   image: newGroup.image,
+    //   version: newGroup.version,
+    //   profile_id: profile.id,
+    // });
 
     return res.status(201).json({
       status: 'success',
       data: {
-        newBlogPost,
+        newGroup,
       },
     });
   }
 };
 
-export { createBlogPost };
+export { createGroup };

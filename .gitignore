@@ -7,3 +7,5 @@ newsitem/src/config
 newsitem/node_modules
 blogpost/src/config
 blogpost/node_modules
+group/src/config
+group/node_modules

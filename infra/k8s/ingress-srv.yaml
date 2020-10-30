@@ -26,6 +26,10 @@ spec:
             backend:
               serviceName: blogpost-srv
               servicePort: 3000
+          - path: /api/v1/group/?(.*)
+            backend:
+              serviceName: group-srv
+              servicePort: 3000
           - path: /?(.*)
             backend:
               serviceName: client-srv

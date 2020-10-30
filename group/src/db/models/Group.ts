@@ -8,7 +8,7 @@ import { BlogPostDoc } from './Blogpost';
 interface GroupAttrs {
   profile: ProfileDoc;
   title: string;
-  version: number;
+  createdAt: number;
 }
 
 // An interface that describes the properties

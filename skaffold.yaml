@@ -40,6 +40,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: maxefi/group
+      context: group
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
     - image: maxefi/client
       context: client
       docker:
