@@ -1,6 +1,6 @@
 import express from 'express';
 import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
-import { test } from '../../controllers/newsitems/test';
+import { test } from '../../controllers/newsitems/demo-test';
 import { newsItemValidation } from '../../../validation/create-newsitem';
 import { newsItemThreadValidation } from '../../../validation/create-newsitem-thread';
 import { createNewsItem } from '../../controllers/newsitems/create-newsitem';

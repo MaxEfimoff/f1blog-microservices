@@ -1,14 +1,14 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { app } from '../app';
-import { users } from '../routes/api/users/users';
 
 let mongo: any;
+let profileId: string;
 
 jest.mock('../nats-wrapper');
 
 beforeAll(async () => {
-  process.env.JWT_KEY = 'yjdtjd';
+  process.env.JWT_KEY = 'secret';
 
   mongo = new MongoMemoryServer();
   const mongoUri = await mongo.getUri();
@@ -17,27 +17,41 @@ beforeAll(async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
+  const collections = await mongoose.connection.db.collections();
+
+  for (let collection of collections) {
+    await collection.drop();
+  }
 });
 
 beforeEach(async () => {
+  jest.clearAllMocks();
   const collections = await mongoose.connection.db.collections();
 
   for (let collection of collections) {
     await collection.deleteMany({});
+    await collection.drop();
   }
 
   const db = await mongoose.connection.db;
 
-  await db.dropCollection('users');
-  const usersColl = await db.createCollection('users');
+  const profilesColl = await db.createCollection('profiles');
 
-  await usersColl.insertOne({
-    active: true,
-    role: 'guest',
-    name: 'Max',
-    email: 'emv3@ya.ru',
-    password: '$2b$10$8zemadXxMLUwpf38PyZGDOMeeYr2d1qv5hEduzRx4Ex12xyYIUzmy',
-  });
+  await profilesColl.insertOne(
+    {
+      user_id: '5f92bdf7588d530018595a09',
+      handle: 'Max4',
+    },
+    (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        profileId = res.ops[0]._id;
+        console.log('Created profile: ', profileId);
+      }
+    }
+  );
 });
 
 afterAll(async () => {

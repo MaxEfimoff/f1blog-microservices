@@ -2,7 +2,7 @@ import express from 'express';
 import { profileValidation } from '../../../validation/create-profile';
 import { createProfile } from '../../controllers/profiles/create-profile';
 import { all } from '../../controllers/profiles/all';
-import { test } from '../../controllers/profiles/test';
+import { test } from '../../controllers/profiles/test-check';
 import { current } from '../../controllers/profiles/current';
 import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
 
