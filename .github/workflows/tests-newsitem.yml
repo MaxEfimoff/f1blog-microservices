@@ -1,7 +1,9 @@
 name: tests-newsitem
 
 on:
-  pull_request
+  pull_request:
+    paths:
+      - 'newsitem/**'
 
 jobs:
   build:
