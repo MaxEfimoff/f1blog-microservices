@@ -40,10 +40,7 @@ it('returns 400 on non-existing login/password', async () => {
     .post('/api/v1/users/login')
     .send({ password: '123456' })
     .expect(400);
-  await request(app)
-    .post('/api/v1/users/login')
-    .send({ password: '123456' })
-    .expect(400);
+  await request(app).post('/api/v1/users/login').send({}).expect(400);
 });
 
 it('returns 404 for not authenticated user', async () => {
