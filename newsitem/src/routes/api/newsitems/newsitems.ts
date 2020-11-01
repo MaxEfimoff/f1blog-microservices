@@ -59,8 +59,5 @@ router.delete(
   requireAuth,
   deleteNewsItemThread
 );
-// router.get('/current', currentUser, requireAuth, current);
-// router.post('/login', loginValidation, validateRequest, login);
-// router.patch('/:hash/activate', activate);
 
 export { router as newsitems };
