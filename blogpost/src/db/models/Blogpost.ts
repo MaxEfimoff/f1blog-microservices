@@ -11,30 +11,6 @@ interface BlogPostAttrs {
   text: string;
   image?: string;
   group?: GroupDoc;
-  // likes?: ProfileDoc[];
-  // dislikes?: ProfileDoc[];
-  // threads?: [
-  //   {
-  //     profile: ProfileDoc;
-  //     text: string;
-  //     likes?: ProfileDoc[];
-  //     dislikes?: ProfileDoc[];
-  //     rating?: number;
-  //     comments?: [
-  //       {
-  //         profile: ProfileDoc;
-  //         text: string;
-  //         likes?: ProfileDoc[];
-  //         dislikes?: ProfileDoc[];
-  //         rating?: number;
-  //         createdAt: number;
-  //         updatedAt?: number;
-  //       }
-  //     ];
-  //   }
-  // ];
-  // tags?: ProfileDoc[];
-  // updatedAt?: number;
   id?: string;
   version?: number;
   createdAt?: number;
@@ -241,7 +217,14 @@ BlogPostSchema.statics.findByEvent = (event: {
 
 // Add build method to a BlogPostSchema
 BlogPostSchema.statics.build = (attrs: BlogPostAttrs) => {
-  return new BlogPost(attrs);
+  return new BlogPost({
+    _id: attrs.id,
+    title: attrs.title,
+    text: attrs.text,
+    image: attrs.image,
+    group: attrs.group,
+    profile: attrs.profile,
+  });
 };
 
 const BlogPost = mongoose.model<BlogPostDoc, BlogPostModel>(

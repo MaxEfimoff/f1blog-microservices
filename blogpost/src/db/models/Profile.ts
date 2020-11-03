@@ -25,6 +25,7 @@ interface ProfileModel extends mongoose.Model<ProfileDoc> {
 export interface ProfileDoc extends mongoose.Document {
   handle: string;
   user_id: string;
+  version: number;
 }
 
 const ProfileSchema = new mongoose.Schema(

@@ -48,11 +48,9 @@ const createGroupBlogPost = async (req: UserRequest, res: Response) => {
       if (err) throw new BadRequestError('Could not save news item to DB');
     });
 
-    await group.save((err) => {
-      if (err) console.log(err);
+    group.posts.unshift(newBlogPost.id);
 
-      group.posts.unshift(newBlogPost.id);
-    });
+    await group.save();
 
     // Publish a BlogPostCreated event
     new BlogPostCreatedPublisher(natsWrapper.client).publish({
