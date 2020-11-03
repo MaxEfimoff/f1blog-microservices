@@ -3,7 +3,7 @@ import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
 import { Group } from '../../../db/models/Group';
-// import { NewsItemCreatedPublisher } from '../../../events/publishers/newsitem-created-publisher';
+import { GroupCreatedPublisher } from '../../../events/publishers/group-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 
 interface UserRequest extends Request {
@@ -29,28 +29,25 @@ const createGroup = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
+    console.log(profile);
     const newGroup = Group.build({
       title,
       profile: profile,
       createdAt: Date.now(),
     });
 
-    console.log(newGroup);
-
     // Save New Group to DB
     await newGroup.save((err) => {
       if (err) throw new BadRequestError('Could not save news item to DB');
     });
 
-    // // Publish a GroupCreated event
-    // new GroupCreatedPublisher(natsWrapper.client).publish({
-    //   id: newGroup.id,
-    //   title: newGroup.title,
-    //   text: newGroup.text,
-    //   image: newGroup.image,
-    //   version: newGroup.version,
-    //   profile_id: profile.id,
-    // });
+    // Publish a GroupCreated event
+    new GroupCreatedPublisher(natsWrapper.client).publish({
+      id: newGroup.id,
+      title: newGroup.title,
+      version: newGroup.version,
+      profile_id: profile.id,
+    });
 
     return res.status(201).json({
       status: 'success',

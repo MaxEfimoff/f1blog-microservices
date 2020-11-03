@@ -10,6 +10,7 @@ interface BlogPostAttrs {
   title: string;
   text: string;
   image?: string;
+  group?: GroupDoc;
   // likes?: ProfileDoc[];
   // dislikes?: ProfileDoc[];
   // threads?: [
