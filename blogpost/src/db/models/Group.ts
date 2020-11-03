@@ -9,6 +9,7 @@ interface GroupAttrs {
   profile: ProfileDoc;
   title: string;
   version: number;
+  id: string;
 }
 
 // An interface that describes the properties
@@ -101,7 +102,11 @@ GroupSchema.statics.findByEvent = (event: { id: string; version: number }) => {
 
 // Add build method to a GroupSchema
 GroupSchema.statics.build = (attrs: GroupAttrs) => {
-  return new Group({ attrs });
+  return new Group({
+    _id: attrs.id,
+    profile: attrs.profile,
+    title: attrs.title,
+  });
 };
 
 const Group = mongoose.model<GroupDoc, GroupModel>('Group', GroupSchema);

@@ -10,7 +10,7 @@ interface BlogPostAttrs {
   title: string;
   text: string;
   image?: string;
-  group?: string;
+  group?: GroupDoc;
   // likes?: ProfileDoc[];
   // dislikes?: ProfileDoc[];
   // threads?: [
@@ -35,7 +35,9 @@ interface BlogPostAttrs {
   // ];
   // tags?: ProfileDoc[];
   // updatedAt?: number;
-  createdAt: number;
+  id?: string;
+  version?: number;
+  createdAt?: number;
 }
 
 // An interface that describes the properties

@@ -101,7 +101,7 @@ GroupSchema.statics.findByEvent = (event: { id: string; version: number }) => {
 
 // Add build method to a GroupSchema
 GroupSchema.statics.build = (attrs: GroupAttrs) => {
-  return new Group({ attrs });
+  return new Group(attrs);
 };
 
 const Group = mongoose.model<GroupDoc, GroupModel>('Group', GroupSchema);

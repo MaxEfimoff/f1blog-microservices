@@ -3,6 +3,7 @@ import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
 import { BlogPost } from '../../../db/models/Blogpost';
+import { Group } from '../../../db/models/Group';
 import { BlogPostCreatedPublisher } from '../../../events/publishers/blogpost-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 
@@ -15,8 +16,8 @@ interface UserRequest extends Request {
   };
 }
 
-const createBlogPost = async (req: UserRequest, res: Response) => {
-  let { title, text, image, group } = req.body;
+const createGroupBlogPost = async (req: UserRequest, res: Response) => {
+  let { title, text, image } = req.body;
 
   const user = req.user;
 
@@ -29,11 +30,14 @@ const createBlogPost = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
+    const group = await Group.findById(req.params.id);
+
     const newBlogPost = BlogPost.build({
       title,
       text,
       image,
-      profile,
+      profile: profile,
+      group,
       createdAt: Date.now(),
     });
 
@@ -44,16 +48,22 @@ const createBlogPost = async (req: UserRequest, res: Response) => {
       if (err) throw new BadRequestError('Could not save news item to DB');
     });
 
-    // // Publish a BlogPostCreated event
-    // new BlogPostCreatedPublisher(natsWrapper.client).publish({
-    //   id: newBlogPost.id,
-    //   title: newBlogPost.title,
-    //   text: newBlogPost.text,
-    //   image: newBlogPost.image,
-    //   version: newBlogPost.version,
-    //   profile_id: profile.id,
-    //   group_id: group,
-    // });
+    await group.save((err) => {
+      if (err) console.log(err);
+
+      group.posts.unshift(newBlogPost.id);
+    });
+
+    // Publish a BlogPostCreated event
+    new BlogPostCreatedPublisher(natsWrapper.client).publish({
+      id: newBlogPost.id,
+      title: newBlogPost.title,
+      text: newBlogPost.text,
+      image: newBlogPost.image,
+      version: newBlogPost.version,
+      group_id: group.id,
+      profile_id: profile.id,
+    });
 
     return res.status(201).json({
       status: 'success',
@@ -64,4 +74,4 @@ const createBlogPost = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { createBlogPost };
+export { createGroupBlogPost };
