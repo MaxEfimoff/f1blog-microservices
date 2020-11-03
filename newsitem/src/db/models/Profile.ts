@@ -23,8 +23,9 @@ interface ProfileModel extends mongoose.Model<ProfileDoc> {
 // An interface that describes the properties
 // that a single Profile Document has
 export interface ProfileDoc extends mongoose.Document {
-  handle: string;
   user_id: string;
+  handle: string;
+  version: number;
 }
 
 const ProfileSchema = new mongoose.Schema(

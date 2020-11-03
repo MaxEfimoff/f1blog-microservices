@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { app } from './app';
 import { DatabaseConnectionError } from '@f1blog/common';
 import { ProfileCreatedListener } from './events/listeners/profile-created-listener';
+import { ProfileUpdatedListener } from './events/listeners/profile-updated-listener';
+import { ProfileDeletedListener } from './events/listeners/profile-deleted-listener';
 import { natsWrapper } from './nats-wrapper';
 
 // DB config
@@ -24,6 +26,8 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     new ProfileCreatedListener(natsWrapper.client).listen();
+    new ProfileUpdatedListener(natsWrapper.client).listen();
+    new ProfileDeletedListener(natsWrapper.client).listen();
 
     await mongoose.connect(db, {
       useFindAndModify: false,

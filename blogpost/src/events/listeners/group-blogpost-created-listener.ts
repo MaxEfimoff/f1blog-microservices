@@ -17,9 +17,6 @@ export class BlogPostCreatedListener extends Listener<BlogPostCreatedEvent> {
     const profile = await Profile.findOne({ _id: profile_id });
     const group = await Group.findOne({ _id: group_id });
 
-    console.log('GROUP', group);
-    console.log('PROFILE', profile);
-
     const blogPost = BlogPost.build({
       profile,
       title,
