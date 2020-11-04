@@ -15,7 +15,7 @@ interface UserRequest extends Request {
 
 const current = async (req: UserRequest, res: Response) => {
   const user = await User.findById(req.user.id);
-  console.log(user);
+
   if (!user) {
     throw new NotFoundError();
   }

@@ -15,8 +15,15 @@ interface UserRequest extends Request {
   };
 }
 
+interface Body {
+  handle: string;
+  avatar: string;
+  background: string;
+  status: string;
+}
+
 const createProfile = async (req: UserRequest, res: Response) => {
-  let { handle, avatar, background, status } = req.body;
+  let { handle, avatar, background, status }: Body = req.body;
 
   const user = await User.findById(req.user.id);
   if (!user) {
@@ -28,6 +35,8 @@ const createProfile = async (req: UserRequest, res: Response) => {
   if (profile) {
     throw new BadRequestError('Profile already exists');
   } else {
+    handle = handle.toLowerCase();
+
     const newProfile = Profile.build({
       user: user,
       handle,

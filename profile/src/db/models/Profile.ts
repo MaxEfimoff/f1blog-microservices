@@ -29,7 +29,7 @@ interface ProfileModel extends mongoose.Model<ProfileDoc> {
 interface ProfileDoc extends mongoose.Document {
   user: UserDoc;
   subscribers?: [];
-  subscribedProfiles?: [];
+  subscribedProfiles?: ProfileDoc[];
   subscribedBlogs?: [];
   joinedGroups?: [];
   handle: string;
