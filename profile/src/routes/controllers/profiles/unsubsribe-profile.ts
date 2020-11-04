@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
-import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
+import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { User } from '../../../db/models/User';
 import { ProfileUpdatedPublisher } from '../../../events/publishers/profile-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
@@ -15,16 +15,7 @@ interface UserRequest extends Request {
   };
 }
 
-interface Body {
-  handle?: string;
-  avatar?: string;
-  background?: string;
-  status?: string;
-}
-
-const updateProfile = async (req: UserRequest, res: Response) => {
-  let { handle, avatar, background }: Body = req.body;
-
+const unsubscribeProfile = async (req: UserRequest, res: Response) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
@@ -36,12 +27,13 @@ const updateProfile = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    profile.handle = handle;
-    profile.avatar = avatar;
-    profile.background = background;
-    profile.date = Date.now();
+    const subscribedProfile = await Profile.findById(req.params.id);
 
-    console.log(profile);
+    const removeIndex = profile.subscribedProfiles.findIndex(
+      (x) => x === subscribedProfile.id
+    );
+
+    profile.subscribedProfiles.splice(removeIndex, 1);
 
     // Save New NewsItem to DB
     await profile.save((err) => {
@@ -67,4 +59,4 @@ const updateProfile = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { updateProfile };
+export { unsubscribeProfile };
