@@ -15,7 +15,7 @@ interface UserRequest extends Request {
   };
 }
 
-const likeNewsItem = async (req: UserRequest, res: Response) => {
+const unDislikeNewsItem = async (req: UserRequest, res: Response) => {
   const user = req.user;
 
   if (!user) {
@@ -30,16 +30,23 @@ const likeNewsItem = async (req: UserRequest, res: Response) => {
     const newsItem: NewsItemDoc = await NewsItem.findById(req.params.id);
 
     if (!newsItem) {
-      throw new BadRequestError('You should create news item first');
+      throw new BadRequestError('There is no news item with this id');
     }
 
     if (
-      newsItem.likes.filter((like) => like.toString() === profile.id).length > 0
+      newsItem.dislikes.filter((dislike) => dislike.toString() === profile.id)
+        .length === 0
     ) {
-      throw new BadRequestError('You already liked this news article');
+      throw new BadRequestError('You have not disliked this news article');
     }
 
-    newsItem.likes.unshift(profile);
+    // Get the remove index
+    const removeIndex = newsItem.dislikes
+      .map((item) => item._id.toString())
+      .indexOf(profile.id);
+
+    // Splice out of array
+    newsItem.dislikes.splice(removeIndex, 1);
 
     // Save New NewsItem to DB
     await newsItem.save((err) => {
@@ -54,7 +61,7 @@ const likeNewsItem = async (req: UserRequest, res: Response) => {
       image: newsItem.image,
       version: newsItem.version,
       profile_id: profile.id,
-      likes: newsItem.likes,
+      dislikes: newsItem.dislikes,
     });
 
     return res.status(201).json({
@@ -66,4 +73,4 @@ const likeNewsItem = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { likeNewsItem };
+export { unDislikeNewsItem };

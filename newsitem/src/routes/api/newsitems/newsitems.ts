@@ -13,7 +13,9 @@ import { fetchMyProfileIdNewsItems } from '../../controllers/newsitems/fetch-pro
 import { deleteNewsItem } from '../../controllers/newsitems/delete-newsitem';
 import { deleteNewsItemThread } from '../../controllers/newsitems/delete-newsitem-thread';
 import { likeNewsItem } from '../../controllers/newsitems/like-newsitem';
+import { unLikeNewsItem } from '../../controllers/newsitems/un-like-newsitem';
 import { dislikeNewsItem } from '../../controllers/newsitems/dislike-newsitem';
+import { unDislikeNewsItem } from '../../controllers/newsitems/un-dislike-newsitem';
 
 const router = express.Router();
 
@@ -41,7 +43,9 @@ router.post(
   createNewsItemThread
 );
 router.post('/like/:id', currentUser, requireAuth, likeNewsItem);
+router.post('/unlike/:id', currentUser, requireAuth, unLikeNewsItem);
 router.post('/dislike/:id', currentUser, requireAuth, dislikeNewsItem);
+router.post('/undislike/:id', currentUser, requireAuth, unDislikeNewsItem);
 
 router.patch(
   '/:id',
