@@ -33,10 +33,6 @@ const dislikeNewsItem = async (req: UserRequest, res: Response) => {
       throw new BadRequestError('You should create news item first');
     }
 
-    if (newsItem.profile.toString() !== profile._id.toString()) {
-      throw new BadRequestError('You can not update this news item');
-    }
-
     if (
       newsItem.dislikes.filter((dislike) => dislike.toString() === profile.id)
         .length > 0

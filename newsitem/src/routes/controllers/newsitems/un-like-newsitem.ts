@@ -15,7 +15,7 @@ interface UserRequest extends Request {
   };
 }
 
-const likeNewsItem = async (req: UserRequest, res: Response) => {
+const unLikeNewsItem = async (req: UserRequest, res: Response) => {
   const user = req.user;
 
   if (!user) {
@@ -30,16 +30,23 @@ const likeNewsItem = async (req: UserRequest, res: Response) => {
     const newsItem: NewsItemDoc = await NewsItem.findById(req.params.id);
 
     if (!newsItem) {
-      throw new BadRequestError('You should create news item first');
+      throw new BadRequestError('There is no news item with this id');
     }
 
     if (
-      newsItem.likes.filter((like) => like.toString() === profile.id).length > 0
+      newsItem.likes.filter((like) => like.toString() === profile.id).length ===
+      0
     ) {
-      throw new BadRequestError('You already liked this news article');
+      throw new BadRequestError('You have not liked this news article');
     }
 
-    newsItem.likes.unshift(profile);
+    // Get the remove index
+    const removeIndex = newsItem.likes
+      .map((item) => item._id.toString())
+      .indexOf(profile.id);
+
+    // Splice out of array
+    newsItem.likes.splice(removeIndex, 1);
 
     // Save New NewsItem to DB
     await newsItem.save((err) => {
@@ -66,4 +73,4 @@ const likeNewsItem = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { likeNewsItem };
+export { unLikeNewsItem };
