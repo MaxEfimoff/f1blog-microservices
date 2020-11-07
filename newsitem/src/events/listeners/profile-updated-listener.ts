@@ -10,16 +10,13 @@ export class ProfileUpdatedListener extends Listener<ProfileUpdatedEvent> {
   async onMessage(data: ProfileUpdatedEvent['data'], msg: Message) {
     console.log('Newsitem:Profile updated event data!', data);
 
-    const { id, handle, version } = data;
+    const { id, handle, version, subscribedProfiles } = data;
 
     const profile = await Profile.findById({ _id: id });
 
-    console.log(profile);
-
     profile.handle = handle;
     profile.version = version;
-    // profile.avatar = avatar;
-    // profile.background = background;
+    profile.subscribedProfiles.unshift(subscribedProfiles);
 
     await profile.save();
 

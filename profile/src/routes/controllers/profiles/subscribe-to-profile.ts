@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
-import { Profile } from '../../../db/models/Profile';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
+import { Profile } from '../../../db/models/Profile';
 import { User } from '../../../db/models/User';
 import { ProfileUpdatedPublisher } from '../../../events/publishers/profile-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
@@ -15,7 +15,7 @@ interface UserRequest extends Request {
   };
 }
 
-const subscribeProfile = async (req: UserRequest, res: Response) => {
+const subscribeToProfile = async (req: UserRequest, res: Response) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
@@ -24,34 +24,33 @@ const subscribeProfile = async (req: UserRequest, res: Response) => {
 
   const profile = await Profile.findOne({ user });
 
+  const subscribedProfile = await Profile.findById(req.params.id);
+
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    const anotherUserProfile = await Profile.findById(req.params.id);
-
     if (
       profile.subscribedProfiles.filter(
-        (newProfile) => newProfile == anotherUserProfile.id
+        (subscrProfile) => subscrProfile.toString() === subscribedProfile.id
       ).length > 0
     ) {
-      throw new BadRequestError('You already subscribed to this profile');
+      throw new BadRequestError('You have already subscribed to this user');
     }
 
-    profile.subscribedProfiles.unshift(anotherUserProfile);
+    profile.subscribedProfiles.unshift(subscribedProfile);
 
     // Save New NewsItem to DB
     await profile.save((err) => {
       if (err) throw new BadRequestError('Could not save profile to DB');
     });
 
-    // Publish a NewsItemUpdatyed event
+    // Publish a Profile Updated event
     new ProfileUpdatedPublisher(natsWrapper.client).publish({
       id: profile.id,
       handle: profile.handle,
-      avatar: profile.avatar,
-      background: profile.background,
       version: profile.version,
       user_id: req.user.id,
+      subscribedProfiles: subscribedProfile._id,
     });
 
     return res.status(201).json({
@@ -63,4 +62,4 @@ const subscribeProfile = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { subscribeProfile };
+export { subscribeToProfile };

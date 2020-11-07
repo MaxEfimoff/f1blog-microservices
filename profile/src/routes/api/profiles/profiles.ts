@@ -1,17 +1,17 @@
 import express from 'express';
+import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
 import { profileValidation } from '../../../validation/create-profile';
 import { updateProfileValidation } from '../../../validation/update-profile';
 import { createProfile } from '../../controllers/profiles/create-profile';
 import { updateProfile } from '../../controllers/profiles/update-profile';
 import { deleteProfile } from '../../controllers/profiles/delete-profile';
-import { subscribeProfile } from '../../controllers/profiles/subsribe-profile';
 import { unsubscribeProfile } from '../../controllers/profiles/unsubsribe-profile';
 import { all } from '../../controllers/profiles/all';
 import { getProfileByHandle } from '../../controllers/profiles/get-by-handle';
 import { getProfileById } from '../../controllers/profiles/get-by-id';
 import { test } from '../../controllers/profiles/test-check';
 import { current } from '../../controllers/profiles/current';
-import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
+import { subscribeToProfile } from '../../controllers/profiles/subscribe-to-profile';
 
 const router = express.Router();
 
@@ -31,6 +31,8 @@ router.post(
   createProfile
 );
 
+router.post('/:id', currentUser, requireAuth, subscribeToProfile);
+
 router.patch(
   '/',
   currentUser,
@@ -39,7 +41,6 @@ router.patch(
   validateRequest,
   updateProfile
 );
-router.patch('/subscribe/:id', currentUser, requireAuth, subscribeProfile);
 router.patch('/unsubscribe/:id', currentUser, requireAuth, unsubscribeProfile);
 
 router.delete('/', currentUser, requireAuth, deleteProfile);

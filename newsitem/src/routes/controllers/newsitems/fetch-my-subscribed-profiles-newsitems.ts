@@ -13,7 +13,10 @@ interface UserRequest extends Request {
   };
 }
 
-const fetchMyNewsItems = async (req: UserRequest, res: Response) => {
+const fetchMySubscribedProfilesNewsItems = async (
+  req: UserRequest,
+  res: Response
+) => {
   const user = req.user;
 
   if (!user) {
@@ -21,6 +24,8 @@ const fetchMyNewsItems = async (req: UserRequest, res: Response) => {
   }
 
   const profile = await Profile.findOne({ user_id: req.user.id });
+
+  console.log(profile.subscribedProfiles);
 
   if (!profile) {
     throw new BadRequestError('You should create profile first');
@@ -45,4 +50,4 @@ const fetchMyNewsItems = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { fetchMyNewsItems };
+export { fetchMySubscribedProfilesNewsItems };
