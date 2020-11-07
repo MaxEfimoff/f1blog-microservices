@@ -8,7 +8,7 @@ interface ProfileAttrs {
   handle: string;
   id: string;
   version: number;
-  subscribedProfiles?: [];
+  subscribedProfiles?: any[];
 }
 
 // An interface that describes the properties
@@ -27,7 +27,12 @@ export interface ProfileDoc extends mongoose.Document {
   user_id: string;
   handle: string;
   version: number;
-  subscribedProfiles?: ProfileDoc[];
+  subscribedProfiles?: any[];
+  subscribers?: any[];
+  joinedGroups?: any[];
+  karma?: number;
+  date?: number;
+  id?: string;
 }
 
 const ProfileSchema = new mongoose.Schema(

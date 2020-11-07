@@ -43,12 +43,12 @@ const updateProfile = async (req: UserRequest, res: Response) => {
 
     console.log(profile);
 
-    // Save New NewsItem to DB
+    // Save New Profile to DB
     await profile.save((err) => {
       if (err) throw new BadRequestError('Could not save profile to DB');
     });
 
-    // Publish a NewsItemUpdatyed event
+    // Publish a Profile Updated event
     new ProfileUpdatedPublisher(natsWrapper.client).publish({
       id: profile.id,
       handle: profile.handle,

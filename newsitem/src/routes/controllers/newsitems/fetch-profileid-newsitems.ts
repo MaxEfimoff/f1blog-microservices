@@ -13,7 +13,7 @@ interface UserRequest extends Request {
   };
 }
 
-const fetchMyProfileIdNewsItems = async (req: UserRequest, res: Response) => {
+const fetchProfileIdNewsItems = async (req: UserRequest, res: Response) => {
   const profile = await Profile.findOne({ _id: req.params.id });
 
   if (!profile) {
@@ -37,4 +37,4 @@ const fetchMyProfileIdNewsItems = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { fetchMyProfileIdNewsItems };
+export { fetchProfileIdNewsItems };
