@@ -10,8 +10,8 @@ promisifyAll(Multi.prototype);
 
 declare module 'redis' {
   export interface RedisClient extends NodeJS.EventEmitter {
-    setAsync(key: string, value: string): Promise<void>;
-    getAsync(key: string): Promise<string>;
+    hsetAsync(key: string, value: string): Promise<void>;
+    hgetAsync(hashKey: string, key: string): Promise<string>;
   }
 }
 
@@ -24,16 +24,19 @@ declare module 'mongoose' {
     mongooseCollection: {
       name: any;
     };
-    cache(): DocumentQuery<T[], Document> & QueryHelpers;
+    cache({}): DocumentQuery<T[], Document> & QueryHelpers;
     useCache: boolean;
-    // hashKey: string;
+    hashKey: string;
   }
 }
 
-mongoose.Query.prototype.cache = function () {
-  this.useCache = true;
-  // this.hashKey = options.key;
+interface Options {
+  key?: string;
+}
 
+mongoose.Query.prototype.cache = function (options: Options = {}) {
+  this.useCache = true;
+  this.hashKey = options.key;
   return this;
 };
 
@@ -50,7 +53,7 @@ mongoose.Query.prototype.exec = async function (...args: any) {
   );
 
   // See if we have a value for 'key' in redis
-  const cashedValue = await client.getAsync(key);
+  const cashedValue = await client.hgetAsync(this.hashKey || '', key);
 
   if (cashedValue) {
     const doc = JSON.parse(cashedValue);
@@ -62,7 +65,11 @@ mongoose.Query.prototype.exec = async function (...args: any) {
 
   const result = await exec.apply(this, args);
 
-  client.set(key, JSON.stringify(result), 'EX', 10);
+  client.hset(this.hashKey, key, JSON.stringify(result));
 
   return result;
 };
+
+export function clearHash(hashKey: string) {
+  client.del(hashKey);
+}

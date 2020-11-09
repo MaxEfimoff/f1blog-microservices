@@ -30,7 +30,7 @@ const fetchMyNewsItems = async (req: UserRequest, res: Response) => {
       .sort({
         createdAt: -1,
       })
-      .cache();
+      .cache({ key: user.id.toString() });
 
     if (!newsItems) {
       throw new NotFoundError();

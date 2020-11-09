@@ -17,6 +17,7 @@ import { unLikeNewsItem } from '../../controllers/newsitems/un-like-newsitem';
 import { dislikeNewsItem } from '../../controllers/newsitems/dislike-newsitem';
 import { unDislikeNewsItem } from '../../controllers/newsitems/un-dislike-newsitem';
 import { fetchMySubscribedProfilesNewsItems } from '../../controllers/newsitems/fetch-my-subscribed-profiles-newsitems';
+import { deleteHash } from '../../../middlewares/clear-hash';
 
 const router = express.Router();
 
@@ -39,6 +40,7 @@ router.post(
   requireAuth,
   newsItemValidation,
   validateRequest,
+  deleteHash,
   createNewsItem
 );
 router.post(
@@ -47,12 +49,31 @@ router.post(
   requireAuth,
   newsItemThreadValidation,
   validateRequest,
+  deleteHash,
   createNewsItemThread
 );
-router.post('/like/:id', currentUser, requireAuth, likeNewsItem);
-router.post('/unlike/:id', currentUser, requireAuth, unLikeNewsItem);
-router.post('/dislike/:id', currentUser, requireAuth, dislikeNewsItem);
-router.post('/undislike/:id', currentUser, requireAuth, unDislikeNewsItem);
+router.post('/like/:id', currentUser, requireAuth, deleteHash, likeNewsItem);
+router.post(
+  '/unlike/:id',
+  currentUser,
+  requireAuth,
+  deleteHash,
+  unLikeNewsItem
+);
+router.post(
+  '/dislike/:id',
+  currentUser,
+  requireAuth,
+  deleteHash,
+  dislikeNewsItem
+);
+router.post(
+  '/undislike/:id',
+  currentUser,
+  requireAuth,
+  deleteHash,
+  unDislikeNewsItem
+);
 
 router.patch(
   '/:id',
@@ -60,6 +81,7 @@ router.patch(
   requireAuth,
   newsItemValidation,
   validateRequest,
+  deleteHash,
   updateNewsItem
 );
 
@@ -68,6 +90,7 @@ router.delete(
   '/thread/:newsitem_id/:thread_id',
   currentUser,
   requireAuth,
+  deleteHash,
   deleteNewsItemThread
 );
 
