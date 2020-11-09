@@ -26,7 +26,7 @@ declare module 'mongoose' {
     };
     cache(): DocumentQuery<T[], Document> & QueryHelpers;
     useCache: boolean;
-    hashKey: string;
+    // hashKey: string;
   }
 }
 
