@@ -29,24 +29,48 @@ const unsubscribeProfile = async (req: UserRequest, res: Response) => {
   } else {
     const subscribedProfile = await Profile.findById(req.params.id);
 
+    // Remove subscribed profile from subscribedProfiles array
     const removeIndex = profile.subscribedProfiles.findIndex(
       (x) => x === subscribedProfile.id
     );
 
     profile.subscribedProfiles.splice(removeIndex, 1);
 
-    // Save New NewsItem to DB
+    // Remove profile from subscribed profile's subscribers array
+    const removeSubscribersIndex = subscribedProfile.subscribers.findIndex(
+      (x) => x === profile.id
+    );
+
+    subscribedProfile.subscribers.splice(removeSubscribersIndex, 1);
+
+    // Save profile to DB
     await profile.save((err) => {
       if (err) throw new BadRequestError('Could not save profile to DB');
     });
 
-    // Publish a NewsItemUpdatyed event
+    // Save profile to DB
+    await subscribedProfile.save((err) => {
+      if (err)
+        throw new BadRequestError('Could not save subscribed profile to DB');
+    });
+
+    // Publish a ProfileUpdated event
     new ProfileUpdatedPublisher(natsWrapper.client).publish({
       id: profile.id,
       handle: profile.handle,
       avatar: profile.avatar,
       background: profile.background,
       version: profile.version,
+      user_id: req.user.id,
+    });
+
+    // Publish a ProfileUpdated event
+    new ProfileUpdatedPublisher(natsWrapper.client).publish({
+      id: subscribedProfile.id,
+      handle: subscribedProfile.handle,
+      avatar: subscribedProfile.avatar,
+      background: subscribedProfile.background,
+      version: subscribedProfile.version,
       user_id: req.user.id,
     });
 

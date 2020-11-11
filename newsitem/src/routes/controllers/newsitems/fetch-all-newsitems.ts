@@ -11,12 +11,14 @@ interface UserRequest extends Request {
     exp: number;
   };
 }
+//
+//
 
 const fetchAllNewsItems = async (req: UserRequest, res: Response) => {
-  const newsItems = await NewsItem.find()
+  const newsItems = await NewsItem.find({})
     .limit(10)
     .sort({ createdAt: -1 })
-    .cache();
+    .cache({ key: 'all' });
 
   if (!newsItems) {
     throw new NotFoundError();

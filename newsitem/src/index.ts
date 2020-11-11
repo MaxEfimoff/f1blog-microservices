@@ -9,7 +9,6 @@ import { natsWrapper } from './nats-wrapper';
 import { request } from 'express';
 
 require('./services/cache');
-// import { createClient } from 'redis';
 
 // DB config
 const db = require('./config/keys').mongoURI_newsitem;
@@ -37,7 +36,6 @@ const start = async () => {
     new ProfileCreatedListener(natsWrapper.client).listen();
     new ProfileUpdatedListener(natsWrapper.client).listen();
     new ProfileDeletedListener(natsWrapper.client).listen();
-    // new FetchAllNewsItemsListener(natsWrapper.client).listen();
 
     await mongoose.connect(db, {
       useFindAndModify: false,
@@ -47,20 +45,6 @@ const start = async () => {
     });
 
     console.log('Connected to DB');
-
-    // const client = await createClient(6379, process.env.REDIS_HOST);
-
-    // client.on('ready', () => {
-    //   console.log('Redis is ready.');
-    // });
-
-    // const cashedNews = client.get('allNewsItems', (err, data) => {
-    //   console.log(data);
-    // });
-
-    // if(cashedNews) {
-    //   return
-    // }
   } catch (err) {
     throw new DatabaseConnectionError();
   }

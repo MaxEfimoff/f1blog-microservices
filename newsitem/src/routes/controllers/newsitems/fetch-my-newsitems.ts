@@ -25,9 +25,12 @@ const fetchMyNewsItems = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    const newsItems = await NewsItem.find({ profile: profile }).limit(10).sort({
-      createdAt: -1,
-    });
+    const newsItems = await NewsItem.find({ profile: profile })
+      .limit(10)
+      .sort({
+        createdAt: -1,
+      })
+      .cache({ key: user.id.toString() });
 
     if (!newsItems) {
       throw new NotFoundError();

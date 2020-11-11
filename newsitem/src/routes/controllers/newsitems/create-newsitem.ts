@@ -5,6 +5,7 @@ import { Profile } from '../../../db/models/Profile';
 import { NewsItem } from '../../../db/models/NewsItem';
 import { NewsItemCreatedPublisher } from '../../../events/publishers/newsitem-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
+import { clearHash } from '../../../services/cache';
 
 interface UserRequest extends Request {
   user: {
@@ -53,6 +54,9 @@ const createNewsItem = async (req: UserRequest, res: Response) => {
       version: newNewsItem.version,
       profile_id: profile.id,
     });
+
+    // clearHash(profile.id.toString());
+    // clearHash('all');
 
     return res.status(201).json({
       status: 'success',

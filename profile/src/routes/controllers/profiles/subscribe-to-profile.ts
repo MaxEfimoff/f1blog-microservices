@@ -39,8 +39,15 @@ const subscribeToProfile = async (req: UserRequest, res: Response) => {
 
     profile.subscribedProfiles.unshift(subscribedProfile);
 
-    // Save New NewsItem to DB
+    subscribedProfile.subscribers.unshift(profile);
+
+    // Save New subscribed profile to DB
     await profile.save((err) => {
+      if (err) throw new BadRequestError('Could not save profile to DB');
+    });
+
+    // Save your profile to Subscribed profile to DB
+    await subscribedProfile.save((err) => {
       if (err) throw new BadRequestError('Could not save profile to DB');
     });
 
@@ -49,6 +56,15 @@ const subscribeToProfile = async (req: UserRequest, res: Response) => {
       id: profile.id,
       handle: profile.handle,
       version: profile.version,
+      user_id: req.user.id,
+      subscribedProfiles: subscribedProfile._id,
+    });
+
+    // Publish a Profile Updated event
+    new ProfileUpdatedPublisher(natsWrapper.client).publish({
+      id: subscribedProfile.id,
+      handle: subscribedProfile.handle,
+      version: subscribedProfile.version,
       user_id: req.user.id,
       subscribedProfiles: subscribedProfile._id,
     });

@@ -28,7 +28,7 @@ interface ProfileModel extends mongoose.Model<ProfileDoc> {
 // that a single Profile Document has
 interface ProfileDoc extends mongoose.Document {
   user: UserDoc;
-  subscribers?: [];
+  subscribers?: ProfileDoc[];
   subscribedProfiles?: ProfileDoc[];
   subscribedBlogs?: [];
   joinedGroups?: [];
@@ -48,7 +48,7 @@ const ProfileSchema = new mongoose.Schema(
       ref: 'User',
     },
     // The ones who are subscribed for me
-    subscibers: [
+    subscribers: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',
