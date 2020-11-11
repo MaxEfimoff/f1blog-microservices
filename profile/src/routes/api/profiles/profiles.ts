@@ -12,6 +12,8 @@ import { getProfileById } from '../../controllers/profiles/get-by-id';
 import { test } from '../../controllers/profiles/test-check';
 import { current } from '../../controllers/profiles/current';
 import { subscribeToProfile } from '../../controllers/profiles/subscribe-to-profile';
+import { fetchSubscribedProfiles } from '../../controllers/profiles/fetch-subscribed-profiles';
+import { fetchSubscribers } from '../../controllers/profiles/fetch-subscribers';
 
 const router = express.Router();
 
@@ -20,6 +22,14 @@ router.get('/test', currentUser, requireAuth, test);
 router.get('/all', currentUser, requireAuth, all);
 router.get('/current', currentUser, requireAuth, current);
 router.get('/handle/:handle', currentUser, requireAuth, getProfileByHandle);
+router.get(
+  '/subscribed-profiles',
+  currentUser,
+  requireAuth,
+  fetchSubscribedProfiles
+);
+router.get('/subscribers', currentUser, requireAuth, fetchSubscribers);
+// This route should be last!!!
 router.get('/:id', currentUser, requireAuth, getProfileById);
 
 router.post(
@@ -31,7 +41,7 @@ router.post(
   createProfile
 );
 
-router.post('/:id', currentUser, requireAuth, subscribeToProfile);
+router.post('/subscribe/:id', currentUser, requireAuth, subscribeToProfile);
 
 router.patch(
   '/',
