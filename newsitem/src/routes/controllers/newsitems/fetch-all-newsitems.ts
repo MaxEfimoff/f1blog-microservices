@@ -11,12 +11,10 @@ interface UserRequest extends Request {
     exp: number;
   };
 }
-//
-//
 
 const fetchAllNewsItems = async (req: UserRequest, res: Response) => {
   const newsItems = await NewsItem.find({})
-    .limit(10)
+    .limit(20)
     .sort({ createdAt: -1 })
     .cache({ key: 'all' });
 

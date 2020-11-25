@@ -61,6 +61,7 @@ export interface NewsItemDoc extends mongoose.Document {
       rating?: number;
       comments?: [
         {
+          _id?: string;
           profile: ProfileDoc;
           text: string;
           likes?: ProfileDoc[];
