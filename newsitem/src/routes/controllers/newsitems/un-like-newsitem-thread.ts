@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
-import { NewsItem } from '../../../db/models/NewsItem';
+import { NewsItem, NewsItemDoc } from '../../../db/models/NewsItem';
 import { NewsItemUpdatedPublisher } from '../../../events/publishers/newsitem-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 
@@ -15,7 +15,7 @@ interface UserRequest extends Request {
   };
 }
 
-const deleteNewsItemThread = async (req: UserRequest, res: Response) => {
+const unLikeNewsItemThread = async (req: UserRequest, res: Response) => {
   const user = req.user;
 
   if (!user) {
@@ -27,7 +27,9 @@ const deleteNewsItemThread = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    const newsItem = await NewsItem.findById(req.params.newsitem_id);
+    const newsItem: NewsItemDoc = await NewsItem.findById(
+      req.params.newsitem_id
+    );
 
     if (!newsItem) {
       throw new BadRequestError('You should create news item first');
@@ -41,30 +43,35 @@ const deleteNewsItemThread = async (req: UserRequest, res: Response) => {
       throw new BadRequestError('Thread does not exist');
     }
 
-    if (newsItemthread.profile.toString() !== profile.id) {
-      throw new BadRequestError('You can not delete this thread');
+    if (
+      newsItemthread.likes.filter((like) => like.toString() === profile.id)
+        .length === 0
+    ) {
+      throw new BadRequestError('You have not liked this thread');
     }
 
-    // Get remove index
-    const removeIndex = newsItem.threads
+    // Get the remove index
+    const removeIndex = newsItemthread.likes
       .map((item) => item._id.toString())
-      .indexOf(req.params.thread_id);
+      .indexOf(profile.id);
 
-    // Splice thread out of array
-    newsItem.threads.splice(removeIndex, 1);
-    newsItem.save();
+    // Splice out of array
+    newsItemthread.likes.splice(removeIndex, 1);
 
-    // Publish a NewsItemDeleted event
+    // Save New NewsItem to DB
+    await newsItem.save((err) => {
+      if (err) throw new BadRequestError('Could not save news item to DB');
+    });
+
+    // Publish a NewsItemUpdatyed event
     new NewsItemUpdatedPublisher(natsWrapper.client).publish({
       id: newsItem.id,
       title: newsItem.title,
       text: newsItem.text,
       image: newsItem.image,
+      version: newsItem.version,
       profile_id: profile.id,
       likes: newsItem.likes,
-      dislikes: newsItem.dislikes,
-      // threads: newsItem.threads,
-      version: newsItem.version,
     });
 
     return res.status(201).json({
@@ -76,4 +83,4 @@ const deleteNewsItemThread = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { deleteNewsItemThread };
+export { unLikeNewsItemThread };

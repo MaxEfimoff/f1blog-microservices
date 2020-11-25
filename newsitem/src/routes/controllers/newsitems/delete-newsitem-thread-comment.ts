@@ -15,7 +15,7 @@ interface UserRequest extends Request {
   };
 }
 
-const deleteNewsItemThread = async (req: UserRequest, res: Response) => {
+const deleteNewsItemThreadComment = async (req: UserRequest, res: Response) => {
   const user = req.user;
 
   if (!user) {
@@ -41,17 +41,25 @@ const deleteNewsItemThread = async (req: UserRequest, res: Response) => {
       throw new BadRequestError('Thread does not exist');
     }
 
-    if (newsItemthread.profile.toString() !== profile.id) {
-      throw new BadRequestError('You can not delete this thread');
+    const newsItemthreadComment = newsItemthread.comments.filter(
+      (comment) => comment._id.toString() === req.params.comment_id
+    )[0];
+
+    if (!newsItemthreadComment) {
+      throw new BadRequestError('Comment does not exist');
+    }
+
+    if (newsItemthreadComment.profile.toString() !== profile.id) {
+      throw new BadRequestError('You can not delete this comment');
     }
 
     // Get remove index
-    const removeIndex = newsItem.threads
+    const removeIndex = newsItemthread.comments
       .map((item) => item._id.toString())
-      .indexOf(req.params.thread_id);
+      .indexOf(req.params.comment_id);
 
     // Splice thread out of array
-    newsItem.threads.splice(removeIndex, 1);
+    newsItemthread.comments.splice(removeIndex, 1);
     newsItem.save();
 
     // Publish a NewsItemDeleted event
@@ -76,4 +84,4 @@ const deleteNewsItemThread = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { deleteNewsItemThread };
+export { deleteNewsItemThreadComment };
