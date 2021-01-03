@@ -6,6 +6,8 @@ const packageJson = require('../package.json');
 const devConfig = {
   mode: 'development',
   devServer: {
+    host: '0.0.0.0',
+    disableHostCheck: true,
     port: 8080,
     historyApiFallback: {
       index: 'index.html',
