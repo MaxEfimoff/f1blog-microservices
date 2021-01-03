@@ -48,8 +48,16 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: maxefi/client
-      context: client
+    - image: maxefi/fe-container
+      context: client/container
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.ts'
+            dest: .
+    - image: maxefi/fe-marketing
+      context: client/marketing
       docker:
         dockerfile: Dockerfile
       sync:
