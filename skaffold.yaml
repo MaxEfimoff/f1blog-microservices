@@ -8,8 +8,9 @@ build:
   local:
     push: false
   artifacts:
+# BACK
     - image: maxefi/auth
-      context: auth
+      context: containers/back/auth
       docker:
         dockerfile: Dockerfile
       sync:
@@ -17,7 +18,7 @@ build:
           - src: 'src/**/*.ts'
             dest: .
     - image: maxefi/profile
-      context: profile
+      context: containers/back/profile
       docker:
         dockerfile: Dockerfile
       sync:
@@ -25,7 +26,7 @@ build:
           - src: 'src/**/*.ts'
             dest: .
     - image: maxefi/newsitem
-      context: newsitem
+      context: containers/back/newsitem
       docker:
         dockerfile: Dockerfile
       sync:
@@ -33,7 +34,7 @@ build:
           - src: 'src/**/*.ts'
             dest: .
     - image: maxefi/blogpost
-      context: blogpost
+      context: containers/back/blogpost
       docker:
         dockerfile: Dockerfile
       sync:
@@ -41,15 +42,16 @@ build:
           - src: 'src/**/*.ts'
             dest: .
     - image: maxefi/group
-      context: group
+      context: containers/back/group
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+# FRONT
     - image: maxefi/fe-container
-      context: client/container
+      context: containers/front/container
       docker:
         dockerfile: Dockerfile
       sync:
@@ -57,7 +59,7 @@ build:
           - src: '**/*.ts'
             dest: .
     - image: maxefi/fe-marketing
-      context: client/marketing
+      context: containers/front/marketing
       docker:
         dockerfile: Dockerfile
       sync:

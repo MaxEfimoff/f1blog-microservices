@@ -34,3 +34,7 @@ spec:
             backend:
               serviceName: client-container-srv
               servicePort: 3000
+          # - path: /fe/?(.*)
+          #   backend:
+          #     serviceName: fe-marketing-srv
+          #     servicePort: 8081
