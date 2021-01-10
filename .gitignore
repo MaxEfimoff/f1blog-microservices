@@ -1,3 +1,4 @@
+.DS_Stoge
 node_modules
 containers/back/auth/node_modules
 containers/back/auth/src/config

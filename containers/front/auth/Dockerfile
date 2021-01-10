@@ -2,13 +2,12 @@
 FROM node:alpine
 
 WORKDIR '/app'
-
 # Download and install a dependencies
-COPY package.json .
+COPY ./package.json /.
 RUN npm install
 COPY . .
 
-EXPOSE 8081
+EXPOSE 8082
 
 # Default command
 CMD ["npm", "run", "dev"]

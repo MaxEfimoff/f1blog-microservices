@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-dashboard-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe-dashboard
+  template:
+    metadata:
+      labels:
+        app: fe-dashboard
+    spec:
+      containers:
+        - name: fe-dashboard
+          image: maxefi/fe-dashboard
+          ports:
+            - containerPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe-dashboard-srv
+spec:
+  type: LoadBalancer
+  selector:
+    app: fe-dashboard
+  ports:
+    - name: fe-dashboard
+      protocol: TCP
+      port: 8083
+      targetPort: 8083
