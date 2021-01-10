@@ -2,12 +2,6 @@ const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
   entry: './src/index.js',
-  cache: false,
-  devtool: 'source-map',
-  optimization: {
-    minimize: false,
-  },
-  target: 'web',
   output: {
     filename: '[name].[contenthash].js',
   },

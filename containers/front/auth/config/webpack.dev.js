@@ -8,24 +8,26 @@ const devConfig = {
   mode: 'development',
   devServer: {
     host: '0.0.0.0',
-    port: 8081,
+    port: 8082,
     historyApiFallback: {
       index: 'index.html',
-    },
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers':
-        'X-Requested-With, content-type, Authorization',
     },
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'marketing',
+      // We will be using this name in the Container app
+      name: 'auth',
+      // This file is a kind of manifest with all the files we need
+      // and routs to them
       filename: 'remoteEntry.js',
+      // We are exporting { mount } function from './src/bootstrap' file
+      // And will be using it in the Container app
+      // in 'container/src/components/MarketingApp.js' file
+      // to create custom html tag <Marketing /> inside Container's 'App.js'
       exposes: {
-        './MarketingApp': './src/bootstrap',
+        './AuthApp': './src/bootstrap',
       },
+      // We share dependencies across all our modules
       shared: packageJson.dependencies,
     }),
     new HtmlWebpackPlugin({

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe-auth
+  template:
+    metadata:
+      labels:
+        app: fe-auth
+    spec:
+      containers:
+        - name: fe-auth
+          image: maxefi/fe-auth
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe-auth-srv
+spec:
+  type: LoadBalancer
+  selector:
+    app: fe-auth
+  ports:
+    - name: fe-auth
+      protocol: TCP
+      port: 8082
+      targetPort: 8082
