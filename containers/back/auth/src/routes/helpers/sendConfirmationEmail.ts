@@ -11,13 +11,15 @@ interface UserHash {
 }
 
 const sendConfirmationEmail = ({ toUser, hash }: UserHash, callback: any) => {
-  console.log(config.google_user, config.google_password);
-
   const transporter = createTransport({
     service: 'gmail',
+    secure: false,
     auth: {
       user: config.google_user,
       pass: config.google_password,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 
@@ -34,6 +36,7 @@ const sendConfirmationEmail = ({ toUser, hash }: UserHash, callback: any) => {
 
   transporter.sendMail(message, (error, info) => {
     if (error) {
+      console.log('Mail', error);
       callback(error, null);
     } else {
       callback(null, info);

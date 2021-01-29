@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -10,7 +11,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { setAlert } from '../actions/alert';
+import { register } from '../actions/auth';
+import PropTypes from 'prop-types';
 
 function Copyright() {
   return (
@@ -47,8 +51,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp({ onSignIn }) {
+const SignUp = ({ setAlert, register, isAuthenticated }) => {
   const classes = useStyles();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    password2: '',
+  });
+
+  const { name, email, password, password2 } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== password2) {
+      setAlert('Passwords do not match!', 'danger');
+    } else {
+      console.log(formData);
+      register({ name, email, password, password2 });
+    }
+  };
+
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -68,13 +99,15 @@ export default function SignUp({ onSignIn }) {
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="name"
                 variant="outlined"
                 required
                 fullWidth
                 id="firstName"
-                label="First Name"
+                label="Name"
                 autoFocus
+                value={name}
+                onChange={(e) => onChange(e)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -83,20 +116,11 @@ export default function SignUp({ onSignIn }) {
                 required
                 fullWidth
                 id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
                 label="Email Address"
                 name="email"
-                autoComplete="email"
+                autoComplete="lname"
+                value={email}
+                onChange={(e) => onChange(e)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -104,11 +128,26 @@ export default function SignUp({ onSignIn }) {
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
-                label="Password"
-                type="password"
                 id="password"
+                label="Password"
+                name="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => onChange(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password2"
+                label="Repeat password"
+                type="password"
+                id="password2"
+                autoComplete="current-password"
+                value={password2}
+                onChange={(e) => onChange(e)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -124,7 +163,7 @@ export default function SignUp({ onSignIn }) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={onSignIn}
+            onClick={onSubmit}
           >
             Sign Up
           </Button>
@@ -140,4 +179,16 @@ export default function SignUp({ onSignIn }) {
       </Box>
     </Container>
   );
-}
+};
+
+SignUp.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+};
+
+const MapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(MapStateToProps, { setAlert, register })(SignUp);

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import postal from 'postal';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -10,7 +11,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login } from '../actions/auth';
 
 function Copyright() {
   return (
@@ -50,8 +54,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn({ onSignIn }) {
+const SignIn = ({ login, isAuthenticated }) => {
   const classes = useStyles();
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const { email, password } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    login({ email, password });
+
+    // // POSTAL
+    // postal.publish({
+    //   channel: 'auth',
+    //   topic: 'login',
+    //   data: {
+    //     isSignedIn: true,
+    //   },
+    // });
+  };
+
+  // Redirect if logged in
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -77,6 +111,8 @@ export default function SignIn({ onSignIn }) {
             name="email"
             autoComplete="email"
             autoFocus
+            value={email}
+            onChange={(e) => onChange(e)}
           />
           <TextField
             variant="outlined"
@@ -88,6 +124,8 @@ export default function SignIn({ onSignIn }) {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => onChange(e)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -99,7 +137,7 @@ export default function SignIn({ onSignIn }) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={onSignIn}
+            onClick={onSubmit}
           >
             Sign In
           </Button>
@@ -115,4 +153,15 @@ export default function SignIn({ onSignIn }) {
       </Box>
     </Container>
   );
-}
+};
+
+SignIn.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+};
+
+const MapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(MapStateToProps, { login })(SignIn);
