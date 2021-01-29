@@ -1,10 +1,8 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -54,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header({ isSignedIn, onSignOut }) {
+export default function Header({ isSignedIn, onSignOut, name }) {
   const classes = useStyles();
 
   const onClick = () => {
@@ -72,25 +70,12 @@ export default function Header({ isSignedIn, onSignOut }) {
         className={classes.appBar}
       >
         <Toolbar className={classes.toolbar}>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            component={RouterLink}
-            to="/"
-          >
-            App
-          </Typography>
-          <Button
-            color="primary"
-            variant="outlined"
-            className={classes.link}
-            component={RouterLink}
-            to={isSignedIn ? '/' : '/auth/signin'}
-            onClick={onClick}
-          >
+          <Link to="/">App</Link>
+          <Link to={isSignedIn ? '/' : '/auth/signin'} onClick={onClick}>
             {isSignedIn ? 'Logout' : 'Login'}
-          </Button>
+          </Link>
+          {!isSignedIn ? <Link to="/auth/signup">Register</Link> : null}
+          {name ? <div>Hello {name}</div> : null}
         </Toolbar>
       </AppBar>
     </React.Fragment>
