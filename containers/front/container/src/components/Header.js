@@ -74,8 +74,8 @@ export default function Header({ isSignedIn, onSignOut, name }) {
           <Link to={isSignedIn ? '/' : '/auth/signin'} onClick={onClick}>
             {isSignedIn ? 'Logout' : 'Login'}
           </Link>
-          {!isSignedIn ? <Link to="/auth/signup">Register</Link> : null}
-          {name ? <div>Hello {name}</div> : null}
+          {isSignedIn && name ? <div>Hello {name}</div> : null}
+          {isSignedIn ? null : <Link to="/auth/signup">Register</Link>}
         </Toolbar>
       </AppBar>
     </React.Fragment>

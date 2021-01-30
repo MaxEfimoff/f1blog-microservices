@@ -2,11 +2,11 @@ import { mount } from 'dashboard/DashboardApp';
 import React, { useRef, useEffect } from 'react';
 
 export default () => {
-  const ref = useRef(null);
+  const dashboardRef = useRef(null);
 
   useEffect(() => {
-    mount(ref.current);
+    mount(document.querySelector('#dashboard'));
   }, []);
 
-  return <div ref={ref} />;
+  return <div id="dashboard" ref={dashboardRef} />;
 };
