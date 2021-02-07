@@ -1,0 +1,14 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json
+  - gcloud config set project f1blog-300909
+  - gcloud config set compute/zone .....name of the zone....
+  - gcloud container clusters get-credentials ...name-of-the-cluster
+
+
+
