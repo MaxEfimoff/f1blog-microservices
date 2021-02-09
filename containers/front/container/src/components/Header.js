@@ -87,6 +87,7 @@ export default function Header({ isSignedIn, onSignOut, name }) {
             App
           </Link>
           <Link to="/dashboard">Dashboard</Link>
+          <Link to="/main/news">Main Page</Link>
           <Link to={isSignedIn ? '/' : '/auth/signin'} onClick={onClick}>
             {isSignedIn ? 'Logout' : 'Login'}
           </Link>

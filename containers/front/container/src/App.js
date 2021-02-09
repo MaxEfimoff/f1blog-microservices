@@ -1,5 +1,11 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import postal from 'postal';
 import jwt_decode from 'jwt-decode';
@@ -7,8 +13,11 @@ import jwt_decode from 'jwt-decode';
 import Progress from './components/Progress';
 import Header from './components/Header';
 import AuthApp from './components/AuthApp';
+import MainApp from './components/MainApp';
+import MarketingApp from './components/MarketingApp';
 
 const MarketingLazy = lazy(() => import('./components/MarketingApp'));
+// const MainLazy = lazy(() => import('./components/MainApp'));
 // const AuthLazy = lazy(() => import('./components/AuthApp'));
 const DashboardLazy = lazy(() => import('./components/DashboardApp'));
 
@@ -53,7 +62,7 @@ export default () => {
     });
 
     console.log('Subscribing as, ', subscription);
-  }, [isSignedIn]);
+  }, []);
 
   const onSignOut = () => {
     setIsSignedIn(false);
@@ -66,7 +75,7 @@ export default () => {
   };
 
   return (
-    <BrowserRouter history={history}>
+    <Router history={history}>
       <div>
         <Header onSignOut={onSignOut} isSignedIn={isSignedIn} name={name} />
         <Suspense fallback={<Progress />}>
@@ -75,15 +84,17 @@ export default () => {
               <AuthApp onSignIn={() => setIsSignedIn(true)} />
             </Route>
             <Route path="/dashboard">
-              {/* {!isSignedIn && <Redirect to="/" />} */}
               <DashboardLazy id="dashboard" />
             </Route>
+            <Route path="/main">
+              <MainApp />
+            </Route>
             <Route path="/">
-              <MarketingLazy />
+              <MarketingApp />
             </Route>
           </Switch>
         </Suspense>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 };

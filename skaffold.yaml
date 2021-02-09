@@ -82,3 +82,11 @@ build:
         manual:
           - src: '**/*.ts'
             dest: .
+    - image: maxefi/fe-mainpage
+      context: containers/front/mainpage
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.ts'
+            dest: .
