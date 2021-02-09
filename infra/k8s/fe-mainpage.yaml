@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-mainpage-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe-mainpage
+  template:
+    metadata:
+      labels:
+        app: fe-mainpage
+    spec:
+      containers:
+        - name: fe-mainpage
+          image: maxefi/fe-mainpage
+          ports:
+            - containerPort: 8084
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe-mainpage-srv
+spec:
+  type: LoadBalancer
+  selector:
+    app: fe-mainpage
+  ports:
+    - name: fe-mainpage
+      protocol: TCP
+      port: 8084
+      targetPort: 8084
