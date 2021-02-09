@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+// import postal from 'postal';
 import { Switch, Route, Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -24,6 +25,19 @@ if (localStorage.jwtToken) {
 export default ({ history, onSignIn }) => {
   useEffect(() => {
     store.dispatch(loadUser());
+
+    // // POSTAL
+    // const setRouteEvent = (data, env) => {
+    //   console.log('Env', env);
+    //   console.log(data);
+    // };
+
+    // const subscription = postal.subscribe({
+    //   channel: 'route',
+    //   topic: 'path',
+    //   callback: setRouteEvent,
+    // });
+    // console.log(subscription);
   }, []);
 
   return (
