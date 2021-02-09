@@ -1,14 +1,15 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
-import { Router, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import postal from 'postal';
 import jwt_decode from 'jwt-decode';
 
 import Progress from './components/Progress';
 import Header from './components/Header';
+import AuthApp from './components/AuthApp';
 
 const MarketingLazy = lazy(() => import('./components/MarketingApp'));
-const AuthLazy = lazy(() => import('./components/AuthApp'));
+// const AuthLazy = lazy(() => import('./components/AuthApp'));
 const DashboardLazy = lazy(() => import('./components/DashboardApp'));
 
 const history = createBrowserHistory();
@@ -65,16 +66,16 @@ export default () => {
   };
 
   return (
-    <Router history={history}>
+    <BrowserRouter history={history}>
       <div>
         <Header onSignOut={onSignOut} isSignedIn={isSignedIn} name={name} />
         <Suspense fallback={<Progress />}>
           <Switch>
             <Route path="/auth">
-              <AuthLazy onSignIn={() => setIsSignedIn(true)} />
+              <AuthApp onSignIn={() => setIsSignedIn(true)} />
             </Route>
             <Route path="/dashboard">
-              {!isSignedIn && <Redirect to="/" />}
+              {/* {!isSignedIn && <Redirect to="/" />} */}
               <DashboardLazy id="dashboard" />
             </Route>
             <Route path="/">
@@ -83,6 +84,6 @@ export default () => {
           </Switch>
         </Suspense>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 };

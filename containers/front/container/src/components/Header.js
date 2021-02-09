@@ -1,4 +1,5 @@
 import React from 'react';
+import postal from 'postal';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -61,6 +62,18 @@ export default function Header({ isSignedIn, onSignOut, name }) {
     }
   };
 
+  // POSTAL
+  const sendRoute = () => {
+    console.log('Click on header');
+    postal.publish({
+      channel: 'route',
+      topic: 'path',
+      data: {
+        path: '/',
+      },
+    });
+  };
+
   return (
     <React.Fragment>
       <AppBar
@@ -70,7 +83,10 @@ export default function Header({ isSignedIn, onSignOut, name }) {
         className={classes.appBar}
       >
         <Toolbar className={classes.toolbar}>
-          <Link to="/">App</Link>
+          <Link to="/" onClick={sendRoute}>
+            App
+          </Link>
+          <Link to="/dashboard">Dashboard</Link>
           <Link to={isSignedIn ? '/' : '/auth/signin'} onClick={onClick}>
             {isSignedIn ? 'Logout' : 'Login'}
           </Link>
