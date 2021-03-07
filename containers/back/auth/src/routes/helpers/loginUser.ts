@@ -1,4 +1,4 @@
-const keys = require('../../config/keys');
+// const keys = require('../../config/keys');
 import jsonwebtoken from 'jsonwebtoken';
 
 interface Payload {
@@ -14,7 +14,8 @@ const loginUser = () => {
 
   const token =
     'Bearer ' +
-    jsonwebtoken.sign(payload, keys.secretOrKey, { expiresIn: 604800 });
+    // jsonwebtoken.sign(payload, keys.secretOrKey, { expiresIn: 604800 });
+    jsonwebtoken.sign(payload, "secret", { expiresIn: 604800 });
 
   return token;
 };

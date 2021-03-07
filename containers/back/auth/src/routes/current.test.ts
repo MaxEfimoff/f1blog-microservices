@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { app } from '../app';
-import { login } from './__test__/helpers/login';
+// import { login } from './__test__/helpers/login';
 
 // it('returns 200 if user is logged in', async () => {
 //   const token = await login();
