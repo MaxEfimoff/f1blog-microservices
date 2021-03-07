@@ -1,4 +1,4 @@
-const config = require('../../config/keys_dev');
+// const config = require('../../config/keys_dev');
 import { createTransport } from 'nodemailer';
 
 interface UserHash {
@@ -21,7 +21,8 @@ const sendResetPasswordEmail = ({ toUser, hash }: UserHash, callback: any) => {
   });
 
   const message = {
-    from: config.google_user,
+    // from: config.google_user,
+    from: "vuesocialnet@gmail.com",
     to: toUser.email,
     subject: 'F1blog.ru - reset password',
     html: `

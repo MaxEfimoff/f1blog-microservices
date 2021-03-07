@@ -21,6 +21,11 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
+            - name: MONGO_AUTH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-auth-secret 
+                  key: MONGO_AUTH_KEY
 ---
 apiVersion: v1
 kind: Service
