@@ -18,13 +18,13 @@ before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t maxefi/auth_test -f ./containers/back/auth/Dockerfile.dev ./containers/back/auth
 
+script:
+  - docker run -e CI=true maxefi/auth_test npm run test:ci
+
 deploy:
   provider: script
   script: bash ./deploy.sh
   on:
     branch: master
 
-
-# script:
-#   - docker run -e CI=true maxefi/auth_test npm run test:ci
 

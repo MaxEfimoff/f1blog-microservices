@@ -4,12 +4,17 @@ import { DatabaseConnectionError } from '@f1blog/common';
 import { natsWrapper } from './nats-wrapper';
 
 // DB config
-const db = require('./config/keys').mongoURI;
+const db = process.env.MONGO_AUTH_KEY;
+// const db = require('./config/keys').mongoURI;
 
 // Connect to Mongodb
 const start = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_Key not set');
+  }
+
+  if (!process.env.MONGO_AUTH_KEY) {
+    throw new Error('MONGO_AUTH_KEY not set');
   }
 
   try {

@@ -1,4 +1,3 @@
-// const keys = require('../../config/keys');
 import jsonwebtoken from 'jsonwebtoken';
 
 interface Payload {
