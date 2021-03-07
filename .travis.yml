@@ -16,10 +16,10 @@ before_install:
   - gcloud config set compute/zone europe-west1-b
   - gcloud container clusters get-credentials multi-cluster
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t maxefi/auth_test -f ./containers/back/auth/Dockerfile ./containers/back/auth
+  - docker build -t maxefi/auth_test -f ./containers/back/auth/Dockerfile.dev ./containers/back/auth
 
 script:
-  - docker run -e CI=true maxefi/auth npm run test
+  - docker run -e CI=true maxefi/auth npm run test:ci
 
 deploy:
   provider: script
