@@ -10,10 +10,6 @@ jest.mock('../nats-wrapper');
 beforeAll(async () => {
   // process.env.JWT_KEY = 'yjdtjd';
 
-  if (!process.env.JWT_KEY) {
-    throw new Error('JWT_Key not set');
-  }
-
   if (!process.env.MONGO_AUTH_KEY) {
     throw new Error('MONGO_AUTH_KEY not set');
   }
