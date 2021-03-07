@@ -15,8 +15,10 @@ const sendConfirmationEmail = ({ toUser, hash }: UserHash, callback: any) => {
     service: 'gmail',
     secure: false,
     auth: {
-      user: config.google_user,
-      pass: config.google_password,
+      // user: config.google_user,
+      // pass: config.google_password,
+      user: "vuesocialnet@gmail.com",
+      pass: "Aa02021984"
     },
     tls: {
       rejectUnauthorized: false,
