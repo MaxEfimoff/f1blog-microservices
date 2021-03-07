@@ -1,4 +1,4 @@
-const config = require('../../config/keys_dev');
+// const config = require('../../config/keys_dev');
 import { createTransport } from 'nodemailer';
 // import { google_user, google_password, domain } from '../../config/keys_dev'
 
@@ -26,14 +26,15 @@ const sendConfirmationEmail = ({ toUser, hash }: UserHash, callback: any) => {
   });
 
   const message = {
-    from: config.google_user,
+    // from: config.google_user,
+    from: "vuesocialnet@gmail.com",
     to: toUser.email,
     subject: 'F1blog - activate account',
     html: `
     <h3>Привет! ${toUser.name}</h3>
     <p>Спасибо за регистрацию на портале F1blog.ru!</p>
-    <p>Для активации аккаунта, пройдите по ссылке: <a target="_" href="${config.domain}/users/${hash}/activate">${config.domain}/activate </a></p>
     `,
+    // <p>Для активации аккаунта, пройдите по ссылке: <a target="_" href="${config.domain}/users/${hash}/activate">${config.domain}/activate </a></p>
   };
 
   transporter.sendMail(message, (error, info) => {
