@@ -14,7 +14,7 @@ before_install:
   - gcloud config set project f1blog-300909
   - gcloud config set compute/zone europe-west1-b
   - gcloud container clusters get-credentials multi-cluster
-  - echo "$DOCKER_PASSWORD" | docker -u "$DOCKER_USERNAME" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t maxefi/auth -f .containers/back/auth/Dockerfile
 
 script:
