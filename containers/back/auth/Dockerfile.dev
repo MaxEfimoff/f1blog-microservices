@@ -1,7 +1,4 @@
 FROM node:alpine
-RUN apk add mongodb=4.0.5-r0 || true
-# this is required by mongodb-memory-server to avoid trying to download the mongod file.
-ENV MONGOMS_SYSTEM_BINARY=/usr/bin/mongod
 
 WORKDIR /app
 COPY package.json .
