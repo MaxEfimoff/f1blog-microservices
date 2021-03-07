@@ -1,15 +1,15 @@
 import request from 'supertest';
 import { app } from '../../app';
 
-it('returns 200 on valid login/password', async () => {
-  return request(app)
-    .post('/api/v1/users/login')
-    .send({
-      email: 'emv3@ya.ru',
-      password: '123456',
-    })
-    .expect(200);
-});
+// it('returns 200 on valid login/password', async () => {
+//   return request(app)
+//     .post('/api/v1/users/login')
+//     .send({
+//       email: 'emv3@ya.ru',
+//       password: '123456',
+//     })
+//     .expect(200);
+// });
 
 it('returns 400 on valid email and invalid password', async () => {
   return request(app)
