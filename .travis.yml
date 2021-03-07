@@ -19,7 +19,7 @@ before_install:
   - docker build -t maxefi/auth_test -f ./containers/back/auth/Dockerfile.dev ./containers/back/auth
 
 script:
-  - docker run -e CI=true maxefi/auth npm run test:ci
+  - docker run -e CI=true maxefi/auth npm test -- --coverage
 
 deploy:
   provider: script
