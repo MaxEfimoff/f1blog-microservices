@@ -1,46 +1,60 @@
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-import { app } from '../app';
-import { users } from '../routes/api/users/users';
+// import { MongoMemoryServer } from 'mongodb-memory-server';
+// import mongoose from 'mongoose';
+// import { app } from '../app';
+// import { users } from '../routes/api/users/users';
 
-let mongo: any;
+// let mongo: any;
 
-jest.mock('../nats-wrapper');
+// jest.mock('../nats-wrapper');
 
 beforeAll(async () => {
-  process.env.JWT_KEY = 'yjdtjd';
+  console.log('Before test')
+  // process.env.JWT_KEY = 'yjdtjd';
 
-  mongo = new MongoMemoryServer();
-  const mongoUri = await mongo.getUri();
+  // if (!process.env.MONGO_AUTH_KEY) {
+  //   throw new Error('MONGO_AUTH_KEY not set');
+  // }
 
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  // const db = process.env.MONGO_AUTH_KEY;
+
+  // await mongoose.connect(db, {
+  //   useFindAndModify: false,
+  //   useNewUrlParser: true,
+  //   useCreateIndex: true,
+  //   useUnifiedTopology: true,
+  // });
+
+  // mongo = new MongoMemoryServer();
+  // const mongoUri = await mongo.getUri();
+
+  // await mongoose.connect(mongoUri, {
+  //   useNewUrlParser: true,
+  //   useUnifiedTopology: true,
+  // });
 });
 
-beforeEach(async () => {
-  const collections = await mongoose.connection.db.collections();
+// beforeEach(async () => {
+//   const collections = await mongoose.connection.db.collections();
 
-  for (let collection of collections) {
-    await collection.deleteMany({});
-  }
+//   for (let collection of collections) {
+//     await collection.deleteMany({});
+//   }
 
-  const db = await mongoose.connection.db;
+//   const db = await mongoose.connection.db;
 
-  await db.dropCollection('users');
-  const usersColl = await db.createCollection('users');
+//   await db.dropCollection('users');
+//   const usersColl = await db.createCollection('users');
 
-  await usersColl.insertOne({
-    active: true,
-    role: 'guest',
-    name: 'Max',
-    email: 'emv3@ya.ru',
-    password: '$2b$10$8zemadXxMLUwpf38PyZGDOMeeYr2d1qv5hEduzRx4Ex12xyYIUzmy',
-  });
-});
+//   await usersColl.insertOne({
+//     active: true,
+//     role: 'guest',
+//     name: 'Max',
+//     email: 'emv3@ya.ru',
+//     password: '$2b$10$8zemadXxMLUwpf38PyZGDOMeeYr2d1qv5hEduzRx4Ex12xyYIUzmy',
+//   });
+// });
 
-afterAll(async () => {
-  await mongo.stop();
-  await mongoose.connection.close();
-});
+// afterAll(async () => {
+//   await mongo.stop();
+//   await mongoose.connection.close();
+// });
