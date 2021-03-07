@@ -1,27 +1,28 @@
 // import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 // import { app } from '../app';
 // import { users } from '../routes/api/users/users';
 
 // let mongo: any;
 
-jest.mock('../nats-wrapper');
+// jest.mock('../nats-wrapper');
 
 beforeAll(async () => {
+  console.log('Before test')
   // process.env.JWT_KEY = 'yjdtjd';
 
-  if (!process.env.MONGO_AUTH_KEY) {
-    throw new Error('MONGO_AUTH_KEY not set');
-  }
+  // if (!process.env.MONGO_AUTH_KEY) {
+  //   throw new Error('MONGO_AUTH_KEY not set');
+  // }
 
-  const db = process.env.MONGO_AUTH_KEY;
+  // const db = process.env.MONGO_AUTH_KEY;
 
-  await mongoose.connect(db, {
-    useFindAndModify: false,
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  });
+  // await mongoose.connect(db, {
+  //   useFindAndModify: false,
+  //   useNewUrlParser: true,
+  //   useCreateIndex: true,
+  //   useUnifiedTopology: true,
+  // });
 
   // mongo = new MongoMemoryServer();
   // const mongoUri = await mongo.getUri();
