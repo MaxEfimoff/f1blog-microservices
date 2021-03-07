@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app } from '../../app';
+import { app } from '../app';
 
 it('returns 400 if no email was sent', async () => {
   return request(app).post('/api/v1/users/reset-password').send({}).expect(400);

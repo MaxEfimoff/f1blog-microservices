@@ -32,15 +32,15 @@ docker push maxefi/fe-mainpage:$SHA
 docker push maxefi/fe-marketing:$SHA
 
 kubectl apply -f infra/k8s
-kubectl set image deployments/auth-depl auth=maxefi/auth:$SHA
-kubectl set image deployments/blogpost-depl blogpost=maxefi/blogpost:$SHA
-kubectl set image deployments/group-depl group=maxefi/group:$SHA
-kubectl set image deployments/newsitem-depl newsitem=maxefi/newsitem:$SHA
-kubectl set image deployments/profile-depl profile=maxefi/profile:$SHA
-kubectl set image deployments/fe-auth-depl fe-auth=maxefi/fe-auth:$SHA
-kubectl set image deployments/client-container-depl auth=maxefi/fe-container:$SHA
-kubectl set image deployments/fe-dashboard-depl fe-dashboard=maxefi/fe-dashboard:$SHA
-kubectl set image deployments/mainpage-depl mainpage=maxefi/mainpage:$SHA
-kubectl set image deployments/marketing-depl marketing=maxefi/marketing:$SHA
+kubectl set image deployments/auth-depl             auth=maxefi/auth:$SHA
+kubectl set image deployments/blogpost-depl         blogpost=maxefi/blogpost:$SHA
+kubectl set image deployments/group-depl            group=maxefi/group:$SHA
+kubectl set image deployments/newsitem-depl         newsitem=maxefi/newsitem:$SHA
+kubectl set image deployments/profile-depl          profile=maxefi/profile:$SHA
+kubectl set image deployments/fe-auth-depl          fe-auth=maxefi/fe-auth:$SHA
+kubectl set image deployments/client-container-depl client-container=maxefi/fe-container:$SHA
+kubectl set image deployments/fe-dashboard-depl     fe-dashboard=maxefi/fe-dashboard:$SHA
+kubectl set image deployments/fe-mainpage-depl      fe-mainpage=maxefi/fe-mainpage:$SHA
+kubectl set image deployments/fe-marketing-depl     fe-marketing=maxefi/fe-marketing:$SHA
 
 
