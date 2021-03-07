@@ -14,11 +14,11 @@ it('returns 400 if email was incorrect', async () => {
     .expect(400);
 });
 
-it('returns 201 if email was correct', async () => {
-  return request(app)
-    .post('/api/v1/users/reset-password')
-    .send({
-      email: 'emv3@ya.ru',
-    })
-    .expect(201);
-});
+// it('returns 201 if email was correct', async () => {
+//   return request(app)
+//     .post('/api/v1/users/reset-password')
+//     .send({
+//       email: 'emv3@ya.ru',
+//     })
+//     .expect(201);
+// });
