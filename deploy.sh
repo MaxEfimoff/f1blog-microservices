@@ -31,7 +31,7 @@ docker push maxefi/fe-dashboard:$SHA
 docker push maxefi/fe-mainpage:$SHA
 docker push maxefi/fe-marketing:$SHA
 
-kubectl apply -f infra/k8s
+kubectl apply -f ./infra/k8s
 kubectl set image deployments/auth-depl             auth=maxefi/auth:$SHA
 kubectl set image deployments/blogpost-depl         blogpost=maxefi/blogpost:$SHA
 kubectl set image deployments/group-depl            group=maxefi/group:$SHA
