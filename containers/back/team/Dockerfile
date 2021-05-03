@@ -1,5 +1,4 @@
 FROM node:alpine
-RUN apk add g++ make python
 
 WORKDIR /app
 COPY package.json .

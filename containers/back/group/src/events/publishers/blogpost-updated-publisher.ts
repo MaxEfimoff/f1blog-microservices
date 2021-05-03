@@ -1,5 +1,5 @@
-import { Publisher, BlogPostpdatedEvent, Subjects } from '@f1blog/common';
+import { Publisher, BlogPostUpdatedEvent, Subjects } from '@f1blog/common';
 
-export class BlogPostpdatedPublisher extends Publisher<BlogPostpdatedEvent> {
-  subject: Subjects.BlogPostpdated = Subjects.BlogPostpdated;
+export class BlogPostUpdatedPublisher extends Publisher<BlogPostUpdatedEvent> {
+  subject: Subjects.BlogPostUpdated = Subjects.BlogPostUpdated;
 }

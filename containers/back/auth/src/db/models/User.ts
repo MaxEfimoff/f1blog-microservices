@@ -7,6 +7,8 @@ interface UserAttrs {
   name: string;
   email: string;
   password: string;
+  isSuperadmin?: boolean;
+  isBlocked?: boolean
   active?: boolean;
   role?: string;
   date?: Date;
@@ -24,6 +26,8 @@ export interface UserDoc extends mongoose.Document {
   name: string;
   email: string;
   password: string;
+  isSuperadmin: boolean;
+  isBlocked: boolean
   active: boolean;
   role: string;
   date: Date;
@@ -50,6 +54,14 @@ const UserSchema = new mongoose.Schema(
       required: true,
       min: 6,
       max: 30,
+    },
+    isSuperAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
     active: {
       type: Boolean,
