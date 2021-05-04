@@ -11,3 +11,5 @@ containers/back/blogpost/src/config
 containers/back/blogpost/node_modules
 containers/back/group/src/config
 containers/back/group/node_modules
+containers/back/team/src/config
+containers/back/team/node_modules

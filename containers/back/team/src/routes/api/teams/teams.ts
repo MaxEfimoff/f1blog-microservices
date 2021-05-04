@@ -15,7 +15,7 @@ import { deleteUserFromTeam } from '../../controllers/teams/delete-user-from-tea
 const router = express.Router();
 
 // Shortened for /api/v1/teams
-router.get('/test', currentUser, test);
+router.get('/test', test);
 router.get('/', currentUser, requireAuth, fetchAllTeams);
 router.get('/my', currentUser, requireAuth, fetchMyTeams);
 
