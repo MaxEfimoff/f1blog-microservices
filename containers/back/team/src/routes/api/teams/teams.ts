@@ -8,11 +8,14 @@ import { fetchMyTeams } from '../../controllers/teams/fetch-my-teams';
 import { createTeam } from '../../controllers/teams/create-team';
 import { updateTeam } from '../../controllers/teams/update-team';
 import { deleteTeam } from '../../controllers/teams/delete-team';
+import { joinTeam } from '../../controllers/teams/join-team';
+import { leaveTeam } from '../../controllers/teams/leave-team';
+import { deleteUserFromTeam } from '../../controllers/teams/delete-user-from-team';
 
 const router = express.Router();
 
-// Shortened for /api/v1/groups
-router.get('/test', currentUser, requireAuth, test);
+// Shortened for /api/v1/teams
+router.get('/test', currentUser, test);
 router.get('/', currentUser, requireAuth, fetchAllTeams);
 router.get('/my', currentUser, requireAuth, fetchMyTeams);
 
@@ -24,7 +27,31 @@ router.post(
   validateRequest,
   createTeam
 );
+router.post(
+  '/:id/join',
+  currentUser,
+  requireAuth,
+  validateRequest,
+  joinTeam
+);
+router.post(
+  '/:id/leave',
+  currentUser,
+  requireAuth,
+  validateRequest,
+  leaveTeam
+);
+
+router.patch(
+  '/:id',
+  currentUser,
+  requireAuth,
+  teamValidation,
+  validateRequest,
+  updateTeam
+);
 
 router.delete('/:id', currentUser, requireAuth, deleteTeam);
+router.delete('/:id/user/:deleteuserid', currentUser, requireAuth, deleteUserFromTeam);
 
 export { router as teams };

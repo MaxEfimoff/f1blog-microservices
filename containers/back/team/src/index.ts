@@ -7,7 +7,7 @@ import { ProfileDeletedListener } from './events/listeners/profile-deleted-liste
 import { natsWrapper } from './nats-wrapper';
 
 // DB config
-const db = require('./config/keys').mongoURI_blog;
+const db = require('./config/keys').mongoURI_team;
 
 // Connect to Mongodb
 const start = async () => {
@@ -16,7 +16,7 @@ const start = async () => {
   }
 
   try {
-    await natsWrapper.connect('ticketing', 'ngjmgdsb', 'http:nats-srv:4222');
+    await natsWrapper.connect('ticketing', 'bjbjbkk', 'http:nats-srv:4222');
 
     natsWrapper.client.on('close', () => {
       console.log('NATS connection closed!');
@@ -38,6 +38,7 @@ const start = async () => {
 
     console.log('Connected to DB');
   } catch (err) {
+    console.log(err)
     throw new DatabaseConnectionError();
   }
 

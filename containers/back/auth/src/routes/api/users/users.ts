@@ -7,6 +7,7 @@ import { activate } from '../../controllers/users/activate';
 import { login } from '../../controllers/users/login';
 import { current } from '../../controllers/users/current';
 import { all } from '../../controllers/users/all';
+import { resendActivationHash } from '../../controllers/users/resend-activation-hash';
 // import { googleOauth } from '../../controllers/users/google-oauth';
 // import { googleOauthCallback } from '../../controllers/users/google-oauth-callback';
 import { resetPassword } from '../../controllers/users/reset-password';
@@ -30,5 +31,6 @@ router.post(
 );
 router.patch('/:hash/activate', activate);
 router.patch('/:hash/reset-password', hashResetPassword);
+router.patch('/hash/resend', resendActivationHash);
 
 export { router as users };

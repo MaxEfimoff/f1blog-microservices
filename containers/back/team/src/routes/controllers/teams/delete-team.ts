@@ -5,6 +5,7 @@ import { Profile } from '../../../db/models/Profile';
 import { Team } from '../../../db/models/Team';
 import { natsWrapper } from '../../../nats-wrapper';
 import { NotAuthorizedError } from '@f1blog/common';
+import { TeamDeletedPublisher } from '../../../events/publishers/team-deleted-publisher';
 
 interface UserRequest extends Request {
   user: {

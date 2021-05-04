@@ -16,7 +16,7 @@ interface UserRequest extends Request {
   };
 }
 
-const createTeam= async (req: UserRequest, res: Response) => {
+const createTeam = async (req: UserRequest, res: Response) => {
   let { title } = req.body;
 
   const user = req.user;
