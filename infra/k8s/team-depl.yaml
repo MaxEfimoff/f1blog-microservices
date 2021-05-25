@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: group-depl
+  name: team-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: group
+      app: team
   template:
     metadata:
       labels:
-        app: group
+        app: team
     spec:
       containers:
-        - name: group
-          image: maxefi/group
+        - name: team
+          image: maxefi/team
           env:
             - name: JWT_KEY
               valueFrom:
@@ -25,12 +25,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: group-srv
+  name: team-srv
 spec:
   selector:
-    app: group
+    app: team
   ports:
-    - name: group
+    - name: team
       protocol: TCP
       port: 3000
       targetPort: 3000
