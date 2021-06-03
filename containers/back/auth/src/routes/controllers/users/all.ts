@@ -1,9 +1,13 @@
 import { Request, Response } from 'express';
 import { User } from '../../../db/models/User';
 import { BadRequestError } from '@f1blog/common';
+import { pool } from '../../../pool';
 
 const all = async (req: Request, res: Response) => {
   const users = await User.find().limit(10).sort({ createdAt: -1 });
+  const users1 = await pool.query('SELECT * FROM users;');
+
+  console.log('SQL USERS: ', users1);
 
   if (!users) {
     throw new BadRequestError('There are no active users');

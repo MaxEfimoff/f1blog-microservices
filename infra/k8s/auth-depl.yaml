@@ -15,6 +15,10 @@ spec:
       containers:
         - name: auth
           image: maxefi/auth
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 500m
           env:
             - name: JWT_KEY
               valueFrom:
@@ -24,8 +28,21 @@ spec:
             - name: MONGO_AUTH_KEY
               valueFrom:
                 secretKeyRef:
-                  name: mongo-auth-secret 
+                  name: mongo-auth-secret
                   key: MONGO_AUTH_KEY
+            - name: AUTH_PGUSER
+              value: postgres
+            - name: AUTH_PGHOST
+              value: auth-postgres-srv
+            - name: AUTH_PGPORT
+              value: "5432"
+            - name: AUTH_PGDATABASE
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgrespassword
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service
