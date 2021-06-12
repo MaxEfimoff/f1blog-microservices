@@ -3,15 +3,17 @@ import { app } from './app';
 import { DatabaseConnectionError } from '@f1blog/common';
 import { natsWrapper } from './nats-wrapper';
 import { pool } from './pool';
+import { users } from './routes/api/users/users';
+import { series } from 'async';
+const { execSync } = require('child_process');
 
 // DB config
 const db = process.env.MONGO_AUTH_KEY;
-// const db = require('./config/keys').mongoURI;
 
 // Connect to Mongodb
 const start = async () => {
-  if (!process.env.AUTH_PG_PASSWORD) {
-    throw new Error('AUTH_PG_PASSWORD not set');
+  if (!process.env.POSTGRES_PASSWORD) {
+    throw new Error('POSTGRES_PASSWORDnot set');
   }
 
   if (!process.env.JWT_KEY) {
@@ -32,17 +34,6 @@ const start = async () => {
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
 
-    // Postgres Client Setup
-    await pool.connect({
-      user: process.env.AUTH_PGUSER,
-      host: process.env.AUTH_PGHOST,
-      database: process.env.AUTH_PGDATABASE,
-      password: process.env.AUTH_PG_PASSWORD,
-      port: process.env.AUTH_PGPORT
-    });
-
-    console.log('Connected to POSTGRES_DB');
-
     await mongoose.connect(db, {
       useFindAndModify: false,
       useNewUrlParser: true,
@@ -52,7 +43,30 @@ const start = async () => {
 
     console.log('Connected to MONGO_DB');
   } catch (err) {
-    throw new DatabaseConnectionError();
+    new DatabaseConnectionError;
+  }
+
+  try {
+    // Postgres Client Setup
+    await pool.connect({
+      user: process.env.AUTH_PGUSER,
+      host: process.env.AUTH_PGHOST,
+      database: process.env.AUTH_PGDATABASE,
+      password: process.env.POSTGRES_PASSWORD,
+      port: process.env.AUTH_PGPORT
+    });
+
+    console.log('Connected to POSTGRES_DB');
+
+    // Run Postgres migrations
+    series([
+      () => execSync(`
+        DATABASE_URL=${process.env.AUTH_PGDATABASE}://${process.env.AUTH_PGUSER}:${process.env.POSTGRES_PASSWORD}@${process.env.AUTH_PGHOST}:${process.env.AUTH_PGPORT}/postgres npm run migrate up
+      `)
+    ]);
+
+  } catch (err) {
+    console.log(err);
   }
 
   app.listen(3000, () => {

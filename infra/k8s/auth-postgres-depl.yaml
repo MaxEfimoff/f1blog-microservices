@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth-postgres
+      component: auth-postgres
   template:
     metadata:
       labels:
-        app: auth-postgres
+        component: auth-postgres
     spec:
       volumes:
         - name: auth-postgres-storage
@@ -19,15 +19,20 @@ spec:
       containers:
         - name: auth-postgres
           image: postgres
+          imagePullPolicy: IfNotPresent
           resources:
+            requests:
+              memory: 500Mi
+              cpu: 500m
             limits:
-              memory: 128Mi
+              memory: 500Mi
               cpu: 500m
           ports:
             - containerPort: 5432
           volumeMounts:
             - name: auth-postgres-storage
               mountPath: /var/lib/postgresql/data
+              subPath: postgres
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -40,9 +45,8 @@ kind: Service
 metadata:
   name: postgres-cluster-ip-service
 spec:
-  type: ClusterIP
   selector:
-    component: postgres
+    component: auth-postgres
   ports:
     - port: 5432
       targetPort: 5432

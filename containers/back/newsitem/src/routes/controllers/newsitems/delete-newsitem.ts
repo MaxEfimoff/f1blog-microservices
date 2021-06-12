@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
-import { BadRequestError, NotFoundError } from '@f1blog/common';
+import { BadRequestError, NotFoundError, NotAuthorizedError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
 import { NewsItem } from '../../../db/models/NewsItem';
 import { NewsItemDeletedPublisher } from '../../../events/publishers/newsitem-deleted-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
-import { NotAuthorizedError } from '@f1blog/common';
 
 interface UserRequest extends Request {
   user: {
