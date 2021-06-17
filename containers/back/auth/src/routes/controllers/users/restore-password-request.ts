@@ -31,7 +31,7 @@ const restorePasswordRequest = async (req: UserRequest, res: Response) => {
       bcrypt.hash(foundUser.email, salt, async (err, hash) => {
         if (err) throw new BadRequestError('Could not hash the password');
 
-        hash = hash.replace('/', '.');
+        hash = hash.replace(/\//g, '.');
 
         // Create resetpasswordhash hash
         const createdHash = await pool.query(`

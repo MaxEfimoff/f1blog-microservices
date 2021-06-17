@@ -6,19 +6,22 @@ import { pool } from '../../../pool';
 const activate = async (req: Request, res: Response) => {
   const hash = req.params.hash;
 
+  console.log('HASH', hash)
+
   const confirmationHash = await pool.query(`
     SELECT * FROM confirmationhash 
-    WHERE hash = ${hash};
-  `);
+    WHERE hash = $1;
+  `, [hash]);
+  const user = confirmationHash.rows[0];
 
-  console.log('CONF HASH', confirmationHash.rows[0]);
+  console.log('CONF HASH', user);
 
-  if (confirmationHash.rows[0]) {
+  if (user) {
     const foundUser = await pool.query(`
       SELECT * FROM confirmationhash 
       JOIN users ON users.id = confirmationhash.user_id
-      WHERE user_id = ${hash} ;
-    `);
+      WHERE user_id = $1 ;
+    `, [user.id]);
 
     console.log('FOUND USER', foundUser.rows[0])
 
@@ -29,7 +32,7 @@ const activate = async (req: Request, res: Response) => {
 
       console.log('UPDATED UESR', updatedUser)
 
-      await pool.query('DELETE FROM confirmationhash WHERE hash = $1 RETURNING *;', hash);
+      await pool.query('DELETE FROM confirmationhash WHERE hash = $1 RETURNING *;', [hash]);
 
       return res.status(200).json({
         status: 'success',

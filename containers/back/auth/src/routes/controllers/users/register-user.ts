@@ -29,14 +29,15 @@ const register = async (req: Request, res: Response) => {
         if (err) throw new BadRequestError('Could not hash the password');
 
         // Create confirmetion hash
-        password = hash.replace('/', '.');
+        const serializedHash = hash.replace(/\//g, '.');
+        console.log('SERIALIZED HASH', serializedHash)
 
         // Save New user to DB
         const { rows } = await pool.query(`
           INSERT INTO users (name, email, password) 
           VALUES ($1, $2, $3) 
           RETURNING *;
-        `, [name, email, password]);
+        `, [name, email, hash]);
 
         console.log('REGISTERED USER: ', rows[0]);
 
@@ -57,15 +58,15 @@ const register = async (req: Request, res: Response) => {
 
         // Save confirmation hash to DB
         const createdHash = await pool.query(`
-          INSERT INTO confirmationhash (user_id) 
-          VALUES ($1) RETURNING *;
-        `, [rows[0].id]);
+          INSERT INTO confirmationhash (hash, user_id) 
+          VALUES ($1, $2) RETURNING *;
+        `, [serializedHash, rows[0].id]);
 
         console.log('HASH ROWS: ', createdHash.rows[0]);
 
         // Send a letter with the confirmation hash
         sendConfirmationEmail(
-          { toUser: savedUser, hash: hash },
+          { toUser: savedUser, hash: serializedHash },
           (err: any) => {
             if (err)
               throw new BadRequestError('Could not send confirmation hash');

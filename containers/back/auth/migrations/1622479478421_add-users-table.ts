@@ -20,6 +20,7 @@ function up(pgm) {
   pgm.sql(`
     CREATE TABLE confirmationhash (
       id SERIAL PRIMARY KEY,  
+      hash VARCHAR(200),
       user_id INTEGER REFERENCES users(id)
     );
   `);
