@@ -36,6 +36,7 @@ const start = async () => {
 
     console.log('Connected to DB');
   } catch (err) {
+    console.log(err)
     throw new DatabaseConnectionError();
   }
 
