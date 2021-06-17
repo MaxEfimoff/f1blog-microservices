@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { BadRequestError } from '@f1blog/common';
 import { pool } from '../../../pool';
-import { isConditionalExpression } from 'typescript';
 
 const hashResetPassword = async (req: Request, res: Response) => {
   let { password } = req.body;
@@ -47,9 +46,6 @@ const hashResetPassword = async (req: Request, res: Response) => {
             WHERE hash = $1
             RETURNING *;
           `, [hash]);
-
-          const allHashes = await pool.query('SELECT * FROM resetpasswordhash');
-          console.log('ALL HASHES', allHashes.rows[0])
         });
       });
 

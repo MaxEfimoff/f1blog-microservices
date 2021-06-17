@@ -33,6 +33,14 @@ function up(pgm) {
       expires_at TIMESTAMP WITH TIME ZONE
     );
   `);
+
+  pgm.sql(`
+    CREATE TABLE changeemailhash (
+      id SERIAL PRIMARY KEY,  
+      hash VARCHAR(200),
+      user_id INTEGER REFERENCES users(id)
+    );
+  `);
 }
 
 function down(pgm) {
