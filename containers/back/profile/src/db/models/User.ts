@@ -5,7 +5,7 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 // that are required to create a new User
 interface UserAttrs {
   name: string;
-  id: string;
+  id: number;
   version: number;
 }
 
@@ -13,13 +13,14 @@ interface UserAttrs {
 // that a User Model has
 interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
-  findByEvent(event: { id: string; version: number }): Promise<UserDoc | null>;
+  findByEvent(event: { id: number; version: number }): Promise<UserDoc | null>;
 }
 
 // An interface that describes the properties
 // that a single User Document has
 export interface UserDoc extends mongoose.Document {
   name: string;
+  version: number;
 }
 
 const UserSchema = new mongoose.Schema(
@@ -30,6 +31,10 @@ const UserSchema = new mongoose.Schema(
       min: 2,
       max: 30,
     },
+    id: {
+      type: Number,
+      required: true
+    }
   },
   {
     toJSON: {
@@ -47,17 +52,17 @@ UserSchema.set('versionKey', 'version');
 UserSchema.plugin(updateIfCurrentPlugin);
 
 // Add findByEvent method to a UserSchema
-UserSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+UserSchema.statics.findByEvent = (event: { id: number; version: number }) => {
   return User.findOne({
     _id: event.id,
-    version: event.version - 1,
+    version: event.version,
   });
 };
 
 // Add build method to a UserSchema
 UserSchema.statics.build = (attrs: UserAttrs) => {
   return new User({
-    _id: attrs.id,
+    id: attrs.id,
     name: attrs.name,
   });
 };

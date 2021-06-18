@@ -56,7 +56,6 @@ const hashChangeEmail = async (req: Request, res: Response) => {
       new UserUpdatedPublisher(natsWrapper.client).publish({
         id: user.id,
         name: user.name,
-        email: email,
         version: user.version,
       });
 

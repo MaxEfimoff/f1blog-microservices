@@ -25,7 +25,7 @@ interface Body {
 const updateProfile = async (req: UserRequest, res: Response) => {
   let { handle, avatar, background }: Body = req.body;
 
-  const user = await User.findById(req.user.id);
+  const user = await User.findOne({ id: req.user.id });
 
   if (!user) {
     throw new NotFoundError();

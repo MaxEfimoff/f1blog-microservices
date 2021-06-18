@@ -10,7 +10,8 @@ export class UserCreatedListener extends Listener<UserCreatedEvent> {
   async onMessage(data: UserCreatedEvent['data'], msg: Message) {
     console.log('User created event data!', data);
 
-    const { id, name, version } = data;
+    let { id, name, version } = data;
+
     const user = User.build({
       name,
       id,

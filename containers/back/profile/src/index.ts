@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { app } from './app';
 import { DatabaseConnectionError } from '@f1blog/common';
 import { UserCreatedListener } from './events/listeners/user-created-listener';
+import { UserUpdatedListener } from './events/listeners/user-updated-listener';
 import { natsWrapper } from './nats-wrapper';
 
 // DB config
@@ -24,6 +25,7 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     new UserCreatedListener(natsWrapper.client).listen();
+    new UserUpdatedListener(natsWrapper.client).listen();
 
     await mongoose.connect(db, {
       useFindAndModify: false,
@@ -34,6 +36,7 @@ const start = async () => {
 
     console.log('Connected to DB');
   } catch (err) {
+    console.log(err);
     throw new DatabaseConnectionError();
   }
 

@@ -10,7 +10,7 @@ interface UserRequest extends Request {
 }
 
 const fetchSubscribedProfiles = async (req: UserRequest, res: Response) => {
-  const user = await User.findById(req.user.id);
+  const user = await User.findOne({ id: req.user.id });
 
   console.log(user);
   if (!user) {

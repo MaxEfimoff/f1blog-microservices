@@ -25,10 +25,14 @@ const activate = async (req: Request, res: Response) => {
 
     console.log('FOUND USER', foundUser.rows[0])
 
-    if (foundUser) {
-      const updatedUserArray = await pool.query('UPDATE users SET active = $1 RETURNING *;', [true]);
+    if (foundUser.rows[0]) {
+      const updatedUserArray = await pool.query(`
+        UPDATE users 
+        SET active = $1
+        WHERE id = $2;
+      `, [true, user.id]);
 
-      const updatedUser = updatedUserArray.rows[0];
+      const updatedUser = foundUser.rows[0];
 
       console.log('UPDATED UESR', updatedUser)
 

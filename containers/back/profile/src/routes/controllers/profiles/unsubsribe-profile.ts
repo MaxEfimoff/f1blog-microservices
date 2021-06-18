@@ -16,7 +16,7 @@ interface UserRequest extends Request {
 }
 
 const unsubscribeProfile = async (req: UserRequest, res: Response) => {
-  const user = await User.findById(req.user.id);
+  const user = await User.findOne({ id: req.user.id });
 
   if (!user) {
     throw new NotFoundError();
