@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      component: auth-postgres
+      app: auth-postgres
   template:
     metadata:
       labels:
-        component: auth-postgres
+        app: auth-postgres
     spec:
       volumes:
         - name: auth-postgres-storage
@@ -46,7 +46,7 @@ metadata:
   name: postgres-cluster-ip-service
 spec:
   selector:
-    component: auth-postgres
+    app: auth-postgres
   ports:
     - port: 5432
       targetPort: 5432

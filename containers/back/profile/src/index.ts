@@ -6,7 +6,8 @@ import { UserUpdatedListener } from './events/listeners/user-updated-listener';
 import { natsWrapper } from './nats-wrapper';
 
 // DB config
-const db = require('./config/keys').mongoURI_profile;
+// const db = require('./config/keys').mongoURI_profile;
+const db = 'mongodb://profile-mongo-srv:27017/profile';
 
 // Connect to Mongodb
 const start = async () => {

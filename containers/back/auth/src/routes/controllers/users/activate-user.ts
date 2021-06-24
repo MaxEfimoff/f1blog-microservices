@@ -6,15 +6,12 @@ import { pool } from '../../../pool';
 const activate = async (req: Request, res: Response) => {
   const hash = req.params.hash;
 
-  console.log('HASH', hash)
-
   const confirmationHash = await pool.query(`
     SELECT * FROM confirmationhash 
     WHERE hash = $1;
   `, [hash]);
-  const user = confirmationHash.rows[0];
 
-  console.log('CONF HASH', user);
+  const user = confirmationHash.rows[0];
 
   if (user) {
     const foundUser = await pool.query(`
@@ -23,18 +20,19 @@ const activate = async (req: Request, res: Response) => {
       WHERE user_id = $1 ;
     `, [user.id]);
 
-    console.log('FOUND USER', foundUser.rows[0])
-
     if (foundUser.rows[0]) {
-      const updatedUserArray = await pool.query(`
+      await pool.query(`
         UPDATE users 
         SET active = $1
         WHERE id = $2;
       `, [true, user.id]);
 
-      const updatedUser = foundUser.rows[0];
+      const updatedUserRequest = await pool.query(`
+        SELECT * FROM users 
+        WHERE id = $1;
+      `, [user.id]);
 
-      console.log('UPDATED UESR', updatedUser)
+      const updatedUser = updatedUserRequest.rows[0];
 
       await pool.query('DELETE FROM confirmationhash WHERE hash = $1 RETURNING *;', [hash]);
 
