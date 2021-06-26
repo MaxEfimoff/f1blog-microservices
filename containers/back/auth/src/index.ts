@@ -1,76 +1,74 @@
-import mongoose from 'mongoose';
-import { app } from './app';
-import { DatabaseConnectionError } from '@f1blog/common';
-import { natsWrapper } from './nats-wrapper';
-import { pool } from './pool';
-import { users } from './routes/api/users/users';
-import { series } from 'async';
-const { execSync } = require('child_process');
+import { app } from "./app";
+import { DatabaseConnectionError } from "@f1blog/common";
+import { natsWrapper } from "./nats-wrapper";
+import { pool } from "./pool";
+import { series } from "async";
+const { execSync } = require("child_process");
 
-// DB config
-const db = process.env.MONGO_AUTH_KEY;
-
-// Connect to Mongodb
+// Connect to Postgres
 const start = async () => {
   if (!process.env.POSTGRES_PASSWORD) {
-    throw new Error('POSTGRES_PASSWORDnot set');
+    throw new Error("POSTGRES_PASSWORD not set");
   }
 
   if (!process.env.JWT_KEY) {
-    throw new Error('JWT_Key not set');
+    throw new Error("JWT_Key not set");
   }
 
-  if (!process.env.MONGO_AUTH_KEY) {
-    throw new Error('MONGO_AUTH_KEY not set');
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error("NATS_CLIENT_ID must be defined");
+  }
+
+  if (!process.env.NATS_URL) {
+    throw new Error("NATS_URL must be defined");
+  }
+
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error("NATS_CLUSTER_ID must be defined");
   }
 
   try {
-    await natsWrapper.connect('ticketing', 'bjhvhv', 'http:nats-srv:4222');
+    await natsWrapper.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URL
+      // "ticketing",
+      // "bjhvhv",
+      // "http:nats-srv:4222"
+    );
 
-    natsWrapper.client.on('close', () => {
-      console.log('NATS connection closed!');
+    natsWrapper.client.on("close", () => {
+      console.log("NATS connection closed!");
       process.exit();
     });
-    process.on('SIGINT', () => natsWrapper.client.close());
-    process.on('SIGTERM', () => natsWrapper.client.close());
+    process.on("SIGINT", () => natsWrapper.client.close());
+    process.on("SIGTERM", () => natsWrapper.client.close());
 
-    await mongoose.connect(db, {
-      useFindAndModify: false,
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-    });
-
-    console.log('Connected to MONGO_DB');
-  } catch (err) {
-    new DatabaseConnectionError;
-  }
-
-  try {
     // Postgres Client Setup
     await pool.connect({
       user: process.env.AUTH_PGUSER,
       host: process.env.AUTH_PGHOST,
       database: process.env.AUTH_PGDATABASE,
       password: process.env.POSTGRES_PASSWORD,
-      port: process.env.AUTH_PGPORT
+      port: process.env.AUTH_PGPORT,
     });
 
-    console.log('Connected to POSTGRES_DB');
+    console.log("Connected to POSTGRES_DB");
 
     // Run Postgres migrations
     series([
-      () => execSync(`
+      () =>
+        execSync(`
         DATABASE_URL=${process.env.AUTH_PGDATABASE}://${process.env.AUTH_PGUSER}:${process.env.POSTGRES_PASSWORD}@${process.env.AUTH_PGHOST}:${process.env.AUTH_PGPORT}/postgres npm run migrate up
-      `)
+      `),
     ]);
-
   } catch (err) {
     console.log(err);
+    new DatabaseConnectionError();
   }
 
   app.listen(3000, () => {
-    console.log('listening on 3000!!!');
+    console.log("listening on 3000!!!");
   });
 };
 

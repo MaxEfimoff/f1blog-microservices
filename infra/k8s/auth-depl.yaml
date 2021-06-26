@@ -24,16 +24,14 @@ spec:
               memory: 500Mi
               cpu: 500m
           env:
-            - name: JWT_KEY
+            - name: NATS_CLIENT_ID
               valueFrom:
-                secretKeyRef:
-                  name: jwt-secret
-                  key: JWT_KEY
-            - name: MONGO_AUTH_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-auth-secret
-                  key: MONGO_AUTH_KEY
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
             - name: AUTH_PGUSER
               value: postgres
             - name: AUTH_PGHOST
@@ -42,6 +40,11 @@ spec:
               value: "5432"
             - name: AUTH_PGDATABASE
               value: postgres
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
