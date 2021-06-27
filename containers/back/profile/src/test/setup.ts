@@ -1,12 +1,11 @@
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-import { app } from '../app';
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
 
 let mongo: any;
 let profileId: string;
 
 beforeAll(async () => {
-  process.env.JWT_KEY = 'secret';
+  process.env.JWT_KEY = "secret";
 
   mongo = new MongoMemoryServer();
   const mongoUri = await mongo.getUri();
@@ -32,22 +31,22 @@ beforeEach(async () => {
 
   const db = await mongoose.connection.db;
 
-  await db.dropCollection('profiles');
-  const profilesColl = await db.createCollection('profiles');
+  await db.dropCollection("profiles");
+  const profilesColl = await db.createCollection("profiles");
 
   await profilesColl.insertOne(
     {
       active: true,
       karma: 1000,
-      name: 'Max',
-      handle: 'Max4',
+      name: "Max",
+      handle: "Max4",
     },
     (err, res) => {
       if (err) {
         console.log(err);
       } else {
         profileId = res.ops[0]._id;
-        console.log('Created profile: ', profileId);
+        console.log("Created profile: ", profileId);
       }
     }
   );
