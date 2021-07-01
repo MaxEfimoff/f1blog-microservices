@@ -1,10 +1,10 @@
 import jsonwebtoken from "jsonwebtoken";
 import { app } from "../../../app";
 
-export const login = async () => {
+export const login = async (id: string = "1") => {
   const payload = {
-    id: "5f92bdf7588d530018595a09",
-    name: "Max",
+    id: id,
+    name: "max",
   };
 
   // Sign the jsonwebtoken token
