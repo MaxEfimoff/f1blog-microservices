@@ -1,9 +1,11 @@
 import request from "supertest";
-import mongoose from "mongoose";
 import { app } from "../../app";
 import { login } from "./helpers/login";
 import { Profile } from "../../db/models/Profile";
 import { User } from "../../db/models/User";
+import { natsWrapper } from "../../nats-wrapper";
+
+const userId = 1;
 
 it("returns 401 if user is not logged in", async () => {
   return request(app).get("/api/v1/profiles/all").expect(401);
@@ -11,13 +13,13 @@ it("returns 401 if user is not logged in", async () => {
 
 it("returns 201 if profile was created successfully", async () => {
   const user = User.build({
-    id: 1,
+    id: userId,
     name: "max",
     version: 0,
   });
   await user.save();
 
-  const token = await login();
+  const token = await login(userId);
   const handle = "gdfgd";
 
   let profiles = await Profile.find({});
@@ -35,4 +37,6 @@ it("returns 201 if profile was created successfully", async () => {
   let profile = await Profile.findOne({ handle: handle });
 
   expect(profile.handle).toEqual(handle);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

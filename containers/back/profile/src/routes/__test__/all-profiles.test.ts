@@ -2,8 +2,10 @@ import request from "supertest";
 import { app } from "../../app";
 import { login } from "./helpers/login";
 
+const userID = 1;
+
 it("returns 200 getting all profiles if logged in", async () => {
-  const token = await login();
+  const token = await login(userID);
 
   await request(app)
     .get("/api/v1/profiles/all")

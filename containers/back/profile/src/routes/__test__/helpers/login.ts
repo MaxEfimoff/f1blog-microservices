@@ -1,7 +1,6 @@
 import jsonwebtoken from "jsonwebtoken";
-import { app } from "../../../app";
 
-export const login = async (id: string = "1") => {
+export const login = async (id: number) => {
   const payload = {
     id: id,
     name: "max",
