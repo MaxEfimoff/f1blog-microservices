@@ -1,17 +1,17 @@
-import { Request, Response } from 'express';
-import 'express-async-errors';
-import { BadRequestError, NotFoundError } from '@f1blog/common';
-import { Profile } from '../../../db/models/Profile';
-import { Team, TeamDoc } from '../../../db/models/Team';
-import { TeamUpdatedPublisher } from '../../../events/publishers/team-updated-publisher';
-import { ProfileUpdatedPublisher } from '../../../events/publishers/profile-updated-publisher';
-import { natsWrapper } from '../../../nats-wrapper';
+import { Request, Response } from "express";
+import "express-async-errors";
+import { BadRequestError, NotFoundError } from "@f1blog/common";
+import { Profile } from "../../../db/models/Profile";
+import { Team, TeamDoc } from "../../../db/models/Team";
+import { TeamUpdatedPublisher } from "../../../events/publishers/team-updated-publisher";
+import { ProfileUpdatedPublisher } from "../../../events/publishers/profile-updated-publisher";
+import { natsWrapper } from "../../../nats-wrapper";
 
 interface UserRequest extends Request {
   user: {
     id: string;
     name: string;
-    isSuperadmin: boolean;
+    role: string;
     iat: number;
     exp: number;
   };
@@ -22,37 +22,39 @@ interface Body {
 }
 
 const deleteUserFromTeam = async (req: UserRequest, res: Response) => {
-
   const user = req.user;
 
   if (!user) {
     throw new NotFoundError();
   }
 
-  if (user.isSuperadmin == false) {
-    throw new BadRequestError('Only superadmin can delete users from a team');
-  }
+  // if (user.role === 'superadmin') {
+  //   throw new BadRequestError('Only superadmin can delete users from a team');
+  // }
 
   const profile = await Profile.findOne({ user_id: req.user.id });
 
   if (!profile) {
-    throw new BadRequestError('You should create profile first');
+    throw new BadRequestError("You should create profile first");
   } else {
     const team: TeamDoc = await Team.findById(req.params.id);
 
     if (!team) {
-      throw new BadRequestError('You should create team first');
+      throw new BadRequestError("You should create team first");
     }
-    const profileToDelete = await Profile.findOne({ user_id: req.params.deleteuserid });
+    const profileToDelete = await Profile.findOne({
+      user_id: req.params.deleteuserid,
+    });
 
     if (!profileToDelete) {
-      throw new BadRequestError('There is no such a user');
+      throw new BadRequestError("There is no such a user");
     }
 
     if (
-      team.members.filter((member) => member.toString() === profileToDelete.id).length === 0
+      team.members.filter((member) => member.toString() === profileToDelete.id)
+        .length === 0
     ) {
-      throw new BadRequestError('User is not a member of this team');
+      throw new BadRequestError("User is not a member of this team");
     }
 
     // Get the remove index
@@ -74,11 +76,11 @@ const deleteUserFromTeam = async (req: UserRequest, res: Response) => {
 
     // Save New team to DB
     await team.save((err) => {
-      if (err) throw new BadRequestError('Could not save team to DB');
+      if (err) throw new BadRequestError("Could not save team to DB");
     });
 
     await profileToDelete.save((err) => {
-      if (err) throw new BadRequestError('Could not save profile to DB');
+      if (err) throw new BadRequestError("Could not save profile to DB");
     });
 
     // Publish a TeamUpdatyed event
@@ -100,7 +102,7 @@ const deleteUserFromTeam = async (req: UserRequest, res: Response) => {
     });
 
     return res.status(201).json({
-      status: 'success',
+      status: "success",
       data: {
         team,
       },

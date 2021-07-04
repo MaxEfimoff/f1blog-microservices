@@ -1,16 +1,24 @@
-import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser';
-import { errorHandler, NotFoundError } from '@f1blog/common';
+import express from "express";
+import "express-async-errors";
+import rateLimit from "express-rate-limit";
+import { json } from "body-parser";
+import { errorHandler, NotFoundError } from "@f1blog/common";
 
 // import passport from 'passport';
 // const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // Routes
-import { users } from './routes/api/users/users';
+import { users } from "./routes/api/users/users";
 
 const app = express();
 
+const limiter = rateLimit({
+  max: 10,
+  windowMs: 60 * 60 * 1000,
+  message: "Too meny requests from this IP, please try again in an hour.",
+});
+
+app.use("/api/v1/users", limiter);
 app.use(json());
 
 // const keys = require('./config/keys_dev.js');
@@ -30,8 +38,8 @@ app.use(json());
 // );
 
 // Use routes
-app.use('/api/v1/users', users);
-app.all('*', async () => {
+app.use("/api/v1/users", users);
+app.all("*", async () => {
   throw new NotFoundError();
 });
 

@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import 'express-async-errors';
-import { NotFoundError } from '@f1blog/common';
-import { Team } from '../../../db/models/Team';
+import { Request, Response } from "express";
+import "express-async-errors";
+import { NotFoundError } from "@f1blog/common";
+import { Team } from "../../../db/models/Team";
 
 const fetchAllTeams = async (req: Request, res: Response) => {
   const teams = await Team.find().limit(10).sort({ createdAt: -1 });
@@ -10,8 +10,8 @@ const fetchAllTeams = async (req: Request, res: Response) => {
     throw new NotFoundError();
   }
 
-  return res.status(201).json({
-    status: 'success',
+  return res.status(200).json({
+    status: "success",
     results: teams.length,
     data: {
       teams,
