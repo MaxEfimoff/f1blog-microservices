@@ -1,11 +1,11 @@
 import { Profile } from "../../../db/models/Profile";
 import { User } from "../../../db/models/User";
-import { generatedId } from "./generate-id";
+import mongoose from "mongoose";
 
 export const createProfile = async (
   id: number,
-  userName: string = "max3",
-  profileHandle: string = "sweet"
+  userName: string,
+  profileHandle: string
 ) => {
   const user = User.build({
     id: id,
@@ -17,12 +17,12 @@ export const createProfile = async (
   const profile = Profile.build({
     handle: profileHandle,
     user_id: user.id,
-    id: generatedId,
+    id: mongoose.Types.ObjectId().toHexString(),
     version: 0,
   });
   await profile.save();
 
-  await sleep(3000);
+  await sleep(1000);
 };
 
 function sleep(ms) {

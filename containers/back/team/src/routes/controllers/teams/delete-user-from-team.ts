@@ -42,9 +42,7 @@ const deleteUserFromTeam = async (req: UserRequest, res: Response) => {
     if (!team) {
       throw new BadRequestError("You should create team first");
     }
-    const profileToDelete = await Profile.findOne({
-      user_id: req.params.deleteuserid,
-    });
+    const profileToDelete = await Profile.findById(req.params.deleteuserid);
 
     if (!profileToDelete) {
       throw new BadRequestError("There is no such a user");

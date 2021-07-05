@@ -20,12 +20,14 @@ const fetchMyTeams = async (req: UserRequest, res: Response) => {
     throw new NotFoundError();
   }
 
-  const profile = await Profile.findOne({ user_id: req.user.id });
+  const profile = await Profile.findOne({ user_id: req.user.id }).populate(
+    "team"
+  );
 
   if (!profile) {
     throw new BadRequestError("You should create profile first");
   } else {
-    const myTeams = await Team.find({ profile: profile });
+    const myTeams = profile.joinedTeams;
 
     if (!myTeams) {
       throw new NotFoundError();

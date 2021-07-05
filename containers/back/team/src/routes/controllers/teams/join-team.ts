@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import 'express-async-errors';
-import { BadRequestError, NotFoundError } from '@f1blog/common';
-import { Profile } from '../../../db/models/Profile';
-import { Team, TeamDoc } from '../../../db/models/Team';
-import { TeamUpdatedPublisher } from '../../../events/publishers/team-updated-publisher';
-import { ProfileUpdatedPublisher } from '../../../events/publishers/profile-updated-publisher';
-import { natsWrapper } from '../../../nats-wrapper';
+import { Request, Response } from "express";
+import "express-async-errors";
+import { BadRequestError, NotFoundError } from "@f1blog/common";
+import { Profile } from "../../../db/models/Profile";
+import { Team, TeamDoc } from "../../../db/models/Team";
+import { TeamUpdatedPublisher } from "../../../events/publishers/team-updated-publisher";
+import { ProfileUpdatedPublisher } from "../../../events/publishers/profile-updated-publisher";
+import { natsWrapper } from "../../../nats-wrapper";
 
 interface UserRequest extends Request {
   user: {
@@ -21,7 +21,6 @@ interface Body {
 }
 
 const joinTeam = async (req: UserRequest, res: Response) => {
-
   const user = req.user;
 
   if (!user) {
@@ -31,18 +30,19 @@ const joinTeam = async (req: UserRequest, res: Response) => {
   const profile = await Profile.findOne({ user_id: req.user.id });
 
   if (!profile) {
-    throw new BadRequestError('You should create profile first');
+    throw new BadRequestError("You should create profile first");
   } else {
     const team: TeamDoc = await Team.findById(req.params.id);
 
     if (!team) {
-      throw new BadRequestError('You should create team first');
+      throw new BadRequestError("You should create team first");
     }
 
     if (
-      team.members.filter((member) => member.toString() === profile.id).length > 0
+      team.members.filter((member) => member.toString() === profile.id).length >
+      0
     ) {
-      throw new BadRequestError('You are already a member of this team');
+      throw new BadRequestError("You are already a member of this team");
     }
 
     team.members.unshift(profile);
@@ -50,9 +50,14 @@ const joinTeam = async (req: UserRequest, res: Response) => {
 
     console.log(team);
 
-    // Save New team to DB
+    // Save team to DB
     await team.save((err) => {
-      if (err) throw new BadRequestError('Could not save team to DB');
+      if (err) throw new BadRequestError("Could not save team to DB");
+    });
+
+    // Save profile to DB
+    await profile.save((err) => {
+      if (err) throw new BadRequestError("Could not save profile to DB");
     });
 
     // Publish a TeamUpdatyed event
@@ -73,7 +78,7 @@ const joinTeam = async (req: UserRequest, res: Response) => {
     });
 
     return res.status(201).json({
-      status: 'success',
+      status: "success",
       data: {
         team,
       },

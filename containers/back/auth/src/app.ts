@@ -1,6 +1,8 @@
 import express from "express";
 import "express-async-errors";
 import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import xss from "xss-clean";
 import { json } from "body-parser";
 import { errorHandler, NotFoundError } from "@f1blog/common";
 
@@ -15,11 +17,20 @@ const app = express();
 const limiter = rateLimit({
   max: 10,
   windowMs: 60 * 60 * 1000,
-  message: "Too meny requests from this IP, please try again in an hour.",
+  message: "Too many requests from this IP, please try again in an hour.",
 });
 
+// Set security http headers
+app.use(helmet());
+
+// Data sanitazion
+app.use(xss());
+
+// Limits number of requests from the same IP
 app.use("/api/v1/users", limiter);
-app.use(json());
+
+// Body parser, reading data from the body into req.body
+app.use(json({ limit: "10kb" }));
 
 // const keys = require('./config/keys_dev.js');
 // passport.use(

@@ -9,11 +9,9 @@ const userName = "testusername";
 const profileHandle = "testprofilehandle";
 const title = "faketitle";
 
-beforeAll(() => {
-  createProfile(userId, userName, profileHandle);
-});
+it("returns 200 after fetching all teams", async () => {
+  await createProfile(userId, userName, profileHandle);
 
-it("returns 200 after tast call", async () => {
   const token = await login(userId);
 
   const res = await request(app)
