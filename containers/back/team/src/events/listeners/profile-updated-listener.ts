@@ -1,6 +1,6 @@
 import { Message } from 'node-nats-streaming';
 import { Listener, ProfileUpdatedEvent, Subjects } from '@f1blog/common';
-import { queueGroupName } from './queue-team-name';
+import { queueGroupName } from './queue-group-name';
 import { Profile } from '../../db/models/Profile';
 
 export class ProfileUpdatedListener extends Listener<ProfileUpdatedEvent> {

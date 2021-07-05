@@ -1,0 +1,950 @@
+{
+	"info": {
+		"_postman_id": "2f475bf6-5e56-4ab8-9a2b-207ab022c954",
+		"name": "f1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Current user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/users/current",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/users/test",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTg5MDIsImV4cCI6MTYyMDcyMzcwMn0.QA0etq3yicDZp2DY8SgMIxwJ8h2KFIsoCcOI4ZpQAMA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/all",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All confirmation hashes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/all-confirmation-hashes",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"all-confirmation-hashes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All reset password hashes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/all-reset-password-hashes",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"all-reset-password-hashes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All change email hashes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/all-change-email-hashes",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"all-change-email-hashes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"emv3@yandex.ru\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/login",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"emv3@ya.ru\",\n    \"password\": \"123456\",\n    \"password2\": \"123456\",\n    \"name\": \"max\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/signup",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore password request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Im1heCIsImlhdCI6MTYyMzMwOTcwMCwiZXhwIjoxNjIzOTE0NTAwfQ.QUbQAQX4zVlIiLN54lSYAH4j99i8h_HpCW1_92vrHnE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"234567\"\n}"
+						},
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/reset-password",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change email request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/change-email",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"change-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate user",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"emv3@ya.ru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/6090f0f3ce1c7d001a71b0ce/activate",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"6090f0f3ce1c7d001a71b0ce",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend activation hash",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"emv3@ya.ru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/hash/resend",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"hash",
+								"resend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hash restored password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"234567\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/1/reset-password",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hash changed email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Im1heCIsImlhdCI6MTYyMzQ5ODg2NiwiZXhwIjoxNjI0MTAzNjY2fQ.deKc4FZbOutupxpkmRRZAmuraW0oTw548e8XROqKXv8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://ticket.dev/api/v1/users/$2b$10$afJ5xiwbpPcJMWHpqaxzKey2vMSBr.kNcsuPtRdt5X4y965.4SFX./change-email",
+							"protocol": "http",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"$2b$10$afJ5xiwbpPcJMWHpqaxzKey2vMSBr.kNcsuPtRdt5X4y965.4SFX.",
+								"change-email"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teams",
+			"item": [
+				{
+					"name": "Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/teams/test",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all teams",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTg5MDIsImV4cCI6MTYyMDcyMzcwMn0.QA0etq3yicDZp2DY8SgMIxwJ8h2KFIsoCcOI4ZpQAMA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/teams/",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch my teams",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTk3ODEsImV4cCI6MTYyMDcyNDU4MX0.IjtfoTJbpS64LMUc0Ez23pvtZOSaQYSaJnrLrBMTzwM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/teams/my",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create team",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTg5MDIsImV4cCI6MTYyMDcyMzcwMn0.QA0etq3yicDZp2DY8SgMIxwJ8h2KFIsoCcOI4ZpQAMA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"super\"\n}"
+						},
+						"url": {
+							"raw": "ticket.dev/api/v1/teams/",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teams",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groups",
+			"item": [
+				{
+					"name": "Groups Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/groups/test",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"groups",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all groups",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxNzg3NzAsImV4cCI6MTYyMDc4MzU3MH0.bncSDaSZ0mZdgOFZ8sJkNgKzXZze1dgQ6L3RKimZAHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/groups/",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"groups",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch my groups",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxNzg3NzAsImV4cCI6MTYyMDc4MzU3MH0.bncSDaSZ0mZdgOFZ8sJkNgKzXZze1dgQ6L3RKimZAHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/groups/my",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"groups",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create group",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxNzg3NzAsImV4cCI6MTYyMDc4MzU3MH0.bncSDaSZ0mZdgOFZ8sJkNgKzXZze1dgQ6L3RKimZAHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"1st group\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ticket.dev/api/v1/groups/",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"groups",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch profile by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTk3ODEsImV4cCI6MTYyMDcyNDU4MX0.IjtfoTJbpS64LMUc0Ez23pvtZOSaQYSaJnrLrBMTzwM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/60911a2a89b9200019729631",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								"60911a2a89b9200019729631"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch subscribers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTk3ODEsImV4cCI6MTYyMDcyNDU4MX0.IjtfoTJbpS64LMUc0Ez23pvtZOSaQYSaJnrLrBMTzwM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/subscribers",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								"subscribers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Profile test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/test",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch profiles I subscribed into",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTk3ODEsImV4cCI6MTYyMDcyNDU4MX0.IjtfoTJbpS64LMUc0Ez23pvtZOSaQYSaJnrLrBMTzwM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/subscribed-profiles",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								"subscribed-profiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch profile by handle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6InN3ZWV0IiwiaWF0IjoxNjI0NTA1NDQ4LCJleHAiOjE2MjUxMTAyNDh9.D9O6edMltXD4i-1MBPETHkxKTmg7mGH2kMe2Bpy3QkU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/handle/112233",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								"handle",
+								"112233"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch all profiles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTk3ODEsImV4cCI6MTYyMDcyNDU4MX0.IjtfoTJbpS64LMUc0Ez23pvtZOSaQYSaJnrLrBMTzwM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/all",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch current profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTk3ODEsImV4cCI6MTYyMDcyNDU4MX0.IjtfoTJbpS64LMUc0Ez23pvtZOSaQYSaJnrLrBMTzwM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/current",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTBmMGYzY2UxYzdkMDAxYTcxYjBjZCIsIm5hbWUiOiJtYXgiLCJpYXQiOjE2MjAxMTk3ODEsImV4cCI6MTYyMDcyNDU4MX0.IjtfoTJbpS64LMUc0Ez23pvtZOSaQYSaJnrLrBMTzwM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"handle\": \"maxxx\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6InN3ZWV0IiwiaWF0IjoxNjI0MDEyMDg4LCJleHAiOjE2MjQ2MTY4ODh9.wlbZ6ZeyWoJTC4lRB2KJSMyMIZym7ElnhlqcBzvOlxw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"handle\": \"yytytyt\",\n    \"avatar\": \"fvdfdvdfvd\",\n    \"background\": \"ddfgdfgdfgd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "ticket.dev/api/v1/profiles/",
+							"host": [
+								"ticket",
+								"dev"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profiles",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	}
+}

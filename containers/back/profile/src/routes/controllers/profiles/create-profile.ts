@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
-import 'express-async-errors';
-import { BadRequestError, NotFoundError } from '@f1blog/common';
-import { Profile } from '../../../db/models/Profile';
-import { User } from '../../../db/models/User';
-import { ProfileCreatedPublisher } from '../../../events/publishers/profile-created-publisher';
-import { natsWrapper } from '../../../nats-wrapper';
+import { Request, Response } from "express";
+import "express-async-errors";
+import { BadRequestError, NotFoundError } from "@f1blog/common";
+import { Profile } from "../../../db/models/Profile";
+import { User } from "../../../db/models/User";
+import { ProfileCreatedPublisher } from "../../../events/publishers/profile-created-publisher";
+import { natsWrapper } from "../../../nats-wrapper";
 
 interface UserRequest extends Request {
   user: {
@@ -25,7 +25,7 @@ interface Body {
 const createProfile = async (req: UserRequest, res: Response) => {
   let { handle, avatar, background, status }: Body = req.body;
 
-  const user = await User.findById(req.user.id);
+  const user = await User.findOne({ id: req.user.id });
   if (!user) {
     throw new NotFoundError();
   }
@@ -33,7 +33,7 @@ const createProfile = async (req: UserRequest, res: Response) => {
   const profile = await Profile.findOne({ user });
 
   if (profile) {
-    throw new BadRequestError('Profile already exists');
+    throw new BadRequestError("Profile already exists");
   } else {
     handle = handle.toLowerCase();
 
@@ -48,7 +48,7 @@ const createProfile = async (req: UserRequest, res: Response) => {
 
     // Save New Profile to DB
     await newProfile.save((err) => {
-      if (err) throw new BadRequestError('Could not save profile to DB');
+      if (err) throw new BadRequestError("Could not save profile to DB");
     });
 
     // Publish a ProfileCreated event
@@ -60,7 +60,7 @@ const createProfile = async (req: UserRequest, res: Response) => {
     });
 
     return res.status(201).json({
-      status: 'success',
+      status: "success",
       data: {
         newProfile,
       },

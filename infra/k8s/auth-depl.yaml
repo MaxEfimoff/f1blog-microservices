@@ -15,17 +15,41 @@ spec:
       containers:
         - name: auth
           image: maxefi/auth
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 500m
+            limits:
+              memory: 500Mi
+              cpu: 500m
           env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: AUTH_PGUSER
+              value: postgres
+            - name: AUTH_PGHOST
+              value: postgres-cluster-ip-service
+            - name: AUTH_PGPORT
+              value: "5432"
+            - name: AUTH_PGDATABASE
+              value: postgres
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-            - name: MONGO_AUTH_KEY
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongo-auth-secret 
-                  key: MONGO_AUTH_KEY
+                  name: postgrespassword
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service

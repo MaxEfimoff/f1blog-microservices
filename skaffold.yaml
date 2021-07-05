@@ -49,6 +49,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: maxefi/team
+      context: containers/back/team
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
 # FRONT
     - image: maxefi/fe-container
       context: containers/front/container

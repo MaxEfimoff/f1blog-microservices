@@ -1,60 +1,38 @@
-// import { MongoMemoryServer } from 'mongodb-memory-server';
-// import mongoose from 'mongoose';
-// import { app } from '../app';
-// import { users } from '../routes/api/users/users';
-
-// let mongo: any;
+import { app } from "../app";
+import { users } from "../routes/api/users/users";
+import { newDb } from "pg-mem";
 
 // jest.mock('../nats-wrapper');
+let db: any;
+let backup: any;
 
 beforeAll(async () => {
-  console.log('Before test')
-  // process.env.JWT_KEY = 'yjdtjd';
+  console.log("Before test");
 
-  // if (!process.env.MONGO_AUTH_KEY) {
-  //   throw new Error('MONGO_AUTH_KEY not set');
-  // }
+  db = newDb();
 
-  // const db = process.env.MONGO_AUTH_KEY;
+  await db.public.many(`
+    CREATE TABLE users (
+      id SERIAL PRIMARY KEY,  
+      name VARCHAR(50) NOT NULL,
+      email VARCHAR(50) NOT NULL,
+      password VARCHAR(500) NOT NULL,
+      active BOOLEAN DEFAULT FALSE,
+      role VARCHAR(50),
+      version INTEGER DEFAULT 0,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
 
-  // await mongoose.connect(db, {
-  //   useFindAndModify: false,
-  //   useNewUrlParser: true,
-  //   useCreateIndex: true,
-  //   useUnifiedTopology: true,
-  // });
+  await db.public.many(`
+    INSERT INTO users (name, password, email, active)
+    VALUES ('max', '123456', 'emv3@ya.ru', true);
+  `);
 
-  // mongo = new MongoMemoryServer();
-  // const mongoUri = await mongo.getUri();
-
-  // await mongoose.connect(mongoUri, {
-  //   useNewUrlParser: true,
-  //   useUnifiedTopology: true,
-  // });
+  backup = db.backup();
 });
 
-// beforeEach(async () => {
-//   const collections = await mongoose.connection.db.collections();
-
-//   for (let collection of collections) {
-//     await collection.deleteMany({});
-//   }
-
-//   const db = await mongoose.connection.db;
-
-//   await db.dropCollection('users');
-//   const usersColl = await db.createCollection('users');
-
-//   await usersColl.insertOne({
-//     active: true,
-//     role: 'guest',
-//     name: 'Max',
-//     email: 'emv3@ya.ru',
-//     password: '$2b$10$8zemadXxMLUwpf38PyZGDOMeeYr2d1qv5hEduzRx4Ex12xyYIUzmy',
-//   });
-// });
-
-// afterAll(async () => {
-//   await mongo.stop();
-//   await mongoose.connection.close();
-// });
+beforeEach(async () => {
+  backup.restore();
+});
