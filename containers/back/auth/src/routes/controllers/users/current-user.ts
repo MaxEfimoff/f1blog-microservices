@@ -4,7 +4,7 @@ interface UserRequest extends Request {
   user: {
     id: string;
     name: string;
-    // email: string;
+    role: string;
     // active: string;
   };
 }
@@ -15,7 +15,7 @@ const current = async (req: UserRequest, res: Response) => {
     data: {
       id: req.user.id,
       name: req.user.name,
-      // email: req.user.email,
+      role: req.user.role,
       // active: req.user.active,
     },
   });

@@ -7,22 +7,28 @@ const hashResetPassword = async (req: Request, res: Response) => {
   let { password } = req.body;
   const { hash } = req.params;
 
-  const resetPasswordHash = await pool.query(`
+  const resetPasswordHash = await pool.query(
+    `
       SELECT * FROM resetpasswordhash
       WHERE hash = $1;
-    `, [hash]);
+    `,
+    [hash]
+  );
 
   console.log('RESET PASSWORD', resetPasswordHash.rows[0]);
 
   if (!resetPasswordHash.rows[0]) {
     throw new BadRequestError('Reset hash not found');
   } else {
-    let user = await pool.query(`
+    let user = await pool.query(
+      `
       SELECT * FROM users
       WHERE id = $1
-    `, [resetPasswordHash.rows[0].user_id]);
+    `,
+      [resetPasswordHash.rows[0].user_id]
+    );
 
-    console.log('USER', user.rows[0])
+    console.log('USER', user.rows[0]);
 
     user = user.rows[0];
 
@@ -35,17 +41,23 @@ const hashResetPassword = async (req: Request, res: Response) => {
           if (err) throw new BadRequestError('Could not hash the password');
 
           // Save the encrypted password in user table
-          pool.query(`
+          pool.query(
+            `
             UPDATE users
             SET password = $1
             WHERE id = $2;
-          `, [passwordHash, user.id]);
+          `,
+            [passwordHash, user.id]
+          );
 
-          pool.query(`
+          pool.query(
+            `
             DELETE FROM resetpasswordhash
             WHERE hash = $1
             RETURNING *;
-          `, [hash]);
+          `,
+            [hash]
+          );
         });
       });
 
