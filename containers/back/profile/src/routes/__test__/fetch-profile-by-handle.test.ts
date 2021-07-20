@@ -7,11 +7,8 @@ const userId = 1;
 const name = "fakename12";
 const handle = "fakehandleqw";
 
-beforeAll(() => {
-  createProfile(userId, name, handle);
-});
-
 it("returns 200 on getting profile by handle", async () => {
+  await createProfile(userId, name, handle);
   const token = await login(userId);
 
   const res = await request(app)

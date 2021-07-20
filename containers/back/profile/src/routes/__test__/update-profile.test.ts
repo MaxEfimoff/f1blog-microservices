@@ -9,8 +9,10 @@ const handle = "new-handle";
 const avatar = "new-avatar";
 const background = "new-background";
 
-beforeAll(async () => {
+beforeAll(async (done) => {
   createProfile(userId);
+
+  done();
 });
 
 it("returns 201 on updating current profile if user is logged in", async () => {

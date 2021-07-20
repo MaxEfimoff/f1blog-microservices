@@ -1,30 +1,30 @@
-import { app } from "./app";
-import { DatabaseConnectionError } from "@f1blog/common";
-import { natsWrapper } from "./nats-wrapper";
-import { pool } from "./pool";
-import { series } from "async";
-const { execSync } = require("child_process");
+import { app } from './app';
+import { DatabaseConnectionError } from '@f1blog/common';
+import { natsWrapper } from './nats-wrapper';
+import { pool } from './pool';
+import { series } from 'async';
+const { execSync } = require('child_process');
 
 // Connect to Postgres
 const start = async () => {
   if (!process.env.POSTGRES_PASSWORD) {
-    throw new Error("POSTGRES_PASSWORD not set");
+    throw new Error('POSTGRES_PASSWORD not set');
   }
 
   if (!process.env.JWT_KEY) {
-    throw new Error("JWT_Key not set");
+    throw new Error('JWT_Key not set');
   }
 
   if (!process.env.NATS_CLIENT_ID) {
-    throw new Error("NATS_CLIENT_ID must be defined");
+    throw new Error('NATS_CLIENT_ID must be defined');
   }
 
   if (!process.env.NATS_URL) {
-    throw new Error("NATS_URL must be defined");
+    throw new Error('NATS_URL must be defined');
   }
 
   if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error("NATS_CLUSTER_ID must be defined");
+    throw new Error('NATS_CLUSTER_ID must be defined');
   }
 
   try {
@@ -32,17 +32,14 @@ const start = async () => {
       process.env.NATS_CLUSTER_ID,
       process.env.NATS_CLIENT_ID,
       process.env.NATS_URL
-      // "ticketing",
-      // "bjhvhv",
-      // "http:nats-srv:4222"
     );
 
-    natsWrapper.client.on("close", () => {
-      console.log("NATS connection closed!");
+    natsWrapper.client.on('close', () => {
+      console.log('NATS connection closed!');
       process.exit();
     });
-    process.on("SIGINT", () => natsWrapper.client.close());
-    process.on("SIGTERM", () => natsWrapper.client.close());
+    process.on('SIGINT', () => natsWrapper.client.close());
+    process.on('SIGTERM', () => natsWrapper.client.close());
 
     // Postgres Client Setup
     await pool.connect({
@@ -53,7 +50,7 @@ const start = async () => {
       port: process.env.AUTH_PGPORT,
     });
 
-    console.log("Connected to POSTGRES_DB");
+    console.log('Connected to POSTGRES_DB');
 
     // Run Postgres migrations
     series([
@@ -68,7 +65,7 @@ const start = async () => {
   }
 
   app.listen(3000, () => {
-    console.log("listening on 3000!!!");
+    console.log('listening on 3000!!!');
   });
 };
 

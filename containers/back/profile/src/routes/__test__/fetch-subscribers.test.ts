@@ -11,9 +11,11 @@ const secondUserId = 5;
 const secondUserName = "anotherfakename";
 const secondProfileHandle = "anotherfakehandle";
 
-beforeAll(async () => {
+beforeAll(async (done) => {
   createProfile(firstUserId, firstUserName, firstProfileHandle);
   createProfile(secondUserId, secondUserName, secondProfileHandle);
+
+  done();
 });
 
 it("returns 200 on getting current subscribers if user is logged in and 401 ai not logged in", async () => {

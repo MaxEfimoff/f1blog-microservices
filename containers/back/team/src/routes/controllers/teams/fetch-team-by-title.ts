@@ -6,7 +6,7 @@ const fetchTeamByTitle = async (req: Request, res: Response) => {
   const team = await Team.findOne({ title: req.params.title });
 
   if (!team) {
-    throw new BadRequestError("There are no team with this id");
+    throw new BadRequestError("There are no team with this title");
   }
 
   return res.status(200).json({

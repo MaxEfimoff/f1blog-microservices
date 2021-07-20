@@ -29,6 +29,28 @@ const router = express.Router();
 // Shortened for /api/v1/users
 // router.get('/googleoauth', googleOauth);
 // router.get('/googleoauth/callback', googleOauthCallback);
+
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication managing API
+ */
+
+/**
+ *  @swagger
+ *  /api/v1/users/all:
+ *    get:
+ *      summary: returns a list of all users
+ *      tags: [Auth]
+ *      responses:
+ *        200:
+ *          description: The list of all the users
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ */
 router.get('/all', currentUser, requireAuth, allUsers);
 router.get('/current', currentUser, requireAuth, current);
 router.get('/all-reset-password-hashes', allResetPasswordHashes);

@@ -5,12 +5,34 @@ import helmet from 'helmet';
 import xss from 'xss-clean';
 import { json } from 'body-parser';
 import { errorHandler, NotFoundError } from '@f1blog/common';
+import swaggerUI from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 // import passport from 'passport';
 // const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // Routes
 import { users } from './routes/api/users/users';
+
+// Openapi options
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Auth service',
+      version: '1.0.0',
+      description: 'Auth service api',
+    },
+    servers: [
+      {
+        url: 'http://tickets.dev:3000',
+      },
+    ],
+  },
+  apis: ['./routes/api/users/*.ts'],
+};
+
+const specs = swaggerJsdoc(options);
 
 const app = express();
 
@@ -22,6 +44,9 @@ const limiter = rateLimit({
 
 // Set security http headers
 app.use(helmet());
+
+// Swagger
+app.use('/api/v1/users', swaggerUI.serve, swaggerUI.setup(specs));
 
 // Data sanitazion
 app.use(xss());

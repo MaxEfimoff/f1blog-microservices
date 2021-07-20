@@ -31,7 +31,7 @@ const createTeam = async (req: UserRequest, res: Response) => {
 
   const profile = await Profile.findOne({ user_id: req.user.id });
 
-  console.log(profile);
+  console.log("Profile", profile);
 
   if (!profile) {
     throw new BadRequestError("You should create profile first");

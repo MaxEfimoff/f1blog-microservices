@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
-import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
-import { ProfileDoc } from './Profile';
-import { GroupDoc } from './Group';
+import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
+import { ProfileDoc } from "./Profile";
+import { GroupDoc } from "./Group";
 
 // An interface that describes the properties
 // that are required to create a new Team
@@ -36,7 +36,7 @@ const TeamSchema = new mongoose.Schema(
   {
     profile: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile',
+      ref: "Profile",
     },
     title: {
       type: String,
@@ -53,13 +53,13 @@ const TeamSchema = new mongoose.Schema(
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profile',
+        ref: "Profile",
       },
     ],
     groups: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Group',
+        ref: "Group",
       },
     ],
     createdAt: {
@@ -83,7 +83,7 @@ const TeamSchema = new mongoose.Schema(
   }
 );
 
-TeamSchema.set('versionKey', 'version');
+TeamSchema.set("versionKey", "version");
 TeamSchema.plugin(updateIfCurrentPlugin);
 
 // Add findByEvent method to a TeamSchema
@@ -99,6 +99,6 @@ TeamSchema.statics.build = (attrs: TeamAttrs) => {
   return new Team(attrs);
 };
 
-const Team = mongoose.model<TeamDoc, TeamModel>('Team', TeamSchema);
+const Team = mongoose.model<TeamDoc, TeamModel>("Team", TeamSchema);
 
 export { Team };

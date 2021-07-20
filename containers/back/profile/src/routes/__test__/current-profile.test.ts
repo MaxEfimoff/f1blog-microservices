@@ -7,8 +7,10 @@ const userId = 4;
 const name = "fakename";
 const handle = "fakehandle";
 
-beforeAll(async () => {
+beforeAll(async (done) => {
   createProfile(userId, name, handle);
+
+  done();
 });
 
 it("returns 200 on getting current profile if user is logged in", async () => {
