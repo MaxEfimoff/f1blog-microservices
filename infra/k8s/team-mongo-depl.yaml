@@ -1,47 +1,47 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: profile-mongo-deployment
+  name: team-mongo-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: profile-mongo
+      app: team-mongo
   template:
     metadata:
       labels:
-        app: profile-mongo
+        app: team-mongo
     spec:
       volumes:
-        - name: profile-mongo-storage
+        - name: team-mongo-storage
           persistentVolumeClaim:
             claimName: db-persistent-volume-claim
       containers:
-        - name: profile-mongo
+        - name: team-mongo
           image: mongo
           imagePullPolicy: IfNotPresent
           resources:
             requests:
-              memory: 500Mi
+              memory: 100Mi
               cpu: 100m
             limits:
-              memory: 500Mi
+              memory: 100Mi
               cpu: 100m
           ports:
             - containerPort: 27017
           volumeMounts:
-            - name: profile-mongo-storage
-              mountPath: /data/db
+            - name: team-mongo-storage
+              mountPath: /data/db/team
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: profile-mongo-srv
+  name: team-mongo-srv
 spec:
   selector:
-    app: profile-mongo
+    app: team-mongo
   ports:
-    - name: profile-db
+    - name: team-db
       protocol: TCP
       port: 27017
       targetPort: 27017

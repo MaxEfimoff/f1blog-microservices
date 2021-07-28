@@ -19,21 +19,21 @@ spec:
           resources:
             requests:
               memory: 500Mi
-              cpu: 500m
+              cpu: 200m
             limits:
               memory: 500Mi
-              cpu: 500m
+              cpu: 200m
           env:
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_URL
-              value: "http://nats-srv:4222"
+              value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: ticketing
             - name: MONGO_URI
-              value: "mongodb://profile-mongo-srv:27017/profile"
+              value: 'mongodb://profile-mongo-srv:27017/profile'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

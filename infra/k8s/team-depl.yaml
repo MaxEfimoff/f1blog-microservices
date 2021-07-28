@@ -29,9 +29,11 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_URL
-              value: "http://nats-srv:4222"
+              value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: ticketing
+            - name: MONGO_URI
+              value: 'mongodb://team-mongo-srv:27017/team'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
-import "express-async-errors";
-import { NotFoundError, BadRequestError } from "@f1blog/common";
-import { Profile } from "../../../db/models/Profile";
-import { Team } from "../../../db/models/Team";
+import { Request, Response } from 'express';
+import 'express-async-errors';
+import { NotFoundError, BadRequestError } from '@f1blog/common';
+import { Profile } from '../../../db/models/Profile';
+import { Team } from '../../../db/models/Team';
 
 interface UserRequest extends Request {
   user: {
@@ -20,21 +20,22 @@ const fetchMyTeams = async (req: UserRequest, res: Response) => {
     throw new NotFoundError();
   }
 
-  const profile = await Profile.findOne({ user_id: req.user.id }).populate(
-    "team"
-  );
+  const profile = await Profile.findOne({ user_id: req.user.id }).populate('team');
+  const teams = await Team.find();
 
   if (!profile) {
-    throw new BadRequestError("You should create profile first");
+    throw new BadRequestError('You should create profile first');
   } else {
-    const myTeams = profile.joinedTeams;
+    const myTeams = teams.filter((team) => {
+      return team.members.includes(profile.id);
+    });
 
     if (!myTeams) {
       throw new NotFoundError();
     }
 
     return res.status(200).json({
-      status: "success",
+      status: 'success',
       results: myTeams.length,
       data: {
         myTeams,

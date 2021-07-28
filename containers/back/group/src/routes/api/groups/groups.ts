@@ -17,14 +17,7 @@ router.get('/test', currentUser, requireAuth, test);
 router.get('/', currentUser, requireAuth, fetchAllGroups);
 router.get('/my', currentUser, requireAuth, fetchMyGroups);
 
-router.post(
-  '/',
-  currentUser,
-  requireAuth,
-  groupValidation,
-  validateRequest,
-  createGroup
-);
+router.post('/', currentUser, requireAuth, groupValidation, validateRequest, createGroup);
 
 router.post(
   '/:id/blogpost',
@@ -32,7 +25,7 @@ router.post(
   requireAuth,
   groupBlogPostValidation,
   validateRequest,
-  createGroupBlogPost
+  createGroupBlogPost,
 );
 
 router.delete('/:id', currentUser, requireAuth, deleteGroup);

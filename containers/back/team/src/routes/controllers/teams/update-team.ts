@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
-import "express-async-errors";
-import { BadRequestError, NotFoundError } from "@f1blog/common";
-import { Profile } from "../../../db/models/Profile";
-import { Team, TeamDoc } from "../../../db/models/Team";
-import { TeamUpdatedPublisher } from "../../../events/publishers/team-updated-publisher";
-import { natsWrapper } from "../../../nats-wrapper";
+import { Request, Response } from 'express';
+import 'express-async-errors';
+import { BadRequestError, NotFoundError } from '@f1blog/common';
+import { Profile } from '../../../db/models/Profile';
+import { Team, TeamDoc } from '../../../db/models/Team';
+import { TeamUpdatedPublisher } from '../../../events/publishers/team-updated-publisher';
+import { natsWrapper } from '../../../nats-wrapper';
 
 interface UserRequest extends Request {
   user: {
@@ -29,33 +29,29 @@ const updateTeam = async (req: UserRequest, res: Response) => {
     throw new NotFoundError();
   }
 
-  // if (user.isSuperadmin == false) {
-  //   throw new BadRequestError('Only superadmin can update team');
-  // }
-
   const profile = await Profile.findOne({ user_id: req.user.id });
 
   if (!profile) {
-    throw new BadRequestError("You should create profile first");
+    throw new BadRequestError('You should create profile first');
   } else {
     const team: TeamDoc = await Team.findById(req.params.id);
 
     if (!team) {
-      throw new BadRequestError("You should create team first");
+      throw new BadRequestError('You should create team first');
     }
 
     if (team.profile.toString() !== profile._id.toString()) {
-      throw new BadRequestError("You can not update this team");
+      throw new BadRequestError('You can not update this team');
     }
 
     team.title = title;
     team.updatedAt = Date.now();
 
-    console.log("Updated team", team);
+    console.log('Updated team', team);
 
     // Save New team to DB
     await team.save((err) => {
-      if (err) throw new BadRequestError("Could not save news item to DB");
+      if (err) throw new BadRequestError('Could not save news item to DB');
     });
 
     // Publish a TeamUpdatyed event
@@ -67,7 +63,7 @@ const updateTeam = async (req: UserRequest, res: Response) => {
     });
 
     return res.status(201).json({
-      status: "success",
+      status: 'success',
       data: {
         team,
       },
