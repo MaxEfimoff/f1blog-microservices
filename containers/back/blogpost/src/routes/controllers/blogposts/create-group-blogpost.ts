@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
-import { Profile } from '../../../db/models/Profile';
-import { BlogPost } from '../../../db/models/Blogpost';
-import { Group } from '../../../db/models/Group';
-import { BlogPostCreatedPublisher } from '../../../events/publishers/blogpost-created-publisher';
-import { natsWrapper } from '../../../nats-wrapper';
+import { Profile } from '../../../../../group/src/db/models/Profile';
+import { BlogPost } from '../../../../../group/src/db/models/Blogpost';
+import { Group } from '../../../../../group/src/db/models/Group';
+import { BlogPostCreatedPublisher } from '../../../../../group/src/events/publishers/blogpost-created-publisher';
+import { natsWrapper } from '../../../../../group/src/nats-wrapper';
 
 interface UserRequest extends Request {
   user: {

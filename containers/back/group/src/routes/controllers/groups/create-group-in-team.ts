@@ -3,6 +3,7 @@ import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
 import { Group } from '../../../db/models/Group';
+import { Team } from '../../../db/models/Team';
 import { GroupCreatedPublisher } from '../../../events/publishers/group-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 
@@ -15,8 +16,9 @@ interface UserRequest extends Request {
   };
 }
 
-const createGroup = async (req: UserRequest, res: Response) => {
+const createGroupInTeam = async (req: UserRequest, res: Response) => {
   let { title } = req.body;
+  const { id } = req.params;
 
   const user = req.user;
 
@@ -30,8 +32,12 @@ const createGroup = async (req: UserRequest, res: Response) => {
     throw new BadRequestError('You should create profile first');
   } else {
     console.log(profile);
+
+    const team = await Team.findById(id);
+
     const newGroup = Group.build({
       title,
+      team: team,
       profile: profile,
       createdAt: Date.now(),
     });
@@ -58,4 +64,4 @@ const createGroup = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { createGroup };
+export { createGroupInTeam };

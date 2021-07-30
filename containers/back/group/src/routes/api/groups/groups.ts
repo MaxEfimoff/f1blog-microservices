@@ -1,33 +1,31 @@
 import express from 'express';
 import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
 import { groupValidation } from '../../../validation/create-group';
-import { groupBlogPostValidation } from '../../../validation/create-group-postblog';
 
 import { test } from '../../controllers/groups/test';
-import { fetchAllGroups } from '../../controllers/groups/fetch-all-groups';
-import { fetchMyGroups } from '../../controllers/groups/fetch-my-groups';
-import { createGroup } from '../../controllers/groups/create-group';
-import { createGroupBlogPost } from '../../controllers/groups/create-group-blogpost';
-import { deleteGroup } from '../../controllers/groups/delete-group';
+import { fetchAllGroupsInTeam } from '../../controllers/groups/fetch-all-groups-in-team';
+import { fetchMyGroups } from '../../controllers/groups/fetch-my-groups-in-team';
+import { fetchAllProfiles } from '../../controllers/groups/fetch-all-profiles';
+import { createGroupInTeam } from '../../controllers/groups/create-group-in-team';
+import { deleteGroupInTeam } from '../../controllers/groups/delete-group-in-team';
 
 const router = express.Router();
 
 // Shortened for /api/v1/groups
 router.get('/test', currentUser, requireAuth, test);
-router.get('/', currentUser, requireAuth, fetchAllGroups);
-router.get('/my', currentUser, requireAuth, fetchMyGroups);
-
-router.post('/', currentUser, requireAuth, groupValidation, validateRequest, createGroup);
+router.get('/team/:id', currentUser, requireAuth, fetchAllGroupsInTeam);
+router.get('/my/team/:id', currentUser, requireAuth, fetchMyGroups);
+router.get('/profiles', currentUser, requireAuth, fetchAllProfiles);
 
 router.post(
-  '/:id/blogpost',
+  '/team/:id',
   currentUser,
   requireAuth,
-  groupBlogPostValidation,
+  groupValidation,
   validateRequest,
-  createGroupBlogPost,
+  createGroupInTeam,
 );
 
-router.delete('/:id', currentUser, requireAuth, deleteGroup);
+router.delete('/:groupId/team/:teamId', currentUser, requireAuth, deleteGroupInTeam);
 
 export { router as groups };

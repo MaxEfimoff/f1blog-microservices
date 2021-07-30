@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
 import { NotFoundError, BadRequestError } from '@f1blog/common';
-import { Profile } from '../../../db/models/Profile';
 import { Group } from '../../../db/models/Group';
+import { Team } from '../../../db/models/Team';
+import { Profile } from '../../../db/models/Profile';
 
 interface UserRequest extends Request {
   user: {
@@ -13,7 +14,8 @@ interface UserRequest extends Request {
   };
 }
 
-const fetchMyGroups = async (req: UserRequest, res: Response) => {
+const fetchAllGroupsInTeam = async (req: UserRequest, res: Response) => {
+  const { id } = req.params;
   const user = req.user;
 
   if (!user) {
@@ -25,15 +27,23 @@ const fetchMyGroups = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    const groups = await Group.find({ profile: profile }).limit(10).sort({
-      createdAt: -1,
-    });
+    const team = await Team.findById(id);
+
+    if (!team) {
+      throw new NotFoundError();
+    }
+
+    console.log('Team', team);
+
+    const groups = await Group.find({ team: team }).limit(10).sort({ createdAt: -1 });
+
+    console.log('groups', groups);
 
     if (!groups) {
       throw new NotFoundError();
     }
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: 'success',
       results: groups.length,
       data: {
@@ -43,4 +53,4 @@ const fetchMyGroups = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { fetchMyGroups };
+export { fetchAllGroupsInTeam };

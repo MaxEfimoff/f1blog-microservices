@@ -3,7 +3,8 @@ import 'express-async-errors';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
 import { Group } from '../../../db/models/Group';
-// import { NewsItemDeletedPublisher } from '../../../events/publishers/newsitem-deleted-publisher';
+import { Team } from '../../../db/models/Team';
+import { GroupDeletedPublisher } from '../../../events/publishers/group-deleted-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 import { NotAuthorizedError } from '@f1blog/common';
 
@@ -16,7 +17,7 @@ interface UserRequest extends Request {
   };
 }
 
-const deleteGroup = async (req: UserRequest, res: Response) => {
+const deleteGroupInTeam = async (req: UserRequest, res: Response) => {
   const user = req.user;
 
   if (!user) {
@@ -28,23 +29,32 @@ const deleteGroup = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
-    const group = await Group.findById(req.params.id);
+    const { groupId, teamId } = req.params;
+
+    const group = await Group.findById(groupId);
+    const team = await Team.findById(teamId);
+
+    if (!team) {
+      throw new BadRequestError('You should create team first');
+    }
+
+    if (!group) {
+      throw new BadRequestError('You should create group first');
+    }
 
     if (group.profile.toString() !== profile.id) {
       return new NotAuthorizedError();
     }
 
-    await group.remove();
+    await Group.findByIdAndRemove({ _id: req.params.groupId });
 
-    // // Publish a BlogPostDeleted event
-    // new BlogPostDeletedPublisher(natsWrapper.client).publish({
-    //   id: blogPost.id,
-    //   title: null,
-    //   text: null,
-    //   image: null,
-    //   version: blogPost.version,
-    //   profile_id: profile.id,
-    // });
+    // Publish a GroupDeleted event
+    new GroupDeletedPublisher(natsWrapper.client).publish({
+      id: group.id,
+      title: null,
+      profile_id: null,
+      version: group.version,
+    });
 
     return res.status(201).json({
       status: 'success',
@@ -55,4 +65,4 @@ const deleteGroup = async (req: UserRequest, res: Response) => {
   }
 };
 
-export { deleteGroup };
+export { deleteGroupInTeam };
