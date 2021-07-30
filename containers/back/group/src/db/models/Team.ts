@@ -6,9 +6,10 @@ import { GroupDoc } from './Group';
 // An interface that describes the properties
 // that are required to create a new Team
 interface TeamAttrs {
-  profile: ProfileDoc;
+  profile_id: string;
   title: string;
-  createdAt: number;
+  id: string;
+  version: number;
 }
 
 // An interface that describes the properties
@@ -21,11 +22,11 @@ interface TeamModel extends mongoose.Model<TeamDoc> {
 // An interface that describes the properties
 // that a single Team Document has
 export interface TeamDoc extends mongoose.Document {
-  profile: ProfileDoc;
+  profile: string;
   title: string;
   description?: string;
   avatar?: string;
-  members?: ProfileDoc[];
+  members?: string[];
   groups?: GroupDoc[];
   createdAt: number;
   updatedAt?: number;
@@ -96,7 +97,11 @@ TeamSchema.statics.findByEvent = (event: { id: string; version: number }) => {
 
 // Add build method to a TeamSchema
 TeamSchema.statics.build = (attrs: TeamAttrs) => {
-  return new Team(attrs);
+  return new Team({
+    _id: attrs.id,
+    profile_id: attrs.profile_id,
+    title: attrs.title,
+  });
 };
 
 const Team = mongoose.model<TeamDoc, TeamModel>('Team', TeamSchema);

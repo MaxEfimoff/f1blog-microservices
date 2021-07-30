@@ -4,7 +4,6 @@ import { BadRequestError, NotFoundError } from '@f1blog/common';
 import { Profile } from '../../../db/models/Profile';
 import { Team, TeamDoc } from '../../../db/models/Team';
 import { TeamUpdatedPublisher } from '../../../events/publishers/team-updated-publisher';
-import { ProfileUpdatedPublisher } from '../../../events/publishers/profile-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 
 interface UserRequest extends Request {

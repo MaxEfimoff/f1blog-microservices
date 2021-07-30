@@ -35,7 +35,7 @@ const deleteTeam = async (req: UserRequest, res: Response) => {
       return new NotAuthorizedError();
     }
 
-    await team.remove();
+    await Team.findByIdAndRemove({ _id: req.params.id });
 
     // Publish a TeamDeleted event
     new TeamDeletedPublisher(natsWrapper.client).publish({
