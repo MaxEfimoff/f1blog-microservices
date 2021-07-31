@@ -9,13 +9,14 @@ import { TeamUpdatedListener } from './events/listeners/team-updated-listener';
 import { TeamDeletedListener } from './events/listeners/team-deleted-listener';
 import { natsWrapper } from './nats-wrapper';
 
-// DB config
-const db = require('./config/keys').mongoURI_blog;
-
 // Connect to Mongodb
 const start = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_Key not set');
+  }
+
+  if (!process.env.MONGO_URI) {
+    throw new Error('MONGO_URI must be defined');
   }
 
   if (!process.env.NATS_CLIENT_ID) {
@@ -53,7 +54,7 @@ const start = async () => {
     new TeamUpdatedListener(natsWrapper.client).listen();
     new TeamDeletedListener(natsWrapper.client).listen();
 
-    await mongoose.connect(db, {
+    await mongoose.connect(process.env.MONGO_URI, {
       useFindAndModify: false,
       useNewUrlParser: true,
       useCreateIndex: true,

@@ -43,7 +43,7 @@ const fetchAllGroupsInTeam = async (req: UserRequest, res: Response) => {
       throw new NotFoundError();
     }
 
-    return res.status(201).json({
+    return res.status(200).json({
       status: 'success',
       results: groups.length,
       data: {

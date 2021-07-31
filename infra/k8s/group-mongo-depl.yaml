@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: group-mongo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: group-mongo
+  template:
+    metadata:
+      labels:
+        app: group-mongo
+    spec:
+      volumes:
+        - name: group-mongo-storage
+          persistentVolumeClaim:
+            claimName: db-persistent-volume-claim
+      containers:
+        - name: group-mongo
+          image: mongo
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 100m
+            limits:
+              memory: 100Mi
+              cpu: 100m
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: group-mongo-storage
+              mountPath: /data/db/group
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: group-mongo-srv
+spec:
+  selector:
+    app: group-mongo
+  ports:
+    - name: group-db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
