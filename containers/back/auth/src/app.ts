@@ -17,7 +17,7 @@ import { users } from './routes/api/users/users';
 const app = express();
 
 const limiter = rateLimit({
-  max: 50,
+  max: 50000,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour.',
 });
@@ -26,11 +26,7 @@ const limiter = rateLimit({
 app.use(helmet());
 
 // Swagger
-app.use(
-  '/api/v1/users/api-docs',
-  swaggerUI.serve,
-  swaggerUI.setup(swaggerDocument)
-);
+app.use('/api/v1/users/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // Data sanitazion
 app.use(xss());

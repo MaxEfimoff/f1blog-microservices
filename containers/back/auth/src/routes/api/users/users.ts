@@ -29,28 +29,6 @@ const router = express.Router();
 // Shortened for /api/v1/users
 // router.get('/googleoauth', googleOauth);
 // router.get('/googleoauth/callback', googleOauthCallback);
-
-/**
- * @swagger
- * tags:
- *   name: Auth
- *   description: Authentication managing API
- */
-
-/**
- *  @swagger
- *  /api/v1/users/all:
- *    get:
- *      summary: returns a list of all users
- *      tags: [Auth]
- *      responses:
- *        200:
- *          description: The list of all the users
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- */
 router.get('/all', currentUser, requireAuth, allUsers);
 router.get('/current', currentUser, requireAuth, current);
 router.get('/all-reset-password-hashes', allResetPasswordHashes);
@@ -61,12 +39,7 @@ router.get('/user-role-by-value/:role', fetchUsersByUserrole);
 router.post('/login', loginValidation, validateRequest, login);
 router.post('/signup', signupValidation, validateRequest, register);
 router.post('/:id/assign-role-to-user/:role', assignRoleToUser);
-router.post(
-  '/reset-password',
-  resetPasswordValidation,
-  validateRequest,
-  restorePasswordRequest
-);
+router.post('/reset-password', resetPasswordValidation, validateRequest, restorePasswordRequest);
 router.post('/change-email', currentUser, requireAuth, changeEmailRequest);
 router.post('/create-user-role', currentUser, requireAuth, createUserRole);
 router.patch('/:hash/activate', activate);
@@ -77,7 +50,7 @@ router.patch(
   validateRequest,
   currentUser,
   requireAuth,
-  hashChangeEmail
+  hashChangeEmail,
 );
 router.patch('/hash/resend', resendActivationHash);
 
