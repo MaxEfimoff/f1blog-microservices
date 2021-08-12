@@ -35,7 +35,7 @@ router.get('/all-reset-password-hashes', allResetPasswordHashes);
 router.get('/all-confirmation-hashes', allConfirmationHashes);
 router.get('/all-change-email-hashes', allChangeEmailHashes);
 router.get('/all-user-roles', allUserRoles);
-router.get('/user-role-by-value/:role', fetchUsersByUserrole);
+router.get('/users-by-userrole/:role', fetchUsersByUserrole);
 router.post('/login', loginValidation, validateRequest, login);
 router.post('/signup', signupValidation, validateRequest, register);
 router.post('/:id/assign-role-to-user/:role', assignRoleToUser);
