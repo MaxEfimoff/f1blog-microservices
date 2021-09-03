@@ -19,7 +19,7 @@ const restorePasswordRequest = async (req: UserRequest, res: Response) => {
     `
     SELECT * FROM users WHERE email = $1;
   `,
-    [email]
+    [email],
   );
 
   const foundUser = user.rows[0];
@@ -43,24 +43,20 @@ const restorePasswordRequest = async (req: UserRequest, res: Response) => {
           VALUES ($1, $2)
           RETURNING *;
         `,
-          [hash, foundUser.id]
+          [hash, foundUser.id],
         );
 
         // Send a letter with the confirmation hash
-        sendResetPasswordEmail(
-          { toUser: foundUser, hash: hash },
-          (err: any) => {
-            if (err)
-              throw new BadRequestError('Could not send confirmation hash');
+        sendResetPasswordEmail({ toUser: foundUser, hash: hash }, (err: any) => {
+          if (err) throw new BadRequestError('Could not send confirmation hash');
 
-            return res.status(201).json({
-              status: 'success',
-              data: {
-                foundUser,
-              },
-            });
-          }
-        );
+          return res.status(201).json({
+            status: 'success',
+            data: {
+              foundUser,
+            },
+          });
+        });
       });
     });
   }

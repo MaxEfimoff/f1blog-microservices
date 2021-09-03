@@ -27,8 +27,6 @@ const getAuthToken = async (role: string = 'user') => {
 
   const { id } = res5.data.data;
 
-  console.log(token, res4.data.data);
-
   if (role !== 'user') {
     const res6 = await Userroles.assignRoleToUser(id, role, {
       headers: {

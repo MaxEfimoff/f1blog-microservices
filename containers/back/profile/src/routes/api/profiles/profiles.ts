@@ -1,10 +1,5 @@
 import express from 'express';
-import {
-  validateRequest,
-  currentUser,
-  requireAuth,
-  isAdmin,
-} from '@f1blog/common';
+import { validateRequest, currentUser, requireAuth, isAdmin } from '@f1blog/common';
 import { profileValidation } from '../../../validation/create-profile';
 import { updateProfileValidation } from '../../../validation/update-profile';
 import { createProfile } from '../../controllers/profiles/create-profile';
@@ -27,24 +22,12 @@ router.get('/test', currentUser, requireAuth, test);
 router.get('/all', currentUser, requireAuth, isAdmin, all);
 router.get('/current', currentUser, requireAuth, current);
 router.get('/handle/:handle', currentUser, requireAuth, getProfileByHandle);
-router.get(
-  '/subscribed-profiles',
-  currentUser,
-  requireAuth,
-  fetchSubscribedProfiles
-);
+router.get('/subscribed-profiles', currentUser, requireAuth, fetchSubscribedProfiles);
 router.get('/subscribers', currentUser, requireAuth, fetchSubscribers);
 // This route should be last!!!
 router.get('/:id', currentUser, requireAuth, getProfileById);
 
-router.post(
-  '/',
-  currentUser,
-  requireAuth,
-  profileValidation,
-  validateRequest,
-  createProfile
-);
+router.post('/', currentUser, requireAuth, profileValidation, validateRequest, createProfile);
 
 router.post('/subscribe/:id', currentUser, requireAuth, subscribeToProfile);
 
@@ -54,7 +37,7 @@ router.patch(
   requireAuth,
   updateProfileValidation,
   validateRequest,
-  updateProfile
+  updateProfile,
 );
 router.patch('/unsubscribe/:id', currentUser, requireAuth, unsubscribeProfile);
 

@@ -1,7 +1,9 @@
-import { Profile } from '../../common/Profile';
 import { getAuthToken } from '../../helpers/getAuthToken';
+import { Profile } from '../../common/Profile';
 
-describe('Create and fetch profile tests', () => {
+beforeAll(() => jest.setTimeout(150 * 1000));
+
+describe('fetches all profiles', () => {
   it('fetches all profiles', async (done) => {
     const token = await getAuthToken('superadmin');
 
@@ -10,7 +12,9 @@ describe('Create and fetch profile tests', () => {
         Authorization: token,
       },
     });
-    console.log(res.data.data);
+
+    expect(res.status).toBe(200);
+
     done();
   });
 });

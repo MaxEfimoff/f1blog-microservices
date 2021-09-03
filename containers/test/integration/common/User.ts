@@ -35,8 +35,25 @@ class User {
   password: string;
   password2: string;
 
-  static async registerRandomUser(data: object = randomUserData, config: object = requestConfig) {
-    return axiosAPIClient.post('/signup', data, config);
+  static async registerRandomUser(
+    userEmail?: string,
+    data: object = randomUserData,
+    config: object = requestConfig,
+  ) {
+    if (userEmail) {
+      return axiosAPIClient.post(
+        '/signup',
+        {
+          email: userEmail,
+          name: randomUserData.name,
+          password: randomUserData.password,
+          password2: randomUserData.password2,
+        },
+        config,
+      );
+    } else {
+      return axiosAPIClient.post('/signup', data, config);
+    }
   }
 
   static async fetchAllConfirmationHashes() {
@@ -72,15 +89,15 @@ class User {
   }
 
   static async changePassword(
-    changePasswordHash: string,
     data: object,
+    changePasswordHash: string,
     config: object = requestConfig,
   ) {
     return axiosAPIClient.patch(`/${changePasswordHash}/reset-password`, data, config);
   }
 
-  static async changeEmailRequest(config: object = requestConfig) {
-    return axiosAPIClient.post(`/change-email`, config);
+  static async changeEmailRequest(data: object, config: object = requestConfig) {
+    return axiosAPIClient.post(`/change-email`, data, config);
   }
 
   static async changeEmail(changeEmailHash: string, data: object, config: object = requestConfig) {

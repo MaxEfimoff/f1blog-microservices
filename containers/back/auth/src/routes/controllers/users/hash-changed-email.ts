@@ -17,7 +17,7 @@ const hashChangeEmail = async (req: Request, res: Response) => {
     SELECT * FROM users
     WHERE email = $1
   `,
-    [email]
+    [email],
   );
 
   if (foundEmail.rows[0]) {
@@ -29,7 +29,7 @@ const hashChangeEmail = async (req: Request, res: Response) => {
     SELECT * FROM changeemailhash
     WHERE hash = $1;
   `,
-    [hash]
+    [hash],
   );
 
   console.log('RESET EMAIL', changeEmailHash.rows[0]);
@@ -42,7 +42,7 @@ const hashChangeEmail = async (req: Request, res: Response) => {
       SELECT * FROM users
       WHERE id = $1
     `,
-      [changeEmailHash.rows[0].user_id]
+      [changeEmailHash.rows[0].user_id],
     );
 
     console.log('USER', user.rows[0]);
@@ -61,7 +61,7 @@ const hashChangeEmail = async (req: Request, res: Response) => {
         SET email = $1, version = $3
         WHERE id = $2;
       `,
-        [email, user.id, user.version]
+        [email, user.id, user.version],
       );
 
       // Publish update user event
@@ -78,7 +78,7 @@ const hashChangeEmail = async (req: Request, res: Response) => {
         WHERE hash = $1
         RETURNING *;
       `,
-        [hash]
+        [hash],
       );
 
       return res.status(201).json({
