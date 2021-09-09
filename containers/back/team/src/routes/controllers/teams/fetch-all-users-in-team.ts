@@ -10,7 +10,7 @@ const fetchAllUsersInTeam = async (req: Request, res: Response) => {
   if (!team) {
     throw new BadRequestError('There is no team with this id');
   } else {
-    const profiles = await Team.find({
+    const foundTeam = await Team.find({
       members: { $in: team.members.map((a) => a._id) },
     })
       .populate('profile')
@@ -19,15 +19,17 @@ const fetchAllUsersInTeam = async (req: Request, res: Response) => {
         createdAt: -1,
       });
 
-    if (!profiles) {
+    if (!foundTeam) {
       throw new NotFoundError();
     }
 
+    const teamMembers = foundTeam[0].members;
+
     return res.status(200).json({
       status: 'success',
-      results: profiles.length,
+      results: teamMembers.length,
       data: {
-        profiles,
+        teamMembers,
       },
     });
   }
