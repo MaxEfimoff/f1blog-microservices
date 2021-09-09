@@ -10,8 +10,10 @@ const userId = 3;
 const name = "fakename";
 const handle = "fakehandle";
 
-beforeAll(() => {
+beforeAll((done) => {
   createProfile(userId, name, handle);
+
+  done();
 });
 
 it("returns 201 on deleting profile", async () => {

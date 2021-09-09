@@ -8,11 +8,8 @@ const userId = 7;
 const name = "fakename";
 const handle = "fakehandle";
 
-beforeAll(() => {
-  createProfile(userId, name, handle);
-});
-
 it("returns 200 on getting profile by id and 401 if user not logged in", async () => {
+  await createProfile(userId, name, handle);
   const token = await login(userId);
 
   const res = await request(app)

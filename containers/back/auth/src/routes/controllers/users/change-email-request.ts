@@ -22,9 +22,12 @@ const changeEmailRequest = async (req: UserRequest, res: Response) => {
   console.log('USER', foundUser);
 
   // Check if email already exists
-  const users = await pool.query(`
+  const users = await pool.query(
+    `
     SELECT * FROM users WHERE id = $1;
-  `, [foundUser.id]);
+  `,
+    [foundUser.id]
+  );
 
   const user = users.rows[0];
 
@@ -41,27 +44,27 @@ const changeEmailRequest = async (req: UserRequest, res: Response) => {
         hash = hash.replace(/\//g, '.');
 
         // Create resetpasswordhash hash
-        const createdHash = await pool.query(`
+        const createdHash = await pool.query(
+          `
           INSERT INTO changeemailhash (hash, user_id)
           VALUES ($1, $2)
           RETURNING *;
-        `, [hash, user.id]);
+        `,
+          [hash, user.id]
+        );
 
         // Send a letter with the confirmation hash
-        sendChangeEmail(
-          { toUser: user, hash: hash },
-          (err: any) => {
-            if (err)
-              throw new BadRequestError('Could not send confirmation hash');
+        sendChangeEmail({ toUser: user, hash: hash }, (err: any) => {
+          if (err)
+            throw new BadRequestError('Could not send confirmation hash');
 
-            return res.status(201).json({
-              status: 'success',
-              data: {
-                user,
-              },
-            });
-          }
-        );
+          return res.status(201).json({
+            status: 'success',
+            data: {
+              user,
+            },
+          });
+        });
       });
     });
   }

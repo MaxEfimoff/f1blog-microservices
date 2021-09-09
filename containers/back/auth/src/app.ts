@@ -1,36 +1,41 @@
-import express from "express";
-import "express-async-errors";
-import rateLimit from "express-rate-limit";
-import helmet from "helmet";
-import xss from "xss-clean";
-import { json } from "body-parser";
-import { errorHandler, NotFoundError } from "@f1blog/common";
+import express from 'express';
+import 'express-async-errors';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import xss from 'xss-clean';
+import { json } from 'body-parser';
+import { errorHandler, NotFoundError } from '@f1blog/common';
+import swaggerUI from 'swagger-ui-express';
+import * as swaggerDocument from './swagger/openapi.json';
 
 // import passport from 'passport';
 // const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // Routes
-import { users } from "./routes/api/users/users";
+import { users } from './routes/api/users/users';
 
 const app = express();
 
 const limiter = rateLimit({
-  max: 10,
+  max: 50000,
   windowMs: 60 * 60 * 1000,
-  message: "Too many requests from this IP, please try again in an hour.",
+  message: 'Too many requests from this IP, please try again in an hour.',
 });
 
 // Set security http headers
 app.use(helmet());
 
+// Swagger
+app.use('/api/v1/users/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
 // Data sanitazion
 app.use(xss());
 
 // Limits number of requests from the same IP
-app.use("/api/v1/users", limiter);
+app.use('/api/v1/users', limiter);
 
 // Body parser, reading data from the body into req.body
-app.use(json({ limit: "10kb" }));
+app.use(json({ limit: '10kb' }));
 
 // const keys = require('./config/keys_dev.js');
 // passport.use(
@@ -49,8 +54,8 @@ app.use(json({ limit: "10kb" }));
 // );
 
 // Use routes
-app.use("/api/v1/users", users);
-app.all("*", async () => {
+app.use('/api/v1/users', users);
+app.all('*', async () => {
   throw new NotFoundError();
 });
 

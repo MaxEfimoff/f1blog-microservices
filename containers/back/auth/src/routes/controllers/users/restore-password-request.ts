@@ -15,9 +15,12 @@ const restorePasswordRequest = async (req: UserRequest, res: Response) => {
   let { email } = req.body;
 
   // Check if email already exists
-  const user = await pool.query(`
+  const user = await pool.query(
+    `
     SELECT * FROM users WHERE email = $1;
-  `, [email]);
+  `,
+    [email],
+  );
 
   const foundUser = user.rows[0];
 
@@ -34,27 +37,26 @@ const restorePasswordRequest = async (req: UserRequest, res: Response) => {
         hash = hash.replace(/\//g, '.');
 
         // Create resetpasswordhash hash
-        const createdHash = await pool.query(`
+        const createdHash = await pool.query(
+          `
           INSERT INTO resetpasswordhash (hash, user_id)
           VALUES ($1, $2)
           RETURNING *;
-        `, [hash, foundUser.id]);
+        `,
+          [hash, foundUser.id],
+        );
 
         // Send a letter with the confirmation hash
-        sendResetPasswordEmail(
-          { toUser: foundUser, hash: hash },
-          (err: any) => {
-            if (err)
-              throw new BadRequestError('Could not send confirmation hash');
+        sendResetPasswordEmail({ toUser: foundUser, hash: hash }, (err: any) => {
+          if (err) throw new BadRequestError('Could not send confirmation hash');
 
-            return res.status(201).json({
-              status: 'success',
-              data: {
-                foundUser,
-              },
-            });
-          }
-        );
+          return res.status(201).json({
+            status: 'success',
+            data: {
+              foundUser,
+            },
+          });
+        });
       });
     });
   }

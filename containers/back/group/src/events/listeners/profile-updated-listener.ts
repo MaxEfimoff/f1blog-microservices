@@ -10,7 +10,7 @@ export class ProfileUpdatedListener extends Listener<ProfileUpdatedEvent> {
   async onMessage(data: ProfileUpdatedEvent['data'], msg: Message) {
     console.log('Newsitem:Profile updated event data!', data);
 
-    const { id, handle, version } = data;
+    const { id, handle, version, joinedTeams } = data;
 
     const profile = await Profile.findById({ _id: id });
 
@@ -18,7 +18,7 @@ export class ProfileUpdatedListener extends Listener<ProfileUpdatedEvent> {
 
     profile.handle = handle;
     profile.version = version;
-    // profile.avatar = avatar;
+    profile.joinedTeams = joinedTeams;
     // profile.background = background;
 
     await profile.save();

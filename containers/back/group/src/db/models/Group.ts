@@ -2,11 +2,13 @@ import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { ProfileDoc } from './Profile';
 import { BlogPostDoc } from './Blogpost';
+import { TeamDoc } from './Team';
 
 // An interface that describes the properties
 // that are required to create a new Group
 interface GroupAttrs {
   profile: ProfileDoc;
+  team: TeamDoc;
   title: string;
   createdAt: number;
 }
@@ -22,6 +24,7 @@ interface GroupModel extends mongoose.Model<GroupDoc> {
 // that a single Group Document has
 export interface GroupDoc extends mongoose.Document {
   profile: ProfileDoc;
+  team: TeamDoc;
   title: string;
   description?: string;
   avatar?: string;
@@ -42,6 +45,10 @@ const GroupSchema = new mongoose.Schema(
     title: {
       type: String,
       max: 200,
+    },
+    team: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
     },
     description: {
       type: String,
@@ -85,7 +92,7 @@ const GroupSchema = new mongoose.Schema(
         delete ret.__v;
       },
     },
-  }
+  },
 );
 
 GroupSchema.set('versionKey', 'version');

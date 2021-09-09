@@ -15,7 +15,7 @@ spec:
       volumes:
         - name: profile-mongo-storage
           persistentVolumeClaim:
-            claimName: database-persistent-volume-claim
+            claimName: db-persistent-volume-claim
       containers:
         - name: profile-mongo
           image: mongo

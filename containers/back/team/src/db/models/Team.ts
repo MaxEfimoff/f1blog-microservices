@@ -80,7 +80,7 @@ const TeamSchema = new mongoose.Schema(
         delete ret.__v;
       },
     },
-  }
+  },
 );
 
 TeamSchema.set('versionKey', 'version');

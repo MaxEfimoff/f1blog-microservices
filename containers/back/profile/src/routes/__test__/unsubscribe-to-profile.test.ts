@@ -12,9 +12,11 @@ const secondUserId = 5;
 const secondUserName = "anotherfakename";
 const secondProfileHandle = "anotherfakehandle";
 
-beforeAll(async () => {
+beforeAll(async (done) => {
   createProfile(firstUserId, firstUserName, firstProfileHandle);
   createProfile(secondUserId, secondUserName, secondProfileHandle);
+
+  done();
 });
 
 it("returns 200 on subscribing to profile if user is logged in", async () => {

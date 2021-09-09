@@ -10,7 +10,6 @@ function up(pgm) {
       email VARCHAR(50) NOT NULL,
       password VARCHAR(500) NOT NULL,
       active BOOLEAN DEFAULT FALSE,
-      role VARCHAR(50),
       version INTEGER DEFAULT 0,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -39,6 +38,44 @@ function up(pgm) {
       id SERIAL PRIMARY KEY,  
       hash VARCHAR(200),
       user_id INTEGER REFERENCES users(id)
+    );
+  `);
+
+  pgm.sql(`
+    CREATE TABLE roles (
+      id SERIAL PRIMARY KEY,  
+      role VARCHAR(20) NOT NULL,
+      description VARCHAR(200) NOT NULL
+    );
+  `);
+
+  pgm.sql(`
+    INSERT INTO roles (role, description)
+    VALUES ('superadmin', 'Superadministrator role')
+    RETURNING *;
+  `);
+
+  pgm.sql(
+    `
+    INSERT INTO roles (role, description)
+    VALUES ('admin', 'Administrator role')
+    RETURNING *;
+  `
+  );
+
+  pgm.sql(
+    `
+    INSERT INTO roles (role, description)
+    VALUES ('user', 'User role')
+    RETURNING *;
+  `
+  );
+
+  pgm.sql(`
+    CREATE TABLE userroles (
+      id SERIAL PRIMARY KEY,  
+      user_id INTEGER REFERENCES users(id),
+      role_id INTEGER REFERENCES roles(id)
     );
   `);
 }

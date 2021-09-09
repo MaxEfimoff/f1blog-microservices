@@ -13,7 +13,7 @@ export class ProfileDeletedListener extends Listener<ProfileDeletedEvent> {
     const { id } = data;
     console.log('ID ', id);
 
-    const profile = await Profile.findByIdAndRemove({ _id: id });
+    await Profile.findByIdAndRemove({ _id: id });
 
     // After we successfully(!) processed the event inside our listener
     // we have to finish by calling ack() method

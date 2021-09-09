@@ -21,6 +21,8 @@ export const createProfile = async (
   await profile.save();
 
   await sleep(3000);
+  console.log('USER', user);
+  console.log('profile', profile);
 };
 
 function sleep(ms) {

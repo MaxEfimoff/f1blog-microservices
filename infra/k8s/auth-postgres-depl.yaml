@@ -15,7 +15,7 @@ spec:
       volumes:
         - name: auth-postgres-storage
           persistentVolumeClaim:
-            claimName: database-persistent-volume-claim
+            claimName: db-persistent-volume-claim
       containers:
         - name: auth-postgres
           image: postgres
@@ -23,10 +23,10 @@ spec:
           resources:
             requests:
               memory: 500Mi
-              cpu: 300m
+              cpu: 200m
             limits:
               memory: 500Mi
-              cpu: 300m
+              cpu: 200m
           ports:
             - containerPort: 5432
           volumeMounts:
