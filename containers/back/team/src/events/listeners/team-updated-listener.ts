@@ -10,7 +10,7 @@ export class TeamUpdatedListener extends Listener<TeamUpdatedEvent> {
   async onMessage(data: TeamUpdatedEvent['data'], msg: Message) {
     console.log('Team updated event data!', data);
 
-    const { id, title, version, profile_id } = data;
+    const { id, title, version, profile_id, members } = data;
 
     const team = await Team.findById({ _id: id });
 
@@ -18,8 +18,8 @@ export class TeamUpdatedListener extends Listener<TeamUpdatedEvent> {
 
     team.title = title;
     team.version = version;
-    team.profile = profile_id;
-    //team.members = members;
+    //team.profile = profile_id;
+    team.members = members;
 
     await team.save();
 

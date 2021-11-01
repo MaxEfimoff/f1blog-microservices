@@ -25,7 +25,7 @@ export interface TeamDoc extends mongoose.Document {
   title: string;
   description?: string;
   avatar?: string;
-  members?: ProfileDoc[];
+  members?: any[];
   groups?: GroupDoc[];
   createdAt: number;
   updatedAt?: number;

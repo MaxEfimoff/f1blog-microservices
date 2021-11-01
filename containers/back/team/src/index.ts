@@ -4,6 +4,7 @@ import { DatabaseConnectionError } from '@f1blog/common';
 import { ProfileCreatedListener } from './events/listeners/profile-created-listener';
 import { ProfileUpdatedListener } from './events/listeners/profile-updated-listener';
 import { ProfileDeletedListener } from './events/listeners/profile-deleted-listener';
+import { TeamUpdatedListener } from './events/listeners/team-updated-listener';
 import { natsWrapper } from './nats-wrapper';
 
 // Connect to Mongodb
@@ -46,6 +47,7 @@ const start = async () => {
     new ProfileCreatedListener(natsWrapper.client).listen();
     new ProfileUpdatedListener(natsWrapper.client).listen();
     new ProfileDeletedListener(natsWrapper.client).listen();
+    new TeamUpdatedListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI, {
       useFindAndModify: false,

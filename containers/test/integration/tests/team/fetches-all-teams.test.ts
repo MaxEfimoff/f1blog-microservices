@@ -1,7 +1,5 @@
 import { createRandomProfile } from '../../helpers/createRandomProfile';
-import { Profile } from '../../common/Profile';
 import { Team } from '../../common/Team';
-import faker from 'faker';
 
 beforeAll(() => jest.setTimeout(150 * 1000));
 

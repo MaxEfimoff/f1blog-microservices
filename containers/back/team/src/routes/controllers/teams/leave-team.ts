@@ -52,6 +52,10 @@ const leaveTeam = async (req: UserRequest, res: Response) => {
       if (err) throw new BadRequestError('Could not save team to DB');
     });
 
+    await profile.save((err) => {
+      if (err) throw new BadRequestError('Could not save profile to DB');
+    });
+
     // Publish a TeamUpdatyed event
     new TeamUpdatedPublisher(natsWrapper.client).publish({
       id: team.id,
