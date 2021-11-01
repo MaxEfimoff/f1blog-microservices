@@ -10,17 +10,18 @@ import { deleteBlogPost } from '../../controllers/blogposts/delete-blogpost';
 
 const router = express.Router();
 
+// Shortened for /api/v1/blogposts
 router.get('/test', test);
-router.get('/', fetchAllBlogPosts);
-router.get('/my', currentUser, requireAuth, fetchMyBlogPosts);
+router.get('/:griupId/', fetchAllBlogPosts);
+router.get('/:griupId/my', currentUser, requireAuth, fetchMyBlogPosts);
 
 router.post(
-  '/',
+  '/:griupId/',
   currentUser,
   requireAuth,
   blogPostValidation,
   validateRequest,
-  createBlogPost
+  createBlogPost,
 );
 
 router.delete('/:id', currentUser, requireAuth, deleteBlogPost);

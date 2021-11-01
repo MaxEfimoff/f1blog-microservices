@@ -14,10 +14,7 @@ interface ProfileAttrs {
 // that a Profile Model has
 interface ProfileModel extends mongoose.Model<ProfileDoc> {
   build(attrs: ProfileAttrs): ProfileDoc;
-  findByEvent(event: {
-    id: string;
-    version: number;
-  }): Promise<ProfileDoc | null>;
+  findByEvent(event: { id: string; version: number }): Promise<ProfileDoc | null>;
 }
 
 // An interface that describes the properties
@@ -27,6 +24,7 @@ export interface ProfileDoc extends mongoose.Document {
   user_id: string;
   version: number;
   joinedTeams: any[];
+  joinedGroups: any[];
 }
 
 const ProfileSchema = new mongoose.Schema(
@@ -50,17 +48,14 @@ const ProfileSchema = new mongoose.Schema(
         delete ret.__v;
       },
     },
-  }
+  },
 );
 
 ProfileSchema.set('versionKey', 'version');
 ProfileSchema.plugin(updateIfCurrentPlugin);
 
 // Add findByEvent method to a ProfileSchema
-ProfileSchema.statics.findByEvent = (event: {
-  id: string;
-  version: number;
-}) => {
+ProfileSchema.statics.findByEvent = (event: { id: string; version: number }) => {
   return Profile.findOne({
     _id: event.id,
     version: event.version - 1,
@@ -73,12 +68,21 @@ ProfileSchema.statics.build = (attrs: ProfileAttrs) => {
     _id: attrs.id,
     handle: attrs.handle,
     user_id: attrs.user_id,
+    joinedTeams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team',
+      },
+    ],
+    joinedGroups: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Group',
+      },
+    ],
   });
 };
 
-const Profile = mongoose.model<ProfileDoc, ProfileModel>(
-  'Profile',
-  ProfileSchema
-);
+const Profile = mongoose.model<ProfileDoc, ProfileModel>('Profile', ProfileSchema);
 
 export { Profile };

@@ -5,6 +5,7 @@ import { Profile } from '../../../db/models/Profile';
 import { BlogPost } from '../../../db/models/Blogpost';
 import { BlogPostCreatedPublisher } from '../../../events/publishers/blogpost-created-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
+import { Group } from '../../../db/models/Group';
 
 interface UserRequest extends Request {
   user: {
@@ -16,7 +17,7 @@ interface UserRequest extends Request {
 }
 
 const createBlogPost = async (req: UserRequest, res: Response) => {
-  let { title, text, image, group } = req.body;
+  let { title, text, image, groupId } = req.body;
 
   const user = req.user;
 
@@ -29,6 +30,20 @@ const createBlogPost = async (req: UserRequest, res: Response) => {
   if (!profile) {
     throw new BadRequestError('You should create profile first');
   } else {
+    if (!groupId) {
+      throw new NotFoundError();
+    }
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      throw new BadRequestError('Group with this id does not exist');
+    }
+
+    if (group.members.filter((member) => member.toString() === profile.id).length === 0) {
+      throw new BadRequestError('Only group members can create posts');
+    }
+
     const newBlogPost = BlogPost.build({
       title,
       text,
