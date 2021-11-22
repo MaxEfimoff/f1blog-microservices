@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: company-mongo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: company-mongo
+  template:
+    metadata:
+      labels:
+        app: company-mongo
+    spec:
+      volumes:
+        - name: company-mongo-storage
+          persistentVolumeClaim:
+            claimName: db-persistent-volume-claim
+      containers:
+        - name: company-mongo
+          image: mongo
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 100m
+            limits:
+              memory: 100Mi
+              cpu: 100m
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: company-mongo-storage
+              mountPath: /data/db/company
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: company-mongo-srv
+spec:
+  selector:
+    app: company-mongo
+  ports:
+    - name: company-db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

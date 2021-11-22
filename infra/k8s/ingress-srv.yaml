@@ -34,6 +34,10 @@ spec:
             backend:
               serviceName: team-srv
               servicePort: 3000
+          - path: /api/v1/company/?(.*)
+            backend:
+              serviceName: company-srv
+              servicePort: 3000
           - path: /?(.*)
             backend:
               serviceName: client-container-srv
