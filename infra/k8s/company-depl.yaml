@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: company-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: company
+  template:
+    metadata:
+      labels:
+        app: company
+    spec:
+      containers:
+        - name: company
+          image: maxefi/company
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 700Mi
+              cpu: 100m
+            limits:
+              memory: 700Mi
+              cpu: 100m
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: 'http://nats-srv:4222'
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: MONGO_URI
+              value: 'mongodb://company-mongo-srv:27017/company'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: company-srv
+spec:
+  selector:
+    app: company
+  ports:
+    - name: company
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
