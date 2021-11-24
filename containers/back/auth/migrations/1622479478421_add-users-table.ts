@@ -19,7 +19,15 @@ function up(pgm) {
   pgm.sql(`
     CREATE TABLE confirmationhash (
       id SERIAL PRIMARY KEY,  
-      hash VARCHAR(200),
+      hash VARCHAR(500),
+      user_id INTEGER REFERENCES users(id)
+    );
+  `);
+
+  pgm.sql(`
+    CREATE TABLE refreshtoken (
+      id SERIAL PRIMARY KEY,  
+      token VARCHAR(500),
       user_id INTEGER REFERENCES users(id)
     );
   `);
@@ -27,7 +35,7 @@ function up(pgm) {
   pgm.sql(`
     CREATE TABLE resetpasswordhash (
       id SERIAL PRIMARY KEY,  
-      hash VARCHAR(200),
+      hash VARCHAR(500),
       user_id INTEGER REFERENCES users(id),
       expires_at TIMESTAMP WITH TIME ZONE
     );
@@ -36,7 +44,7 @@ function up(pgm) {
   pgm.sql(`
     CREATE TABLE changeemailhash (
       id SERIAL PRIMARY KEY,  
-      hash VARCHAR(200),
+      hash VARCHAR(500),
       user_id INTEGER REFERENCES users(id)
     );
   `);
@@ -45,7 +53,7 @@ function up(pgm) {
     CREATE TABLE roles (
       id SERIAL PRIMARY KEY,  
       role VARCHAR(20) NOT NULL,
-      description VARCHAR(200) NOT NULL
+      description VARCHAR(500) NOT NULL
     );
   `);
 
@@ -60,7 +68,7 @@ function up(pgm) {
     INSERT INTO roles (role, description)
     VALUES ('admin', 'Administrator role')
     RETURNING *;
-  `
+  `,
   );
 
   pgm.sql(
@@ -68,7 +76,7 @@ function up(pgm) {
     INSERT INTO roles (role, description)
     VALUES ('user', 'User role')
     RETURNING *;
-  `
+  `,
   );
 
   pgm.sql(`

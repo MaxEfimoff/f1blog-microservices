@@ -1,16 +1,16 @@
 import { Message } from 'node-nats-streaming';
 import { Listener, ProfileUpdatedEvent, Subjects } from '@f1blog/common';
 import { queueGroupName } from './queue-group-name';
-import { Profile } from '../../company/schemas/profile.schema';
+import { Profile } from '../../db/models/Profile';
 
 export class ProfileUpdatedListener extends Listener<ProfileUpdatedEvent> {
   subject: Subjects.ProfileUpdated = Subjects.ProfileUpdated;
   queueGroupName = queueGroupName;
 
   async onMessage(data: ProfileUpdatedEvent['data'], msg: Message) {
-    console.log('Newsitem:Profile updated event data!', data);
+    console.log('Team:Profile updated event data!', data);
 
-    const { id, handle, version, joinedTeams } = data;
+    const { id, handle, version } = data;
 
     const profile = await Profile.findById({ _id: id });
 
@@ -18,7 +18,6 @@ export class ProfileUpdatedListener extends Listener<ProfileUpdatedEvent> {
 
     profile.handle = handle;
     profile.version = version;
-    // profile.joinedTeams = joinedTeams;
     // profile.avatar = avatar;
     // profile.background = background;
 

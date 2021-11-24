@@ -23,6 +23,9 @@ import { fetchUsersByUserrole } from '../../controllers/users/fetch-users-by-rol
 import { createUserRole } from '../../controllers/users/create-user-role';
 import { assignRoleToUser } from '../../controllers/users/assign-role-to-user';
 import { validateRequest, currentUser, requireAuth } from '@f1blog/common';
+import { logout } from '../../controllers/users/logout';
+import { refresh } from '../../controllers/users/refresh';
+import { allRefreshTokens } from '../../controllers/users/all-refresh-tokens';
 
 const router = express.Router();
 
@@ -53,5 +56,8 @@ router.patch(
   hashChangeEmail,
 );
 router.patch('/hash/resend', resendActivationHash);
+router.get('/logout', logout);
+router.get('/refresh-token', refresh);
+router.get('/all-refreshtokens', allRefreshTokens);
 
 export { router as users };

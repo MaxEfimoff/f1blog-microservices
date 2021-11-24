@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import "express-async-errors";
-import { BadRequestError } from "@f1blog/common";
-import { pool } from "../../../pool";
+import { Request, Response } from 'express';
+import 'express-async-errors';
+import { BadRequestError } from '@f1blog/common';
+import { pool } from '../../../pool';
 
 const activate = async (req: Request, res: Response) => {
   const hash = req.params.hash;
@@ -11,7 +11,7 @@ const activate = async (req: Request, res: Response) => {
     SELECT * FROM confirmationhash 
     WHERE hash = $1;
   `,
-    [hash]
+    [hash],
   );
 
   const user = confirmationHash.rows[0];
@@ -23,7 +23,7 @@ const activate = async (req: Request, res: Response) => {
       JOIN users ON users.id = confirmationhash.user_id
       WHERE user_id = $1 ;
     `,
-      [user.id]
+      [user.id],
     );
 
     if (foundUser.rows[0]) {
@@ -33,7 +33,7 @@ const activate = async (req: Request, res: Response) => {
         SET active = $1
         WHERE id = $2;
       `,
-        [true, user.id]
+        [true, user.id],
       );
 
       const updatedUserRequest = await pool.query(
@@ -41,25 +41,25 @@ const activate = async (req: Request, res: Response) => {
         SELECT * FROM users 
         WHERE id = $1;
       `,
-        [user.id]
+        [user.id],
       );
 
       const updatedUser = updatedUserRequest.rows[0];
 
-      await pool.query(
-        "DELETE FROM confirmationhash WHERE hash = $1 RETURNING *;",
-        [hash]
-      );
+      await pool.query('DELETE FROM confirmationhash WHERE hash = $1 RETURNING *;', [hash]);
+
+      // redirect to login page
+      // res.redirect('...')
 
       return res.status(200).json({
-        status: "success",
+        status: 'success',
         data: {
           updatedUser,
         },
       });
     }
   } else {
-    throw new BadRequestError("Control string is not found");
+    throw new BadRequestError('Control string is not found');
   }
 };
 
