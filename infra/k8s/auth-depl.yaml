@@ -19,10 +19,10 @@ spec:
           resources:
             requests:
               memory: 500Mi
-              cpu: 200m
+              cpu: 100m
             limits:
               memory: 500Mi
-              cpu: 200m
+              cpu: 100m
           env:
             - name: NATS_CLIENT_ID
               valueFrom:
@@ -40,16 +40,21 @@ spec:
               value: '5432'
             - name: AUTH_PGDATABASE
               value: postgres
-            - name: JWT_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: jwt-secret
-                  key: JWT_KEY
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgrespassword
                   key: POSTGRES_PASSWORD
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: JWT_REFRESH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-refresh-secret
+                  key: JWT_REFRESH_KEY           
 ---
 apiVersion: v1
 kind: Service

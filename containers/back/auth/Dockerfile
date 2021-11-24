@@ -1,5 +1,5 @@
 FROM node:alpine
-RUN apk add python2 make g++
+RUN apk add python3 make g++
 
 WORKDIR /app
 

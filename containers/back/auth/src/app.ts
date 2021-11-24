@@ -3,6 +3,7 @@ import 'express-async-errors';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import xss from 'xss-clean';
+import cookieParser from 'cookie-parser';
 import { json } from 'body-parser';
 import { errorHandler, NotFoundError } from '@f1blog/common';
 import swaggerUI from 'swagger-ui-express';
@@ -24,6 +25,7 @@ const limiter = rateLimit({
 
 // Set security http headers
 app.use(helmet());
+app.use(cookieParser());
 
 // Swagger
 app.use('/api/v1/users/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
