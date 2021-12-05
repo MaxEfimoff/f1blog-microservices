@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { NotFoundError } from 'rxjs';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BadRequestError } from '@f1blog/common';
 import { Team, TeamDoc } from './schemas/team.schema';
 import { Profile, ProfileDoc } from './schemas/profile.schema';
@@ -13,16 +14,20 @@ import { natsWrapper } from '../nats-wrapper';
 
 @Injectable()
 export class TeamService {
-  constructor(
-    @InjectModel(Team.name) private teamModel: Model<TeamDoc>,
-    @InjectModel(Profile.name) private profileModel: Model<ProfileDoc>,
-  ) {}
-
   async createTeam(
     teamDto: CreateTeamDto,
     profile: ProfileDoc,
   ): Promise<TeamDoc> {
+    const team: TeamDoc = await Team.findOne({
+      title: teamDto.title,
+    });
+
+    if (team) {
+      throw new BadRequestException('Team with this title already exists');
+    }
+
     const newTeam = Team.build({ profile: profile, ...teamDto });
+    newTeam.members.unshift(profile.id);
 
     await newTeam.save((err) => {
       if (err) throw new BadRequestError('Could not save team to DB');
@@ -33,6 +38,7 @@ export class TeamService {
       title: newTeam.title,
       version: newTeam.version,
       profile_id: profile.id,
+      members: newTeam.members,
     });
 
     return newTeam;
@@ -43,19 +49,19 @@ export class TeamService {
     id: string,
     profile: ProfileDoc,
   ): Promise<TeamDoc> {
-    const team = await Team.findById(id);
+    const team: TeamDoc = await Team.findById(id);
 
     if (!team) {
-      throw new NotFoundError('You should create team first');
+      throw new NotFoundException('You should create team first');
     }
 
     Object.assign(team, teamDto);
 
     await team.save((err) => {
-      if (err) throw new BadRequestError('Could not save news item to DB');
+      if (err) throw new BadRequestException('Could not save news item to DB');
     });
 
-    // Publish a TeamUpdatyed event
+    // Publish a TeamUpdated event
     new TeamUpdatedPublisher(natsWrapper.client).publish({
       id: team.id,
       title: team.title,
@@ -66,21 +72,240 @@ export class TeamService {
     return team;
   }
 
-  async getTeamById(id: string): Promise<TeamDoc> {
-    const team = await Team.findById(id);
+  async getTeamById(_id: string): Promise<TeamDoc> {
+    const team: TeamDoc = await Team.findById(_id);
+
+    if (!team) {
+      throw new NotFoundException('You should create team first');
+    }
 
     return team;
   }
 
   async getAllTeams(): Promise<TeamDoc[]> {
-    const teams = await Team.find();
+    const teams: TeamDoc[] = await Team.find();
+
+    if (!teams) {
+      throw new NotFoundException('There are no teams');
+    }
 
     return teams;
   }
 
   async getProfiles(): Promise<ProfileDoc[]> {
-    const teams = await Profile.find().limit(10);
+    const profiles = await Profile.find();
+    console.log(profiles);
+
+    if (!profiles) {
+      throw new NotFoundException('There are no profiles in this team');
+    }
+
+    return profiles;
+  }
+
+  async deleteTeam(_id: string, profile: ProfileDoc): Promise<TeamDoc> {
+    const team: TeamDoc = await Team.findByIdAndRemove(_id);
+
+    if (!team) {
+      throw new NotFoundException('You should create team first');
+    }
+
+    // Publish a TeamUpdated event
+    new TeamUpdatedPublisher(natsWrapper.client).publish({
+      id: team.id,
+      title: team.title,
+      version: team.version,
+      profile_id: profile.id,
+    });
+
+    return team;
+  }
+
+  async deleteUserFromTeam(_id: string, profileId: string): Promise<TeamDoc> {
+    const team: TeamDoc = await Team.findById(_id);
+    const profile: ProfileDoc = await Profile.findById(profileId);
+    console.log('Profile', profile);
+
+    if (!team) {
+      throw new NotFoundException('You should create team first');
+    }
+
+    // Check if user is in members array
+    if (
+      team.members.filter((member) => member.toString() === profile.id)
+        .length === 0
+    ) {
+      throw new NotFoundException('User is not a member of this team');
+    }
+
+    // Get the remove index in Team document
+    const removeIndex = team.members
+      .map((item) => item._id.toString())
+      .indexOf(profile.id);
+
+    // Splice out of Team members array
+    team.members.splice(removeIndex, 1);
+
+    // Get the remove index in Profile document
+    const removeTeamIndex = profile.joinedTeams
+      .map((item) => item._id.toString())
+      .indexOf(team.id);
+
+    // Splice out of Profile joinedTeams array
+    profile.joinedTeams.splice(removeTeamIndex, 1);
+
+    // Save data to DB
+    await team.save((err) => {
+      if (err) throw new NotFoundException('Could not save team to DB');
+    });
+
+    await profile.save((err) => {
+      if (err) throw new NotFoundException('Could not save profile to DB');
+    });
+
+    new TeamUpdatedPublisher(natsWrapper.client).publish({
+      id: team.id,
+      title: team.title,
+      members: team.members,
+      version: team.version - 1,
+      profile_id: profile.id,
+    });
+
+    return team;
+  }
+
+  async getMyTeams(profile: ProfileDoc): Promise<TeamDoc[]> {
+    const teams = profile.myTeams;
+    console.log('TEAMS', teams);
+
+    if (!teams) {
+      throw new NotFoundException('You should create teams first');
+    }
 
     return teams;
+  }
+
+  async getJoinedTeams(profile: ProfileDoc): Promise<TeamDoc[]> {
+    const teams = profile.joinedTeams;
+    console.log('TEAMS', teams);
+    if (!teams) {
+      throw new NotFoundException('You should joined teams first');
+    }
+
+    return teams;
+  }
+
+  async getTeamByTitle(title: string): Promise<TeamDoc> {
+    const team: TeamDoc = await Team.findOne({ title: title });
+
+    if (!team) {
+      throw new NotFoundException('You should create team first');
+    }
+
+    return team;
+  }
+
+  async joinTeam(_id: string, profile: ProfileDoc): Promise<TeamDoc> {
+    const team: TeamDoc = await Team.findById(_id);
+
+    const foundProfile = await Profile.findById(profile._id);
+
+    if (!foundProfile) {
+      throw new NotFoundException('You should create profile first!');
+    }
+
+    if (!team) {
+      throw new NotFoundException('You should create team first');
+    }
+
+    if (
+      team.members.filter((member) => member.toString() === profile.id).length >
+      0
+    ) {
+      throw new BadRequestException('You are already a member of this team');
+    }
+
+    foundProfile.joinedTeams.unshift(team);
+    team.members.unshift(foundProfile);
+
+    await team.save((err) => {
+      if (err) throw new BadRequestException('Could not save team to DB');
+    });
+
+    await foundProfile.save((err) => {
+      if (err) throw new BadRequestException('Could not save profile to DB');
+    });
+
+    new TeamUpdatedPublisher(natsWrapper.client).publish({
+      id: team.id,
+      title: team.title,
+      members: team.members,
+      version: team.version - 1,
+      profile_id: profile.id,
+    });
+
+    return team;
+  }
+
+  async leaveTeam(_id: string, profile: ProfileDoc): Promise<TeamDoc> {
+    const team: TeamDoc = await Team.findById(_id);
+
+    if (!team) {
+      throw new NotFoundException('You should create team first');
+    }
+
+    if (
+      team.members.filter((member) => member.toString() === profile.id)
+        .length === 0
+    ) {
+      throw new NotFoundException('You are not a member of this team');
+    }
+
+    // Get the remove index in Team document
+    const removeIndex = team.members
+      .map((item) => item._id.toString())
+      .indexOf(profile.id);
+
+    // Splice out of Team members array
+    team.members.splice(removeIndex, 1);
+
+    // Get the remove index in Profile document
+    const removeTeamIndex = profile.joinedTeams
+      .map((item) => item._id.toString())
+      .indexOf(team.id);
+
+    // Splice out of Profile joinedTeams array
+    profile.joinedTeams.splice(removeTeamIndex, 1);
+    console.log('UPDATED PROFILE', profile);
+    // Save data to DB
+    await team.save((err) => {
+      if (err) throw new NotFoundException('Could not save team to DB');
+    });
+
+    await profile.save((err) => {
+      if (err) throw new NotFoundException('Could not save profile to DB');
+    });
+
+    console.log('SAVED PROFILE', profile);
+
+    new TeamUpdatedPublisher(natsWrapper.client).publish({
+      id: team.id,
+      title: team.title,
+      members: team.members,
+      version: team.version - 1,
+      profile_id: profile.id,
+    });
+
+    return team;
+  }
+
+  async getTeamMembers(_id: string): Promise<ProfileDoc[]> {
+    const team: TeamDoc = await Team.findById(_id);
+
+    if (!team) {
+      throw new NotFoundException('You should create team first');
+    }
+
+    return team.members;
   }
 }

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import 'express-async-errors';
-import { Profile } from '../../../db/models/Profile';
+import { Profile } from '../../../db/models/profile.schema';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
-import { User } from '../../../db/models/User';
+import { User } from '../../../db/models/user.schema';
 import { ProfileUpdatedPublisher } from '../../../events/publishers/profile-updated-publisher';
 import { natsWrapper } from '../../../nats-wrapper';
 
@@ -30,16 +30,12 @@ const unsubscribeProfile = async (req: UserRequest, res: Response) => {
     const subscribedProfile = await Profile.findById(req.params.id);
 
     // Remove subscribed profile from subscribedProfiles array
-    const removeIndex = profile.subscribedProfiles.findIndex(
-      (x) => x === subscribedProfile.id
-    );
+    const removeIndex = profile.subscribedProfiles.findIndex((x) => x === subscribedProfile.id);
 
     profile.subscribedProfiles.splice(removeIndex, 1);
 
     // Remove profile from subscribed profile's subscribers array
-    const removeSubscribersIndex = subscribedProfile.subscribers.findIndex(
-      (x) => x === profile.id
-    );
+    const removeSubscribersIndex = subscribedProfile.subscribers.findIndex((x) => x === profile.id);
 
     subscribedProfile.subscribers.splice(removeSubscribersIndex, 1);
 
@@ -50,8 +46,7 @@ const unsubscribeProfile = async (req: UserRequest, res: Response) => {
 
     // Save profile to DB
     await subscribedProfile.save((err) => {
-      if (err)
-        throw new BadRequestError('Could not save subscribed profile to DB');
+      if (err) throw new BadRequestError('Could not save subscribed profile to DB');
     });
 
     // Publish a ProfileUpdated event

@@ -1,11 +1,7 @@
 import { Request, Response } from 'express';
-import { Profile } from '../../../db/models/Profile';
-import { User } from '../../../db/models/User';
-import {
-  BadRequestError,
-  NotAuthorizedError,
-  NotFoundError,
-} from '@f1blog/common';
+import { Profile } from '../../../db/models/profile.schema';
+import { User } from '../../../db/models/user.schema';
+import { BadRequestError, NotAuthorizedError, NotFoundError } from '@f1blog/common';
 
 interface UserRequest extends Request {
   user: {

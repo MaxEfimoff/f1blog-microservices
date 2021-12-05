@@ -1,7 +1,7 @@
 import { Message } from 'node-nats-streaming';
 import { Listener, UserUpdatedEvent, Subjects } from '@f1blog/common';
-import { queueGroupName } from './queue-group-name';
-import { User } from '../../db/models/User';
+import { queueGroupName } from '../queue-group-name';
+import { User } from '../../db/models/user.schema';
 
 export class UserUpdatedListener extends Listener<UserUpdatedEvent> {
   subject: Subjects.UserUpdated = Subjects.UserUpdated;
@@ -14,7 +14,7 @@ export class UserUpdatedListener extends Listener<UserUpdatedEvent> {
 
     const user = await User.findOne({ id: id });
 
-    console.log('FOUND', user)
+    console.log('FOUND', user);
 
     user.name = name;
     user.version = version - 1;

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { Profile } from '../../../db/models/Profile';
-import { User } from '../../../db/models/User';
+import { Profile } from '../../../db/models/profile.schema';
+import { User } from '../../../db/models/user.schema';
 import { BadRequestError, NotFoundError } from '@f1blog/common';
 
 interface UserRequest extends Request {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Profile } from '../../../db/models/Profile';
+import { Profile } from '../../../db/models/profile.schema';
 import { BadRequestError } from '@f1blog/common';
 
 const all = async (req: Request, res: Response) => {

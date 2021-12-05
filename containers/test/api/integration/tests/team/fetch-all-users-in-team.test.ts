@@ -20,7 +20,7 @@ describe('joines team', () => {
         Authorization: token,
       },
     });
-
+    console.log(res);
     expect(res.status).toBe(201);
 
     const { id: teamId } = res.data.data.newTeam;

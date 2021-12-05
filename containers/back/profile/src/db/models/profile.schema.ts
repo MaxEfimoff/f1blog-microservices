@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { UserDoc } from './User';
+import { UserDoc } from './user.schema';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // An interface that describes the properties
@@ -10,6 +10,7 @@ interface ProfileAttrs {
   subscribedProfiles?: [];
   subscribedBlogs?: [];
   joinedGroups?: [];
+  joinedTeams?: any[];
   handle: string;
   avatar?: string;
   background?: string;
@@ -26,12 +27,14 @@ interface ProfileModel extends mongoose.Model<ProfileDoc> {
 
 // An interface that describes the properties
 // that a single Profile Document has
-interface ProfileDoc extends mongoose.Document {
+export interface ProfileDoc extends mongoose.Document {
   user: UserDoc;
   subscribers?: ProfileDoc[];
   subscribedProfiles?: ProfileDoc[];
   subscribedBlogs?: [];
   joinedGroups?: [];
+  joinedTeams?: any[];
+  myTeams?: any[];
   handle: string;
   avatar?: string;
   background?: string;
@@ -74,6 +77,18 @@ const ProfileSchema = new mongoose.Schema(
         ref: 'Group',
       },
     ],
+    joinedTeams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team',
+      },
+    ],
+    myTeams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team',
+      },
+    ],
     handle: {
       type: String,
       required: true,
@@ -112,17 +127,14 @@ const ProfileSchema = new mongoose.Schema(
         delete ret.__v;
       },
     },
-  }
+  },
 );
 
 ProfileSchema.set('versionKey', 'version');
 ProfileSchema.plugin(updateIfCurrentPlugin);
 
 // Add findByEvent method to a ProfileSchema
-ProfileSchema.statics.findByEvent = (event: {
-  id: string;
-  version: number;
-}) => {
+ProfileSchema.statics.findByEvent = (event: { id: string; version: number }) => {
   return Profile.findOne({
     _id: event.id,
     version: event.version - 1,
@@ -134,9 +146,6 @@ ProfileSchema.statics.build = (attrs: ProfileAttrs) => {
   return new Profile(attrs);
 };
 
-const Profile = mongoose.model<ProfileDoc, ProfileModel>(
-  'Profile',
-  ProfileSchema
-);
+const Profile = mongoose.model<ProfileDoc, ProfileModel>('Profile', ProfileSchema);
 
 export { Profile };

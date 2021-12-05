@@ -20,8 +20,7 @@ describe('joines team', () => {
     });
 
     expect(res.status).toBe(201);
-
-    const { id: teamId } = res.data.data.newTeam;
+    const { id: teamId } = res.data;
 
     const res2 = await Team.joinTeam(
       {},
@@ -33,7 +32,7 @@ describe('joines team', () => {
       teamId,
     );
     expect(res2.status).toBe(201);
-    expect(res2.data.data.team.members[0].id).toEqual(profileId);
+    expect(res2.data.members[0]).toEqual(profileId);
 
     const res3 = await Team.deleteUserFromTeam(
       {
@@ -45,7 +44,8 @@ describe('joines team', () => {
       profileId,
     );
     expect(res2.status).toBe(201);
-    expect(res3.data.data.team.members[0]).toBeUndefined();
+    console.log(res3.data);
+    expect(res3.data.members[0]).toBeUndefined();
 
     done();
   });

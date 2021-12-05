@@ -1,26 +1,26 @@
-import request from "supertest";
-import { app } from "../../app";
-import { login } from "./helpers/login";
-import { Profile } from "../../db/models/Profile";
-import { User } from "../../db/models/User";
-import { natsWrapper } from "../../nats-wrapper";
+import request from 'supertest';
+import { app } from '../../app';
+import { login } from './helpers/login';
+import { Profile } from '../../db/models/profile.schema';
+import { User } from '../../db/models/user.schema';
+import { natsWrapper } from '../../nats-wrapper';
 
 const userId = 1;
 
-it("returns 401 if user is not logged in", async () => {
-  return request(app).get("/api/v1/profiles/all").expect(401);
+it('returns 401 if user is not logged in', async () => {
+  return request(app).get('/api/v1/profiles/all').expect(401);
 });
 
-it("returns 201 if profile was created successfully", async () => {
+it('returns 201 if profile was created successfully', async () => {
   const user = User.build({
     id: userId,
-    name: "max",
+    name: 'max',
     version: 0,
   });
   await user.save();
 
   const token = await login(userId);
-  const handle = "gdfgd";
+  const handle = 'gdfgd';
 
   let profiles = await Profile.find({});
   let users = await User.find({});
@@ -29,8 +29,8 @@ it("returns 201 if profile was created successfully", async () => {
   expect(profiles.length).toEqual(0);
 
   await request(app)
-    .post("/api/v1/profiles")
-    .set("Authorization", token)
+    .post('/api/v1/profiles')
+    .set('Authorization', token)
     .send({ handle: handle })
     .expect(201);
 

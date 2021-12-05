@@ -1,10 +1,10 @@
-import { Profile } from "../../../db/models/Profile";
-import { User } from "../../../db/models/User";
+import { Profile } from '../../../db/models/profile.schema';
+import { User } from '../../../db/models/user.schema';
 
 export const createProfile = async (
   id: number,
-  userName: string = "max3",
-  profileHandle: string = "sweet"
+  userName: string = 'max3',
+  profileHandle: string = 'sweet',
 ) => {
   const user = User.build({
     id: id,

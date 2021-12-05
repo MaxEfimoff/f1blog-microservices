@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { ProfileDoc } from './profile.schema';
 import { GroupDoc } from './group.schema';
@@ -13,7 +13,7 @@ interface TeamAttrs {
 
 // An interface that describes the properties
 // that a Team Model has
-interface TeamModel extends mongoose.Model<TeamDoc> {
+export interface TeamModel extends mongoose.Model<TeamDoc> {
   build(attrs: TeamAttrs): TeamDoc;
   findByEvent(event: { id: string; version: number }): Promise<TeamDoc | null>;
 }
@@ -25,7 +25,7 @@ export interface TeamDoc extends mongoose.Document {
   title: string;
   description?: string;
   avatar?: string;
-  members?: any[];
+  members?: ProfileDoc[];
   groups?: GroupDoc[];
   createdAt: number;
   updatedAt?: number;

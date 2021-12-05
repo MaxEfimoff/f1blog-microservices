@@ -16,7 +16,7 @@ const axiosAPIClient = axios.create(axiosConfig);
 
 class Team {
   static async fetchAllTeams(config: object = requestConfig) {
-    return axiosAPIClient.get('/all', config);
+    return axiosAPIClient.get('/', config);
   }
 
   static async fetchMyTeams(config: object = requestConfig) {
