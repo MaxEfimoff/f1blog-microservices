@@ -1,7 +1,7 @@
 import { Message } from 'node-nats-streaming';
 import { Listener, ProfileDeletedEvent, Subjects } from '@f1blog/common';
-import { queueGroupName } from './queue-group-name';
-import { Profile } from '../../company/schemas/profile.schema';
+import { queueGroupName } from '../queue-group-name';
+import { Profile } from '../../team/schemas/profile.schema';
 
 export class ProfileDeletedListener extends Listener<ProfileDeletedEvent> {
   subject: Subjects.ProfileDeleted = Subjects.ProfileDeleted;

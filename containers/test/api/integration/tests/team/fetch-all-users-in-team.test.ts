@@ -1,66 +1,144 @@
+import faker from 'faker';
+import { AxiosResponse } from 'axios';
+import { defineFeature, loadFeature } from 'jest-cucumber';
 import { createRandomProfile } from '../../helpers/createRandomProfile';
 import { Team } from '../../common/Team';
-import faker from 'faker';
+
+const feature = loadFeature('../../features/team/fetch-all-users-in-team.feature');
 
 beforeAll(() => jest.setTimeout(150 * 1000));
 
-describe('joines team', () => {
-  it('joines team', async (done) => {
-    const { token } = await createRandomProfile();
-    const userEmail = faker.internet.email();
-    const userEmail2 = faker.internet.email();
-    const { profileId, token: token2 } = await createRandomProfile(userEmail);
-    const { profileId: profileId3, token: token3 } = await createRandomProfile(userEmail2);
-    const data = {
-      title: faker.company.companyName(),
-    };
+defineFeature(feature, (test) => {
+  let token: any;
+  let token2: any;
+  let token3: any;
+  let res: AxiosResponse<any>;
+  let res2: AxiosResponse<any>;
+  let res3: AxiosResponse<any>;
+  let profileId: string;
 
-    const res = await Team.createTeam(data, {
-      headers: {
-        Authorization: token,
-      },
+  test('Successfully fetch all users in team', ({ given, when, then, and }) => {
+    given('I have created 3 profiles for different users', async () => {
+      const userEmail = faker.internet.email();
+      const userEmail1 = faker.internet.email();
+      const userEmail2 = faker.internet.email();
+
+      const profile = await createRandomProfile(userEmail);
+      token = profile.token;
+      profileId = profile.profileId;
+      token2 = (await createRandomProfile(userEmail1)).token;
+      token3 = (await createRandomProfile(userEmail2)).token;
     });
 
-    expect(res.status).toBe(201);
+    when('As a first user I have created new team', async () => {
+      const data = {
+        title: faker.company.companyName(),
+      };
 
-    const { id: teamId } = res.data.data.newTeam;
-
-    const res2 = await Team.joinTeam(
-      {},
-      {
+      res = await Team.createTeam(data, {
         headers: {
           Authorization: token2,
         },
-      },
-      teamId,
-    );
-    expect(res2.status).toBe(201);
+      });
 
-    const res3 = await Team.joinTeam(
-      {},
-      {
-        headers: {
-          Authorization: token3,
+      expect(res.status).toBe(201);
+    });
+
+    and('As a second user I have joined created team', async () => {
+      const { id } = res.data;
+
+      res2 = await Team.joinTeam(
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
         },
-      },
-      teamId,
-    );
-    expect(res3.status).toBe(201);
+        id,
+      );
 
-    const res4 = await Team.fetchAllUsersInTeam(
-      {
-        headers: {
-          Authorization: token,
+      expect(res2.status).toBe(201);
+      expect(res2.data.members[0]).toEqual(profileId);
+      expect(res2.data.members.length).toEqual(2);
+    });
+
+    and('I fetched all users from the team and validate both users are there', async () => {
+      const { id } = res.data;
+
+      const res2 = await Team.fetchAllUsersInTeam(
+        {
+          headers: {
+            Authorization: token2,
+          },
         },
-      },
-      teamId,
-    );
-    expect(res4.status).toBe(200);
+        id,
+      );
 
-    expect(res4.data.data.teamMembers.find((id) => id === profileId)).toBeDefined();
-    expect(res4.data.data.teamMembers.find((id) => id === profileId3)).toBeDefined();
-    expect(res4.data.data.teamMembers.length).toEqual(2);
+      expect(res2.status).toBe(200);
+      expect(res2.data.length).toEqual(2);
+    });
 
-    done();
+    and('As a third user I have joined the team', async () => {
+      const { id } = res.data;
+
+      res3 = await Team.joinTeam(
+        {},
+        {
+          headers: {
+            Authorization: token3,
+          },
+        },
+        id,
+      );
+
+      expect(res3.status).toBe(201);
+      expect(res3.data.members.length).toEqual(3);
+    });
+
+    and('I fetched all users from the team and validate all three users are there', async () => {
+      const { id } = res.data;
+
+      const res2 = await Team.fetchAllUsersInTeam(
+        {
+          headers: {
+            Authorization: token2,
+          },
+        },
+        id,
+      );
+
+      expect(res2.status).toBe(200);
+      expect(res2.data.length).toEqual(3);
+    });
+
+    and('As a second user I have left the team', async () => {
+      const { id } = res.data;
+
+      res3 = await Team.leaveTeam(
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+        id,
+      );
+    });
+
+    then('I fetched all users from the team and validate both users are there', async () => {
+      const { id } = res.data;
+
+      const res2 = await Team.fetchAllUsersInTeam(
+        {
+          headers: {
+            Authorization: token2,
+          },
+        },
+        id,
+      );
+
+      expect(res2.status).toBe(200);
+      expect(res2.data.length).toEqual(2);
+    });
   });
 });

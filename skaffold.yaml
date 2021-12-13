@@ -90,14 +90,6 @@ build:
         manual:
           - src: '**/*.ts'
             dest: .
-    - image: maxefi/fe-dashboard
-      context: containers/front/dashboard
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: '**/*.ts'
-            dest: .
     - image: maxefi/fe-mainpage
       context: containers/front/mainpage
       docker:

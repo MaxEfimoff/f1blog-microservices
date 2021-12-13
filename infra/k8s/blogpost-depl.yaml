@@ -18,10 +18,10 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             requests:
-              memory: 500Mi
+              memory: 700Mi
               cpu: 200m
             limits:
-              memory: 500Mi
+              memory: 700Mi
               cpu: 200m
           env:
             - name: NATS_CLIENT_ID

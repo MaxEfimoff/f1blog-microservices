@@ -1,7 +1,7 @@
 import { Message } from 'node-nats-streaming';
 import { Listener, UserCreatedEvent, Subjects } from '@f1blog/common';
-import { queueGroupName } from './queue-group-name';
-import { User } from '../../db/models/User';
+import { queueGroupName } from '../queue-group-name';
+import { User } from '../../db/models/user.schema';
 
 export class UserCreatedListener extends Listener<UserCreatedEvent> {
   subject: Subjects.UserCreated = Subjects.UserCreated;
