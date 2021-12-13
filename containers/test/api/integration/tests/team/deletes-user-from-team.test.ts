@@ -1,10 +1,10 @@
-import { createRandomProfile } from '../../helpers/createRandomProfile';
-import { Team } from '../../common/Team';
 import faker from 'faker';
 import { AxiosResponse } from 'axios';
 import { defineFeature, loadFeature } from 'jest-cucumber';
+import { createRandomProfile } from '../../helpers/createRandomProfile';
+import { Team } from '../../common/Team';
 
-const feature = loadFeature('../../features/team/leave-team.feature');
+const feature = loadFeature('../../features/team/delete-user-from-team.feature');
 
 beforeAll(() => jest.setTimeout(150 * 1000));
 
@@ -17,7 +17,7 @@ defineFeature(feature, (test) => {
   let data: any;
   let profileId: string;
 
-  test('Successfully create, join and leave team', ({ given, when, then, and }) => {
+  test('Successfully delete user from team', ({ given, when, then, and }) => {
     given('I have created 2 profiles for different users', async () => {
       const userEmail = faker.internet.email();
       const userEmail1 = faker.internet.email();
@@ -62,28 +62,33 @@ defineFeature(feature, (test) => {
       expect(res2.data.members.length).toEqual(2);
     });
 
-    and('As a second user I have left the team', async () => {
+    and('As a first user user I have deleted second user from the team', async () => {
       const { id } = res.data;
 
-      res3 = await Team.leaveTeam(
-        {},
+      res3 = await Team.deleteUserFromTeam(
         {
           headers: {
-            Authorization: token,
+            Authorization: token2,
           },
         },
         id,
+        profileId,
       );
     });
 
     then("I validated that second user's id does not exist in the list of joined users", () => {
-      expect(res3.status).toBe(201);
+      expect(res3.status).toBe(200);
       expect(res3.data.members.length).toEqual(1);
       expect(res3.data.members[1]).toBeUndefined();
     });
   });
 
-  test('Try to leave team not being a member of it', ({ given, when, then, and }) => {
+  test('Try to delete user which is not member of a team from that team', ({
+    given,
+    when,
+    then,
+    and,
+  }) => {
     given('I have created 2 profiles for different users', async () => {
       const userEmail = faker.internet.email();
       const userEmail1 = faker.internet.email();
@@ -108,23 +113,23 @@ defineFeature(feature, (test) => {
       expect(res.status).toBe(201);
     });
 
-    and('As a second user I try to leave the team not being a member of it', async () => {
+    and('As a first user I try to delete second user from the team', async () => {
       const { id } = res.data;
 
-      res3 = await Team.leaveTeam(
-        {},
+      res3 = await Team.deleteUserFromTeam(
         {
           headers: {
             Authorization: token,
           },
         },
         id,
+        profileId,
       );
     });
 
-    then('I get an error', () => {
+    then('As a first user I get an error', () => {
       expect(res3.status).toBe(404);
-      expect(res3.data.message).toEqual('You are not a member of this team');
+      expect(res3.data.message).toEqual('User is not a member of this team');
     });
   });
 });

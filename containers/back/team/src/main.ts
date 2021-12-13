@@ -6,9 +6,11 @@ import { natsWrapper } from './nats-wrapper';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
 
   try {
     await natsWrapper.connect(

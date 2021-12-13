@@ -94,7 +94,6 @@ export class TeamService {
 
   async getProfiles(): Promise<ProfileDoc[]> {
     const profiles = await Profile.find();
-    console.log(profiles);
 
     if (!profiles) {
       throw new NotFoundException('There are no profiles in this team');
@@ -124,7 +123,6 @@ export class TeamService {
   async deleteUserFromTeam(_id: string, profileId: string): Promise<TeamDoc> {
     const team: TeamDoc = await Team.findById(_id);
     const profile: ProfileDoc = await Profile.findById(profileId);
-    console.log('Profile', profile);
 
     if (!team) {
       throw new NotFoundException('You should create team first');
@@ -176,7 +174,6 @@ export class TeamService {
 
   async getMyTeams(profile: ProfileDoc): Promise<TeamDoc[]> {
     const teams = profile.myTeams;
-    console.log('TEAMS', teams);
 
     if (!teams) {
       throw new NotFoundException('You should create teams first');
@@ -187,7 +184,6 @@ export class TeamService {
 
   async getJoinedTeams(profile: ProfileDoc): Promise<TeamDoc[]> {
     const teams = profile.joinedTeams;
-    console.log('TEAMS', teams);
     if (!teams) {
       throw new NotFoundException('You should joined teams first');
     }
@@ -276,7 +272,6 @@ export class TeamService {
 
     // Splice out of Profile joinedTeams array
     profile.joinedTeams.splice(removeTeamIndex, 1);
-    console.log('UPDATED PROFILE', profile);
     // Save data to DB
     await team.save((err) => {
       if (err) throw new NotFoundException('Could not save team to DB');
@@ -285,8 +280,6 @@ export class TeamService {
     await profile.save((err) => {
       if (err) throw new NotFoundException('Could not save profile to DB');
     });
-
-    console.log('SAVED PROFILE', profile);
 
     new TeamUpdatedPublisher(natsWrapper.client).publish({
       id: team.id,

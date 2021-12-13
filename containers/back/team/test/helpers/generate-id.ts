@@ -1,3 +1,3 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 
-export const generatedId = mongoose.Types.ObjectId().toHexString();
+export const generatedId = new mongoose.Types.ObjectId().toString();

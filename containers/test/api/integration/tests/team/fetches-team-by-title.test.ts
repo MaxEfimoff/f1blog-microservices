@@ -1,38 +1,94 @@
 import { createRandomProfile } from '../../helpers/createRandomProfile';
-import { Profile } from '../../common/Profile';
 import { Team } from '../../common/Team';
 import faker from 'faker';
+import mongoose from 'mongoose';
+import { AxiosResponse } from 'axios';
+import { defineFeature, loadFeature } from 'jest-cucumber';
+
+const feature = loadFeature('../../features/team/fetch-team-by-title.feature');
 
 beforeAll(() => jest.setTimeout(150 * 1000));
 
-describe('creates new team', () => {
-  it('creates new team', async (done) => {
-    const { token } = await createRandomProfile();
-    const data = {
-      title: faker.company.companyName(),
-    };
+defineFeature(feature, (test) => {
+  let token: any;
+  let token2: any;
+  let res: AxiosResponse<any>;
+  let res2: AxiosResponse<any>;
+  let res3: AxiosResponse<any>;
+  let data: any;
+  let profileId: string;
 
-    const res = await Team.createTeam(data, {
-      headers: {
-        Authorization: token,
-      },
+  test('Successfully fetching existing team by title', ({ given, when, then, and }) => {
+    given('I have created profile for a user', async () => {
+      const userEmail = faker.internet.email();
+
+      token = (await createRandomProfile(userEmail)).token;
     });
-    expect(res.status).toBe(201);
-    expect(res.data.data.newTeam.title).toEqual(data.title);
 
-    const { title } = res.data.data.newTeam;
+    when('I send valid credentials for a new team', async () => {
+      data = {
+        title: faker.company.companyName(),
+      };
 
-    const res2 = await Team.fetchTeamByTitle(
-      {
+      res = await Team.createTeam(data, {
         headers: {
           Authorization: token,
         },
-      },
-      title,
-    );
-    expect(res2.status).toBe(200);
-    expect(res2.data.data.team.title).toEqual(title);
+      });
 
-    done();
+      expect(res.status).toBe(201);
+    });
+
+    then('I successfully fetch created team by title', async () => {
+      const { title } = res.data;
+      const res2 = await Team.fetchTeamByTitle(
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+        title,
+      );
+      expect(res2.status).toBe(200);
+    });
+  });
+
+  test('Unsuccessfully trying to fetch team by wrong title', ({ given, when, then, and }) => {
+    given('I have created profile for a user', async () => {
+      const userEmail = faker.internet.email();
+
+      token = (await createRandomProfile(userEmail)).token;
+    });
+
+    when('I send valid credentials for a new team', async () => {
+      data = {
+        title: faker.company.companyName(),
+      };
+
+      res = await Team.createTeam(data, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      expect(res.status).toBe(201);
+    });
+
+    and('I try to fetch created team by wrong title', async () => {
+      const title = 'wrongTitle';
+      res2 = await Team.fetchTeamByTitle(
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+        title,
+      );
+    });
+
+    then('I get an error message', () => {
+      expect(res2.status).toBe(404);
+      expect(res2.statusText).toBe('Not Found');
+    });
   });
 });

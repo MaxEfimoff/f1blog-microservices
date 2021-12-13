@@ -20,7 +20,7 @@ class Team {
   }
 
   static async fetchMyTeams(config: object = requestConfig) {
-    return axiosAPIClient.get('/my', config);
+    return axiosAPIClient.get('/my-teams/all', config);
   }
 
   static async fetchAllProfiles(config: object = requestConfig) {
@@ -32,11 +32,11 @@ class Team {
   }
 
   static async fetchTeamByTitle(config: object = requestConfig, title: string) {
-    return axiosAPIClient.get(`/title/${title}`, config);
+    return axiosAPIClient.get(`/${title}/title`, config);
   }
 
   static async fetchAllUsersInTeam(config: object = requestConfig, id: string) {
-    return axiosAPIClient.get(`/${id}/all`, config);
+    return axiosAPIClient.get(`/${id}/members`, config);
   }
 
   static async createTeam(data: object, config: object = requestConfig) {

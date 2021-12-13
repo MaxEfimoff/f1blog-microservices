@@ -23,6 +23,7 @@
     "axios": "^0.21.1",
     "faker": "^5.5.3",
     "jest-cucumber": "^3.0.1",
+    "mongoose": "^6.0.15",
     "ts-node-dev": "^1.0.0-pre.62",
     "typescript": "^4.0.2",
     "utf8": "^3.0.0"
