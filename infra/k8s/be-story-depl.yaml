@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blogpost-depl
+  name: story-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blogpost
+      app: story
   template:
     metadata:
       labels:
-        app: blogpost
+        app: story
     spec:
       containers:
-        - name: blogpost
-          image: maxefi/blogpost
+        - name: story
+          image: maxefi/story
           imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 700Mi
-              cpu: 200m
+              cpu: 400m
             limits:
               memory: 700Mi
-              cpu: 200m
+              cpu: 400m
           env:
             - name: NATS_CLIENT_ID
               valueFrom:
@@ -32,6 +32,8 @@ spec:
               value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: ticketing
+            - name: MONGO_URI
+              value: 'mongodb://story-mongo-srv:27017/story'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -41,12 +43,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: blogpost-srv
+  name: story-srv
 spec:
   selector:
-    app: blogpost
+    app: story
   ports:
-    - name: blogpost
+    - name: story
       protocol: TCP
       port: 3000
       targetPort: 3000

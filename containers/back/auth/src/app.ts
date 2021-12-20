@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import 'express-async-errors';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -25,6 +26,12 @@ const limiter = rateLimit({
 
 // Set security http headers
 app.use(helmet());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:3001',
+  }),
+);
 app.use(cookieParser());
 
 // Swagger

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-mongo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: story-mongo
+  template:
+    metadata:
+      labels:
+        app: story-mongo
+    spec:
+      volumes:
+        - name: story-mongo-storage
+          persistentVolumeClaim:
+            claimName: db-persistent-volume-claim
+      containers:
+        - name: story-mongo
+          image: mongo
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 100m
+            limits:
+              memory: 100Mi
+              cpu: 100m
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: story-mongo-storage
+              mountPath: /data/db/story
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: story-mongo-srv
+spec:
+  selector:
+    app: story-mongo
+  ports:
+    - name: story-db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

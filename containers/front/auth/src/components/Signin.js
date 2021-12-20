@@ -15,6 +15,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../actions/auth';
+import FormButton from './UI/FormButton/FormButton';
 
 function Copyright() {
   return (
@@ -64,8 +65,7 @@ const SignIn = ({ login, isAuthenticated }) => {
 
   const { email, password } = formData;
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -96,11 +96,8 @@ const SignIn = ({ login, isAuthenticated }) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className={classes.form}
-          noValidate
-        >
+        <FormButton />
+        <form onSubmit={(e) => e.preventDefault()} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"

@@ -1,0 +1,1 @@
+export const mongoURI_newsitem = "mongodb+srv://wildblood:erager164572@cluster0.adddh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"

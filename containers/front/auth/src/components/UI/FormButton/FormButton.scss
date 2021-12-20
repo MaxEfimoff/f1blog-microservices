@@ -1,0 +1,209 @@
+@import '../../styles/constants';
+
+.form-button {
+  background-color: $_BUTTON-GREY;
+  border: 0;
+  border-radius: 3px;
+  color: $_FFF;
+  cursor: pointer;
+  font-family: $_GE_FONTS_MEDIUM;
+  font-size: 14px;
+  height: 36px;
+  line-height: 36px;
+  margin-right: 20px;
+  min-width: 110px;
+  outline: none;
+  padding: 0 24px;
+  position: relative;
+  text-align: center;
+  transition: background-color ease-in-out 0.2s;
+
+  &:hover {
+    background-color: $_BUTTON-GREY-HOVER;
+  }
+
+  &:disabled {
+    background-color: $_BUTTON-GREY-DISABLED;
+    color: $_DDD;
+    cursor: not-allowed;
+
+    .icon {
+      fill: $_DDD;
+    }
+  }
+
+  &.green {
+    background-color: $_APPROVE_GREEN;
+
+    &:hover {
+      background-color: $_0FB;
+    }
+
+    &:disabled {
+      background-color: $_BUTTON-GREEN-DISABLED;
+      color: $_FFF;
+      cursor: not-allowed;
+    }
+  }
+
+  &.primary {
+    background-color: $_BUTTON-PRIMARY;
+
+    &:hover {
+      background-color: $_BUTTON-PRIMARY-HOVER;
+    }
+
+    &:disabled {
+      background-color: $_BUTTON-PRIMARY-DISABLED;
+      color: $_FFF;
+      cursor: not-allowed;
+    }
+
+    &.pending {
+      background-color: $_BUTTON-PRIMARY-PENDING;
+    }
+
+    &.completed {
+      background-color: $_BUTTON-GREEN-COMPLETED;
+    }
+
+    &.technical-issues {
+      background-color: $_BUTTON-PRIMARY-TECHNICAL_ISSUES;
+      color: $_FFF;
+      cursor: not-allowed;
+    }
+  }
+
+  &.orange {
+    background-color: $_BUTTON-ORANGE;
+
+    &:hover {
+      background-color: $_BUTTON-ORANGE;
+    }
+
+    &:disabled {
+      background-color: $_BUTTON-ORANGE-DISABLED;
+      color: $_FFF;
+      cursor: not-allowed;
+    }
+  }
+
+  &.transparent {
+    background-color: transparent;
+    color: $_888;
+  }
+
+  &.red {
+    background-color: $_BUTTON-RED;
+
+    &:disabled {
+      background: $_BUTTON-RED-DISABLED;
+      color: $_FFF;
+    }
+  }
+
+  &.white {
+    background-color: $_FFF;
+    color: $_LINK_BLUE;
+  }
+
+  &.black {
+    background-color: $_0A;
+    border: 1px solid $_777;
+    color: $_BUTTON-ORANGE;
+  }
+
+  &.whiteWithBorder {
+    background-color: $_FFF;
+    border: 1px solid $_BUTTON-ORANGE;
+    color: $_BUTTON-ORANGE;
+
+    &:hover {
+      border: 1px solid $_BUTTON-ORANGE-HOVER;
+      color: $_BUTTON-ORANGE-HOVER;
+    }
+
+    &:disabled {
+      border: 1px solid $_BUTTON-ORANGE;
+      color: $_BUTTON-ORANGE;
+      cursor: not-allowed;
+    }
+  }
+
+  &.pending {
+    &.white {
+      .icon-spinner {
+        fill: $_BUTTON-BLUE-PENDING;
+      }
+    }
+
+    &.red {
+      background-color: $_BUTTON-RED-PENDING;
+    }
+
+    .icon-spinner {
+      fill: $_FFF;
+    }
+  }
+
+  &.red {
+    &.completed {
+      background-color: $_BUTTON-GREEN-COMPLETED;
+
+      .icon-check {
+        fill: $_FFF;
+      }
+    }
+  }
+
+  &.orange {
+    background: $_FF9;
+  }
+
+  &.completed {
+    background-color: $_BUTTON-GREEN-COMPLETED;
+
+    .icon-check {
+      display: inline-block;
+      fill: $_FFF;
+      position: relative;
+      top: 3px;
+    }
+  }
+
+  &.sm {
+    font-size: 11px;
+    height: 13px;
+    line-height: 0;
+    min-width: 60px;
+    padding: 9px;
+
+    .icon-spinner {
+      height: 13px;
+      width: 13px;
+    }
+  }
+
+  &.md {
+    font-size: 12px;
+    height: 40px;
+    line-height: 1;
+    padding: 0 15px;
+  }
+
+  &.-forceShowLabel {
+    padding: 0 19px;
+
+    .icon-check {
+      margin-right: 5px;
+    }
+  }
+
+  .icon-check {
+    display: none;
+  }
+}
+
+.expired-buttons {
+  padding-bottom: 20px;
+}

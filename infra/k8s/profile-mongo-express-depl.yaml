@@ -1,58 +1,58 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: mongo-express
-  name: mongo-express
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mongo-express
-  template:
-    metadata:
-      labels:
-        app: mongo-express
-    spec:
-      containers:
-        - name: mongo-express
-          imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              memory: 200Mi
-              cpu: 100m
-            limits:
-              memory: 200Mi
-              cpu: 100m
-          image: mongo-express:latest
-          ports:
-            - containerPort: 8089
-              protocol: TCP
-          env:
-          - name: ME_CONFIG_MONGODB_SERVER
-            value: "team-mongo-srv"
-          - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
-            value: "true"
-          - name: ME_CONFIG_BASICAUTH_USERNAME
-            value: "admin-username"
-          - name: ME_CONFIG_BASICAUTH_PASSWORD
-            value: "admin-password"
-      restartPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: mongo-express
-  name: mongo-express-srv
-spec:
-  type: LoadBalancer
-  selector:
-    app: mongo-express
-  ports:
-    - name: mongo-express
-      protocol: TCP
-      port: 8089
-      targetPort: 8089
-  externalIPs:
-    - 1.2.4.120
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   labels:
+#     app: mongo-express
+#   name: mongo-express
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: mongo-express
+#   template:
+#     metadata:
+#       labels:
+#         app: mongo-express
+#     spec:
+#       containers:
+#         - name: mongo-express
+#           imagePullPolicy: IfNotPresent
+#           resources:
+#             requests:
+#               memory: 200Mi
+#               cpu: 100m
+#             limits:
+#               memory: 200Mi
+#               cpu: 100m
+#           image: mongo-express:latest
+#           ports:
+#             - containerPort: 8089
+#               protocol: TCP
+#           env:
+#           - name: ME_CONFIG_MONGODB_SERVER
+#             value: "team-mongo-srv"
+#           - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+#             value: "true"
+#           - name: ME_CONFIG_BASICAUTH_USERNAME
+#             value: "admin-username"
+#           - name: ME_CONFIG_BASICAUTH_PASSWORD
+#             value: "admin-password"
+#       restartPolicy: Always
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   labels:
+#     app: mongo-express
+#   name: mongo-express-srv
+# spec:
+#   type: LoadBalancer
+#   selector:
+#     app: mongo-express
+#   ports:
+#     - name: mongo-express
+#       protocol: TCP
+#       port: 8089
+#       targetPort: 8089
+#   externalIPs:
+#     - 1.2.4.120

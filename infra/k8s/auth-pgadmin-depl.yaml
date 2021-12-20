@@ -1,51 +1,51 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: auth-pg-depl
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: auth-pg
-  template:
-    metadata:
-      labels:
-        app: auth-pg
-    spec:
-      containers:
-        - name: pgadmin4
-          image: dpage/pgadmin4
-          imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              memory: 200Mi
-              cpu: 100m
-            limits:
-              memory: 200Mi
-              cpu: 100m
-          ports:
-            - containerPort: 80
-              name: pgadminport
-          env:
-            - name: PGADMIN_DEFAULT_EMAIL
-              value: "admin@admin.com"
-            - name: PGADMIN_DEFAULT_PASSWORD
-              value: "admin"
-            - name: PGADMIN_PORT
-              value: "80"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: pg-cluster-ip-service
-spec:
-  type: NodePort
-  # externalIPs:
-  # - 192.168.0.10
-  selector:
-    app: auth-pg
-  ports:
-    - name: auth-pg
-      protocol: TCP
-      port: 80
-      targetPort: 30200
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: auth-pg-depl
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: auth-pg
+#   template:
+#     metadata:
+#       labels:
+#         app: auth-pg
+#     spec:
+#       containers:
+#         - name: pgadmin4
+#           image: dpage/pgadmin4
+#           imagePullPolicy: IfNotPresent
+#           resources:
+#             requests:
+#               memory: 200Mi
+#               cpu: 100m
+#             limits:
+#               memory: 200Mi
+#               cpu: 100m
+#           ports:
+#             - containerPort: 80
+#               name: pgadminport
+#           env:
+#             - name: PGADMIN_DEFAULT_EMAIL
+#               value: "admin@admin.com"
+#             - name: PGADMIN_DEFAULT_PASSWORD
+#               value: "admin"
+#             - name: PGADMIN_PORT
+#               value: "80"
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: pg-cluster-ip-service
+# spec:
+#   type: NodePort
+#   # externalIPs:
+#   # - 192.168.0.10
+#   selector:
+#     app: auth-pg
+#   ports:
+#     - name: auth-pg
+#       protocol: TCP
+#       port: 80
+#       targetPort: 30200

@@ -25,8 +25,8 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: maxefi/newsitem
-      context: containers/back/newsitem
+    - image: maxefi/story
+      context: containers/back/story
       docker:
         dockerfile: Dockerfile
       sync:

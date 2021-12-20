@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsUrl } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateTeamDto {
   @ApiProperty({ example: 'testtitle', description: 'Team title' })

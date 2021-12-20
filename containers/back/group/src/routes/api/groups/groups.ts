@@ -11,6 +11,7 @@ import { deleteGroupInTeam } from '../../controllers/groups/delete-group-in-team
 import { joinGroup } from '../../controllers/groups/join-group';
 import { leaveGroup } from '../../controllers/groups/leave-group';
 import { fetchGroupInTeam } from '../../controllers/groups/fetches-group-in-team';
+import { fetchAllTeams } from '../../controllers/groups/fetch-all-teams';
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.get('/teams/:id', currentUser, requireAuth, fetchAllGroupsInTeam);
 router.get('/team/:id/group/:groupId', currentUser, requireAuth, fetchGroupInTeam);
 router.get('/my/team/:id', currentUser, requireAuth, fetchMyGroups);
 router.get('/profiles', currentUser, requireAuth, fetchAllProfiles);
+router.get('/all-teams', currentUser, requireAuth, fetchAllTeams);
 
 router.post(
   '/team/:id',

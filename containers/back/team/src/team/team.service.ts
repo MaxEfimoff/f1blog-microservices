@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { BadRequestError } from '@f1blog/common';
 import { Team, TeamDoc } from './schemas/team.schema';
 import { Profile, ProfileDoc } from './schemas/profile.schema';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -30,7 +29,7 @@ export class TeamService {
     newTeam.members.unshift(profile.id);
 
     await newTeam.save((err) => {
-      if (err) throw new BadRequestError('Could not save team to DB');
+      if (err) throw new BadRequestException('Could not save team to DB');
     });
 
     new TeamCreatedPublisher(natsWrapper.client).publish({
